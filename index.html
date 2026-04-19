@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build Your Package — E-commerce Growth Agency</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700&family=Inter:wght@400;500&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green: #1D9E75;
+  --green-dark: #0F6E56;
+  --green-light: #E1F5EE;
+  --green-mid: #5DCAA5;
+  --text: #0f0f0f;
+  --text-2: #6b6b6b;
+  --text-3: #a8a8a8;
+  --border: rgba(0,0,0,.08);
+  --border-h: rgba(0,0,0,.15);
+  --bg: #f7f7f5;
+  --surface: #ffffff;
+  --surface-2: #f2f2ef;
+  --radius: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;background:var(--text);position:sticky;top:0;z-index:20}
+.logo{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:#fff;letter-spacing:-.02em}
+.logo span{color:var(--green-mid)}
+.nav-pill{font-size:11px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);padding:5px 14px;border-radius:999px;font-weight:500;border:1px solid rgba(255,255,255,.12);letter-spacing:.02em}
+
+.container{max-width:740px;margin:0 auto;padding:0 1.5rem;width:100%}
+
+/* PICKER */
+#picker{flex:1;display:flex;align-items:center;justify-content:center;padding:4rem 1.5rem;background:var(--bg)}
+.picker-inner{text-align:center;max-width:560px;width:100%}
+.picker-kicker{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--green-dark);background:var(--green-light);padding:5px 14px;border-radius:999px;margin-bottom:1.5rem}
+.picker-inner h1{font-family:'Syne',sans-serif;font-size:clamp(2rem,5.5vw,3rem);font-weight:700;line-height:1.1;letter-spacing:-.03em;color:var(--text);margin-bottom:.75rem}
+.picker-inner h1 em{font-style:normal;color:var(--green)}
+.picker-inner p{color:var(--text-2);font-size:15px;margin-bottom:3rem;line-height:1.7;max-width:380px;margin-left:auto;margin-right:auto}
+.country-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:500px){.country-grid{grid-template-columns:1fr;max-width:280px;margin:0 auto}}
+.c-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:2rem 1rem 1.5rem;cursor:pointer;transition:all .2s ease;text-align:center;position:relative;overflow:hidden}
+.c-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(29,158,117,.04) 0%,transparent 60%);opacity:0;transition:opacity .2s}
+.c-card:hover{border-color:var(--green);transform:translateY(-3px);box-shadow:0 12px 32px rgba(29,158,117,.12)}
+.c-card:hover::before{opacity:1}
+.c-icon{width:52px;height:52px;border-radius:14px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:700;font-size:13px;letter-spacing:.04em;transition:transform .2s}
+.c-card:hover .c-icon{transform:scale(1.05)}
+.c-icon.eg,.c-icon.sa{background:var(--green-light);color:var(--green-dark)}
+.c-icon.us{background:#EEF4FF;color:#3354A8}
+.c-name{font-family:'Syne',sans-serif;font-size:15px;font-weight:600;color:var(--text)}
+.c-native{font-size:12px;color:var(--text-3);margin-top:4px}
+.c-lang{display:inline-block;margin-top:10px;font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);border:1px solid var(--border);padding:3px 10px;border-radius:999px;transition:border-color .2s,color .2s}
+.c-card:hover .c-lang{border-color:var(--green-mid);color:var(--green-dark)}
+
+/* WIZARD */
+#wizard{display:none;padding:2.5rem 0 5rem;flex:1}
+
+/* PROGRESS */
+.progress-wrap{margin-bottom:2.75rem}
+.progress-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.progress-meta{display:flex;flex-direction:column;gap:2px}
+.progress-step{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3)}
+.rtl .progress-step{letter-spacing:.01em}
+.progress-title-sm{font-size:14px;font-weight:500;color:var(--text)}
+.back-btn{background:none;border:1.5px solid var(--border);border-radius:999px;padding:6px 16px;font-size:12px;color:var(--text-2);cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;white-space:nowrap}
+.back-btn:hover{border-color:var(--border-h);color:var(--text)}
+.dots-row{display:flex;gap:5px}
+.dot{height:4px;flex:1;border-radius:999px;background:var(--border);transition:background .35s ease}
+.dot.done{background:var(--green)}
+.dot.active{background:var(--green-mid)}
+
+/* STEP */
+.step-tag{display:inline-block;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--green-dark);background:var(--green-light);padding:4px 12px;border-radius:999px;margin-bottom:1rem}
+.rtl .step-tag{letter-spacing:.01em}
+.step-h{font-family:'Syne',sans-serif;font-size:clamp(1.5rem,4vw,2.1rem);font-weight:700;letter-spacing:-.025em;line-height:1.2;margin-bottom:.4rem;color:var(--text)}
+.rtl .step-h{font-family:'Cairo',sans-serif;letter-spacing:0;font-weight:700}
+.step-sub{font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:2rem}
+.rtl .step-sub{text-align:right}
+
+/* SERVICE CARDS */
+.svc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.svc{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;cursor:pointer;display:flex;align-items:flex-start;gap:12px;transition:all .15s ease;position:relative}
+.svc:hover{border-color:var(--border-h);box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.svc.on{border-color:var(--green);background:#fafffe;box-shadow:0 4px 16px rgba(29,158,117,.1)}
+.rtl .svc{direction:rtl}
+.chk{width:20px;height:20px;border-radius:6px;border:1.5px solid #d4d4d4;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .15s;background:var(--surface)}
+.svc:hover .chk{border-color:#aaa}
+.svc.on .chk{background:var(--green);border-color:var(--green)}
+.tick{display:none}
+.svc.on .tick{display:block}
+.svc-name{font-size:13px;font-weight:500;line-height:1.3;color:var(--text)}
+.svc-sub{font-size:11px;color:var(--text-3);margin-top:3px;line-height:1.4}
+.rtl .svc-name,.rtl .svc-sub{text-align:right}
+
+/* FORM */
+.summary-strip{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-bottom:1.75rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-height:46px}
+.rtl .summary-strip{direction:rtl}
+.s-tag{background:var(--green-light);color:var(--green-dark);font-size:11px;font-weight:500;padding:4px 12px;border-radius:999px}
+.s-empty{font-size:12px;color:var(--text-3);font-style:italic}
+
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.rtl .field{direction:rtl;text-align:right}
+.field label{font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--text-3)}
+.rtl .field label{letter-spacing:.01em;font-family:'Cairo',sans-serif}
+.field input,.field textarea{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 16px;font-size:14px;color:var(--text);font-family:'Inter',sans-serif;outline:none;transition:border-color .15s,box-shadow .15s;width:100%}
+.field input:focus,.field textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(29,158,117,.08)}
+.field input::placeholder,.field textarea::placeholder{color:var(--text-3)}
+.field textarea{resize:vertical;min-height:85px;line-height:1.6}
+.rtl .field input,.rtl .field textarea{text-align:right}
+.rtl .field input::placeholder,.rtl .field textarea::placeholder{text-align:right}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:520px){.form-row{grid-template-columns:1fr}}
+.budget-row{display:flex;gap:10px;align-items:flex-end}
+.budget-row input{flex:1}
+.currency-box{background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 16px;font-size:13px;font-weight:600;color:var(--text-2);white-space:nowrap;letter-spacing:.04em}
+
+/* BUTTONS */
+.wiz-nav{display:flex;gap:10px;margin-top:2.25rem;align-items:center}
+.rtl .wiz-nav{direction:rtl}
+.wiz-nav .skip-link{margin-left:auto}
+.rtl .wiz-nav .skip-link{margin-left:0;margin-right:auto}
+.btn-prev{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 22px;font-size:14px;color:var(--text-2);cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;white-space:nowrap;font-weight:500}
+.rtl .btn-prev{font-family:'Cairo',sans-serif}
+.btn-prev:hover{border-color:var(--border-h);color:var(--text)}
+.btn-next{background:var(--text);color:#fff;border:none;border-radius:var(--radius);padding:12px 28px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Syne',sans-serif;transition:all .15s;letter-spacing:.01em;white-space:nowrap}
+.rtl .btn-next{font-family:'Cairo',sans-serif;font-weight:600}
+.btn-next:hover{background:#222;transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,0,0,.15)}
+.btn-next.green{background:var(--green)}
+.btn-next.green:hover{background:var(--green-dark);box-shadow:0 6px 20px rgba(29,158,117,.25)}
+.skip-link{font-size:12px;color:var(--text-3);cursor:pointer;white-space:nowrap;padding:0 4px;transition:color .15s}
+.skip-link:hover{color:var(--text-2)}
+
+/* SUCCESS */
+.success-box{display:none;text-align:center;padding:3.5rem 2rem;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-xl)}
+.success-ring{width:64px;height:64px;background:var(--green-light);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem}
+.success-box h3{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:700;letter-spacing:-.02em;margin-bottom:.6rem}
+.rtl .success-box h3{font-family:'Cairo',sans-serif;letter-spacing:0}
+.success-box p{color:var(--text-2);font-size:14px;line-height:1.8;max-width:360px;margin:0 auto}
+.form-note{font-size:12px;color:var(--text-3);text-align:center;margin-top:12px;line-height:1.7}
+
+.rtl,.rtl *{font-family:'Cairo',sans-serif}
+.rtl .step-tag,.rtl .step-h,.rtl .success-box h3{font-family:'Cairo',sans-serif;letter-spacing:0}
+.rtl .btn-next,.rtl .btn-prev,.rtl .skip-link,.rtl .back-btn{font-family:'Cairo',sans-serif}
+.rtl .field input[style*="direction:ltr"],.rtl input#f-url{font-family:'Inter',sans-serif}
+
+footer{border-top:1px solid var(--border);padding:1.5rem 2rem;text-align:center;font-size:12px;color:var(--text-3);background:var(--bg)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">ec<span>.</span>agency</div>
+  <span class="nav-pill" id="nav-tag">Now accepting clients</span>
+</nav>
+
+<div id="picker">
+  <div class="picker-inner">
+    <div class="picker-kicker">E-commerce growth</div>
+    <h1>You pick.<br>You <em>set the price.</em></h1>
+    <p>No fixed packages. No surprise quotes. Select your country to get started.</p>
+    <div class="country-grid">
+      <div class="c-card" onclick="selectCountry('eg')">
+        <div class="c-icon eg">EG</div>
+        <div class="c-name">Egypt</div>
+        <div class="c-native">مصر</div>
+        <span class="c-lang">عربي</span>
+      </div>
+      <div class="c-card" onclick="selectCountry('sa')">
+        <div class="c-icon sa">SA</div>
+        <div class="c-name">Saudi Arabia</div>
+        <div class="c-native">السعودية</div>
+        <span class="c-lang">عربي</span>
+      </div>
+      <div class="c-card" onclick="selectCountry('us')">
+        <div class="c-icon us">US</div>
+        <div class="c-name">United States</div>
+        <div class="c-native">English</div>
+        <span class="c-lang">EN</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="wizard">
+  <div class="container">
+    <div id="wiz-inner"></div>
+  </div>
+</div>
+
+<footer><span id="footer-txt">© 2025 ec.agency — All rights reserved</span></footer>
+
+<script>
+const D={
+  us:{dir:'ltr',cls:'',currency:'USD',navTag:'Now accepting clients',backCountry:'Change country',stepOf:(c,t)=>`Step ${c} of ${t}`,skip:'Skip',prevTxt:'Back',nextTxt:'Next',submitTxt:'Send my request',note:'We review every submission and get back within 24 hours.',summaryEmpty:'Nothing selected yet',sxTitle:'Request received!',sxMsg:"We'll review your selections and get back within 24 hours with a tailored proposal.",formEyebrow:'Final Step',formTitle:'Your Details & Budget',formSub:"Almost done. Tell us who you are and what you're working with.",nameLbl:'Your name',namePh:'John Smith',emailLbl:'Email',emailPh:'john@brand.com',urlLbl:'Store / Brand URL',urlPh:'https://yourbrand.com',budgetLbl:'Monthly budget',budgetPh:'e.g. 1500',msgLbl:'Anything else we should know?',msgPh:'Tell us about your store, goals, or timeline...',footer:'© 2025 ec.agency — All rights reserved',
+  cats:[
+    {eyebrow:'Step 1',title:'Website & Store',sub:'What do you need for your online store?',s:[{id:'store',n:'Store build',s:'Shopify / WooCommerce / Next.js'},{id:'brand',n:'Brand identity',s:'Logo, colors, typography'},{id:'cro',n:'CRO & speed',s:'Conversion optimization'},{id:'multilang',n:'Multilingual setup',s:'Multi-country & language support'},{id:'pwa',n:'Mobile PWA',s:'App-like mobile experience'},{id:'subscription',n:'Subscription setup',s:'Recurring billing & memberships'},{id:'productpage',n:'Product page design',s:'High-converting product layouts'}]},
+    {eyebrow:'Step 2',title:'Creative & Content',sub:'What kind of content do you need?',s:[{id:'photo',n:'Product photography',s:'Art direction & editing'},{id:'social',n:'Social media content',s:'Reels, posts, stories'},{id:'video',n:'AI video production',s:'Product showcase videos'},{id:'copy',n:'Copywriting',s:'Product pages & landing copy'},{id:'packaging',n:'Packaging design',s:'Boxes, bags & labels'},{id:'motion',n:'Motion graphics',s:'Animated ads & banners'},{id:'ugc',n:'UGC strategy',s:'User-generated content planning'},{id:'blog',n:'Blog & SEO content',s:'Articles & keyword content'}]},
+    {eyebrow:'Step 3',title:'Paid Advertising',sub:'Which ad channels do you want to run?',s:[{id:'meta',n:'Meta Ads',s:'Facebook & Instagram'},{id:'google',n:'Google Shopping',s:'Google & Performance Max'},{id:'tiktok',n:'TikTok Ads',s:'Short-form campaigns'},{id:'snap',n:'Snapchat Ads',s:'Story & lens campaigns'},{id:'youtube',n:'YouTube Ads',s:'Pre-roll & discovery ads'},{id:'pinterest',n:'Pinterest Ads',s:'Product pin campaigns'},{id:'influencer',n:'Influencer campaigns',s:'Outreach & management'}]},
+    {eyebrow:'Step 4',title:'Email & Retention',sub:'How do you want to stay in touch with customers?',s:[{id:'flows',n:'Email automation flows',s:'Welcome, cart, post-purchase'},{id:'campaigns',n:'Monthly email campaigns',s:'Newsletters & promos'},{id:'sms',n:'SMS marketing',s:'Text message campaigns'},{id:'loyalty',n:'Loyalty program',s:'Points, rewards & tiers'},{id:'push',n:'Push notifications',s:'Web & mobile push alerts'},{id:'reviews',n:'Review management',s:'Collect & respond to reviews'}]},
+    {eyebrow:'Step 5',title:'AI & Automation',sub:'Want to automate your operations?',s:[{id:'chatbot',n:'AI customer support bot',s:'Trained on your products'},{id:'n8n',n:'Order & inventory automation',s:'n8n workflows'},{id:'recommendations',n:'AI product recommendations',s:'Personalized upsell engine'},{id:'pricing',n:'Dynamic pricing',s:'Automated price optimization'},{id:'seoai',n:'AI SEO automation',s:'Auto-generated SEO content'},{id:'returns',n:'Returns automation',s:'Self-serve returns & refunds'}]},
+  ]},
+  eg:{dir:'rtl',cls:'rtl',currency:'EGP',navTag:'بنقبل عملاء جدد',backCountry:'تغيير الدولة',stepOf:(c,t)=>`الخطوة ${c} من ${t}`,skip:'تخطي',prevTxt:'رجوع',nextTxt:'التالي',submitTxt:'ابعت طلبك',note:'بنراجع كل طلب وبنرد عليك في خلال 24 ساعة.',summaryEmpty:'لسه ماختارتش حاجة',sxTitle:'وصلنا طلبك!',sxMsg:'هنراجع الخدمات اللي اخترتها وهنتواصل معاك في خلال 24 ساعة بعرض مناسب.',formEyebrow:'الخطوة الأخيرة',formTitle:'بياناتك وميزانيتك',formSub:'تقريباً خلصنا. قولنا مين إنت وميزانيتك قد إيه.',nameLbl:'اسمك',namePh:'محمد أحمد',emailLbl:'البريد الإلكتروني',emailPh:'mohamed@brand.com',urlLbl:'Store / Brand URL',urlPh:'https://yourbrand.com',budgetLbl:'ميزانيتك الشهرية',budgetPh:'مثلاً: 50000',msgLbl:'في حاجة تانية تقولهالنا؟',msgPh:'حكيلنا عن متجرك وهدفك والوقت المتاح...',footer:'© 2025 ec.agency — جميع الحقوق محفوظة',
+  cats:[
+    {eyebrow:'الخطوة الأولى',title:'الموقع والمتجر',sub:'إيه اللي محتاجه للمتجر بتاعك؟',s:[{id:'store',n:'بناء المتجر',s:'Shopify / WooCommerce / Next.js'},{id:'brand',n:'الهوية البصرية',s:'شعار وألوان وخطوط'},{id:'cro',n:'تحسين التحويل والسرعة',s:'تحسين معدل التحويل'},{id:'multilang',n:'إعداد متعدد اللغات',s:'دعم أكثر من دولة ولغة'},{id:'pwa',n:'تطبيق موبايل PWA',s:'تجربة تطبيق على الموبايل'},{id:'subscription',n:'إعداد الاشتراكات',s:'فواتير متكررة وعضويات'},{id:'productpage',n:'تصميم صفحات المنتجات',s:'تصاميم عالية التحويل'}]},
+    {eyebrow:'الخطوة التانية',title:'الإبداع والمحتوى',sub:'إيه نوع المحتوى اللي محتاجه؟',s:[{id:'photo',n:'تصوير المنتجات',s:'إخراج فني وتعديل'},{id:'social',n:'محتوى السوشيال ميديا',s:'ريلز وبوستات وستوريز'},{id:'video',n:'فيديو بالذكاء الاصطناعي',s:'فيديوهات عرض المنتجات'},{id:'copy',n:'كتابة المحتوى',s:'صفحات المنتجات والإعلانات'},{id:'packaging',n:'تصميم التغليف',s:'علب وأكياس وملصقات'},{id:'motion',n:'موشن جرافيك',s:'إعلانات وبنرات متحركة'},{id:'ugc',n:'استراتيجية UGC',s:'تخطيط محتوى المستخدمين'},{id:'blog',n:'محتوى المدونة والسيو',s:'مقالات ومحتوى الكلمات المفتاحية'}]},
+    {eyebrow:'الخطوة التالتة',title:'الإعلانات المدفوعة',sub:'عايز تشتغل على أنهي منصات إعلانية؟',s:[{id:'meta',n:'إعلانات ميتا',s:'فيسبوك وإنستغرام'},{id:'google',n:'جوجل شوبينج',s:'Google & Performance Max'},{id:'tiktok',n:'إعلانات تيك توك',s:'حملات الفيديو القصير'},{id:'snap',n:'إعلانات سناب شات',s:'حملات الستوري والفلاتر'},{id:'youtube',n:'إعلانات يوتيوب',s:'إعلانات ما قبل الفيديو'},{id:'pinterest',n:'إعلانات بينتريست',s:'حملات بين المنتجات'},{id:'influencer',n:'حملات المؤثرين',s:'تواصل وإدارة'}]},
+    {eyebrow:'الخطوة الرابعة',title:'البريد والاحتفاظ بالعملاء',sub:'عايز تتواصل مع عملاءك إزاي؟',s:[{id:'flows',n:'أتمتة البريد الإلكتروني',s:'ترحيب وسلة متروكة وما بعد الشراء'},{id:'campaigns',n:'حملات البريد الشهرية',s:'نشرات ترويجية'},{id:'sms',n:'تسويق SMS',s:'حملات الرسائل النصية'},{id:'loyalty',n:'برنامج الولاء',s:'نقاط ومكافآت ومستويات'},{id:'push',n:'إشعارات Push',s:'تنبيهات الويب والموبايل'},{id:'reviews',n:'إدارة التقييمات',s:'جمع التقييمات والرد عليها'}]},
+    {eyebrow:'الخطوة الخامسة',title:'الذكاء الاصطناعي والأتمتة',sub:'عايز تأتمت عمليات متجرك؟',s:[{id:'chatbot',n:'بوت دعم العملاء',s:'مدرب على منتجاتك'},{id:'n8n',n:'أتمتة الطلبات والمخزون',s:'سير عمل n8n'},{id:'recommendations',n:'توصيات المنتجات بالذكاء الاصطناعي',s:'محرك upsell مخصص'},{id:'pricing',n:'التسعير الديناميكي',s:'تحسين السعر أوتوماتيكي'},{id:'seoai',n:'أتمتة السيو بالذكاء الاصطناعي',s:'محتوى سيو تلقائي'},{id:'returns',n:'أتمتة المرتجعات',s:'مرتجعات واسترداد ذاتي'}]},
+  ]},
+  sa:{dir:'rtl',cls:'rtl',currency:'SAR',navTag:'نقبل عملاء جدد',backCountry:'تغيير الدولة',stepOf:(c,t)=>`الخطوة ${c} من ${t}`,skip:'تخطي',prevTxt:'رجوع',nextTxt:'التالي',submitTxt:'أرسل طلبك',note:'نراجع كل طلب ونرد عليك خلال 24 ساعة بعرض مخصص.',summaryEmpty:'لم تختر أي خدمة بعد',sxTitle:'تم استلام طلبك!',sxMsg:'سنراجع الخدمات التي اخترتها ونتواصل معك خلال 24 ساعة بعرض مناسب.',formEyebrow:'الخطوة الأخيرة',formTitle:'بياناتك وميزانيتك',formSub:'لقد اقتربت من الانتهاء. أخبرنا من أنت وما ميزانيتك.',nameLbl:'اسمك',namePh:'محمد العتيبي',emailLbl:'البريد الإلكتروني',emailPh:'mohammed@brand.com',urlLbl:'Store / Brand URL',urlPh:'https://yourbrand.com',budgetLbl:'ميزانيتك الشهرية',budgetPh:'مثال: 8000',msgLbl:'هل هناك شيء آخر نحتاج معرفته؟',msgPh:'أخبرنا عن متجرك وأهدافك والجدول الزمني...',footer:'© 2025 ec.agency — جميع الحقوق محفوظة',
+  cats:[
+    {eyebrow:'الخطوة الأولى',title:'الموقع والمتجر',sub:'ما الذي تحتاجه لمتجرك الإلكتروني؟',s:[{id:'store',n:'بناء المتجر',s:'Shopify / WooCommerce / Next.js'},{id:'brand',n:'الهوية البصرية',s:'شعار وألوان وخطوط'},{id:'cro',n:'تحسين التحويل والسرعة',s:'تحسين معدل التحويل'},{id:'multilang',n:'إعداد متعدد اللغات',s:'دعم أكثر من دولة ولغة'},{id:'pwa',n:'تطبيق موبايل PWA',s:'تجربة تطبيق على الجوال'},{id:'subscription',n:'إعداد الاشتراكات',s:'فواتير متكررة وعضويات'},{id:'productpage',n:'تصميم صفحات المنتجات',s:'تصاميم عالية التحويل'}]},
+    {eyebrow:'الخطوة الثانية',title:'الإبداع والمحتوى',sub:'ما نوع المحتوى الذي تحتاجه؟',s:[{id:'photo',n:'تصوير المنتجات',s:'إخراج فني وتعديل'},{id:'social',n:'محتوى وسائل التواصل',s:'ريلز ومنشورات وقصص'},{id:'video',n:'فيديو بالذكاء الاصطناعي',s:'فيديوهات عرض المنتجات'},{id:'copy',n:'كتابة المحتوى',s:'صفحات المنتجات والإعلانات'},{id:'packaging',n:'تصميم التغليف',s:'علب وأكياس وملصقات'},{id:'motion',n:'موشن جرافيك',s:'إعلانات وبنرات متحركة'},{id:'ugc',n:'استراتيجية UGC',s:'تخطيط محتوى المستخدمين'},{id:'blog',n:'محتوى المدونة والسيو',s:'مقالات ومحتوى الكلمات المفتاحية'}]},
+    {eyebrow:'الخطوة الثالثة',title:'الإعلانات المدفوعة',sub:'ما القنوات الإعلانية التي تريد تشغيلها؟',s:[{id:'meta',n:'إعلانات ميتا',s:'فيسبوك وإنستغرام'},{id:'google',n:'جوجل شوبينج',s:'Google & Performance Max'},{id:'tiktok',n:'إعلانات تيك توك',s:'حملات الفيديو القصير'},{id:'snap',n:'إعلانات سناب شات',s:'حملات الستوري والفلاتر'},{id:'youtube',n:'إعلانات يوتيوب',s:'إعلانات ما قبل الفيديو'},{id:'pinterest',n:'إعلانات بينتريست',s:'حملات بين المنتجات'},{id:'influencer',n:'حملات المؤثرين',s:'تواصل وإدارة'}]},
+    {eyebrow:'الخطوة الرابعة',title:'البريد والاحتفاظ بالعملاء',sub:'كيف تريد التواصل مع عملائك؟',s:[{id:'flows',n:'أتمتة البريد الإلكتروني',s:'ترحيب وسلة متروكة وما بعد الشراء'},{id:'campaigns',n:'حملات البريد الشهرية',s:'نشرات ترويجية'},{id:'sms',n:'تسويق SMS',s:'حملات الرسائل النصية'},{id:'loyalty',n:'برنامج الولاء',s:'نقاط ومكافآت ومستويات'},{id:'push',n:'إشعارات Push',s:'تنبيهات الويب والجوال'},{id:'reviews',n:'إدارة التقييمات',s:'جمع التقييمات والرد عليها'}]},
+    {eyebrow:'الخطوة الخامسة',title:'الذكاء الاصطناعي والأتمتة',sub:'هل تريد أتمتة عمليات متجرك؟',s:[{id:'chatbot',n:'بوت دعم العملاء',s:'مدرب على منتجاتك'},{id:'n8n',n:'أتمتة الطلبات والمخزون',s:'سير عمل n8n'},{id:'recommendations',n:'توصيات المنتجات بالذكاء الاصطناعي',s:'محرك upsell مخصص'},{id:'pricing',n:'التسعير الديناميكي',s:'تحسين السعر تلقائياً'},{id:'seoai',n:'أتمتة السيو بالذكاء الاصطناعي',s:'محتوى سيو تلقائي'},{id:'returns',n:'أتمتة المرتجعات',s:'مرتجعات واسترداد ذاتي'}]},
+  ]}
+};
+
+let country=null,step=0,selected=new Set();
+const TOTAL=5;
+
+function selectCountry(k){
+  country=k;step=0;selected=new Set();
+  const d=D[k];
+  document.getElementById('picker').style.display='none';
+  document.getElementById('wizard').style.display='block';
+  document.documentElement.lang=k==='us'?'en':'ar';
+  document.documentElement.dir=d.dir;
+  document.getElementById('nav-tag').textContent=d.navTag;
+  document.getElementById('footer-txt').textContent=d.footer;
+  renderStep();window.scrollTo(0,0);
+}
+function goBackCountry(){
+  document.getElementById('wizard').style.display='none';
+  document.getElementById('picker').style.display='flex';
+  document.documentElement.lang='en';document.documentElement.dir='ltr';
+  document.getElementById('nav-tag').textContent='Now accepting clients';
+  document.getElementById('footer-txt').textContent='© 2025 ec.agency — All rights reserved';
+  window.scrollTo(0,0);
+}
+function toggleSvc(id){
+  if(selected.has(id))selected.delete(id);else selected.add(id);
+  document.querySelectorAll('.svc').forEach(el=>{if(el.dataset.id===id)el.classList.toggle('on',selected.has(id));});
+}
+function prevStep(){if(step===0){goBackCountry();return;}step--;renderStep();window.scrollTo(0,0);}
+function nextStep(){step++;renderStep();window.scrollTo(0,0);}
+function submitForm(){
+  const d=D[country];
+  if(!document.getElementById('f-name').value.trim()||!document.getElementById('f-email').value.trim()||!document.getElementById('f-budget').value.trim()){
+    alert(d.dir==='rtl'?'من فضلك أدخل اسمك وبريدك وميزانيتك.':'Please fill in your name, email, and budget.');return;
+  }
+  document.getElementById('form-area').style.display='none';
+  document.getElementById('sx').style.display='block';
+}
+function renderStep(){
+  const d=D[country];
+  const isForm=step===TOTAL;
+  const cat=!isForm?d.cats[step]:null;
+  const dots=Array.from({length:TOTAL+1},(_,i)=>`<div class="dot ${i<step?'done':i===step?'active':''}"></div>`).join('');
+  const selNames=[];
+  d.cats.forEach(c=>c.s.forEach(s=>{if(selected.has(s.id))selNames.push(s.n);}));
+  const summaryHtml=selNames.length?selNames.map(n=>`<span class="s-tag">${n}</span>`).join(''):`<span class="s-empty">${d.summaryEmpty}</span>`;
+
+  let body='';
+  if(!isForm){
+    body=`
+      <div class="step-tag">${cat.eyebrow}</div>
+      <div class="step-h">${cat.title}</div>
+      <div class="step-sub">${cat.sub}</div>
+      <div class="svc-grid">
+        ${cat.s.map(s=>`
+        <div class="svc ${selected.has(s.id)?'on':''}" data-id="${s.id}" onclick="toggleSvc('${s.id}')">
+          <div class="chk"><svg class="tick" width="10" height="10" viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div><div class="svc-name">${s.n}</div><div class="svc-sub">${s.s}</div></div>
+        </div>`).join('')}
+      </div>
+      <div class="wiz-nav">
+        <button class="btn-prev" onclick="prevStep()">${d.prevTxt}</button>
+        <button class="btn-next" onclick="nextStep()">${d.nextTxt}</button>
+        <span class="skip-link" onclick="nextStep()">${d.skip}</span>
+      </div>`;
+  } else {
+    body=`
+      <div class="step-tag">${d.formEyebrow}</div>
+      <div class="step-h">${d.formTitle}</div>
+      <div class="step-sub">${d.formSub}</div>
+      <div class="summary-strip">${summaryHtml}</div>
+      <div id="form-area">
+        <div class="form-row">
+          <div class="field"><label>${d.nameLbl}</label><input type="text" id="f-name" placeholder="${d.namePh}"></div>
+          <div class="field"><label>${d.emailLbl}</label><input type="email" id="f-email" placeholder="${d.emailPh}"></div>
+        </div>
+        <div class="field">
+          <label style="letter-spacing:.07em">${d.urlLbl}</label>
+          <input type="text" id="f-url" placeholder="${d.urlPh}" style="direction:ltr;font-family:'Inter',sans-serif">
+        </div>
+        <div class="field">
+          <label>${d.budgetLbl}</label>
+          <div class="budget-row">
+            <input type="number" id="f-budget" placeholder="${d.budgetPh}" min="0">
+            <div class="currency-box">${d.currency}</div>
+          </div>
+        </div>
+        <div class="field"><label>${d.msgLbl}</label><textarea id="f-msg" placeholder="${d.msgPh}"></textarea></div>
+        <div class="wiz-nav" style="margin-top:1.5rem">
+          <button class="btn-prev" onclick="prevStep()">${d.prevTxt}</button>
+          <button class="btn-next green" onclick="submitForm()" style="max-width:none;flex:2">${d.submitTxt}</button>
+        </div>
+        <p class="form-note">${d.note}</p>
+      </div>
+      <div class="success-box" id="sx">
+        <div class="success-ring"><svg width="26" height="26" viewBox="0 0 26 26" fill="none"><polyline points="5,13 10.5,18.5 21,7" stroke="#1D9E75" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>${d.sxTitle}</h3>
+        <p>${d.sxMsg}</p>
+      </div>`;
+  }
+
+  document.getElementById('wiz-inner').innerHTML=`
+    <div class="${d.cls}">
+      <div class="progress-wrap">
+        <div class="progress-top">
+          <div class="progress-meta">
+            <span class="progress-step">${d.stepOf(step+1,TOTAL+1)}</span>
+            <span class="progress-title-sm">${isForm?d.formTitle:cat.title}</span>
+          </div>
+          <button class="back-btn" onclick="goBackCountry()">${d.backCountry}</button>
+        </div>
+        <div class="dots-row">${dots}</div>
+      </div>
+      ${body}
+    </div>`;
+}
+</script>
+</body>
+</html>
