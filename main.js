@@ -6,7 +6,6 @@ const mobileMenuClose = document.getElementById('mobileMenuClose');
 const langToggle = document.getElementById('langToggle');
 const controlPanel = document.getElementById('controlPanel');
 const controlToggle = document.getElementById('controlToggle');
-const controlContent = document.getElementById('controlContent');
 const html = document.documentElement;
 
 // ─── TRANSLATIONS ─────────────────────────────────────────────────────────────
@@ -75,7 +74,7 @@ let panelOpen = false;
 controlToggle.addEventListener('click', () => {
   if (didDrag) return;
   panelOpen = !panelOpen;
-  controlContent.classList.toggle('open', panelOpen);
+  controlPanel.classList.toggle('open', panelOpen);
 });
 
 let isDragging = false;
