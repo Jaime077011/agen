@@ -67,6 +67,42 @@ body {
   z-index: 1;
 }
 
+/* CUSTOM CURSOR */
+@media (pointer: fine) {
+  * { cursor: none !important; }
+
+  .cursor-dot {
+    position: fixed;
+    top: 0; left: 0;
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s ease, opacity 0.2s;
+  }
+
+  .cursor-ring {
+    position: fixed;
+    top: 0; left: 0;
+    width: 32px; height: 32px;
+    border: 1.5px solid var(--accent);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 9998;
+    opacity: 0.6;
+    transition: width 0.2s ease, height 0.2s ease, opacity 0.2s, border-color 0.2s;
+  }
+
+  a:hover ~ .cursor-ring,
+  button:hover ~ .cursor-ring {
+    width: 44px; height: 44px;
+    opacity: 0.9;
+  }
+}
+
 /* PAGE CONTENT WRAPPER */
 .page-content {
   display: flex;
@@ -75,15 +111,15 @@ body {
   overflow: hidden;
 }
 
-/* Lang switch — circle reveal overlay */
+/* Lang switch — minimal dark fade */
 .lang-overlay {
   position: fixed;
   inset: 0;
   z-index: 400;
-  background: radial-gradient(ellipse at center, #180608 0%, #0d0d0d 70%);
-  clip-path: circle(0% at 50% 50%);
+  background: #0d0d0d;
+  opacity: 0;
   pointer-events: none;
-  will-change: clip-path, opacity;
+  transition: opacity 0.2s ease;
 }
 
 /* NAV */

@@ -70,43 +70,18 @@ function setLanguage(lang) {
   langAnimating = true;
   currentLang = lang;
 
-  // Origin: center of the lang toggle button
-  const rect = langToggle.getBoundingClientRect();
-  const ox = rect.left + rect.width  / 2;
-  const oy = rect.top  + rect.height / 2;
-
-  // ── Phase 1: circle expands from button ──────────────────────────────────
-  langOverlay.style.transition = 'none';
-  langOverlay.style.clipPath   = `circle(0% at ${ox}px ${oy}px)`;
-  langOverlay.style.opacity    = '1';
-  langOverlay.offsetHeight;                                        // force reflow
-
-  langOverlay.style.transition = 'clip-path 0.42s cubic-bezier(0.4, 0, 0.2, 1)';
-  langOverlay.style.clipPath   = `circle(150% at ${ox}px ${oy}px)`;
+  // Fade to dark
+  langOverlay.style.opacity = '1';
 
   setTimeout(() => {
-    // ── Phase 2: swap content while screen is covered ──────────────────────
+    // Swap while hidden
     applyLanguage(lang);
-    pageContent.style.opacity = '0';
 
-    // ── Phase 3: circle contracts from screen center ───────────────────────
-    langOverlay.style.transition = 'clip-path 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
-    langOverlay.style.clipPath   = `circle(0% at 50% 50%)`;
+    // Fade back out
+    langOverlay.style.opacity = '0';
 
-    // Fade content in as circle retreats
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        pageContent.style.transition = 'opacity 0.45s ease 0.08s';
-        pageContent.style.opacity    = '1';
-      });
-    });
-
-    setTimeout(() => {
-      pageContent.style.transition = '';
-      langAnimating = false;
-    }, 560);
-
-  }, 440);
+    setTimeout(() => { langAnimating = false; }, 220);
+  }, 200);
 }
 
 langToggle.addEventListener('click', () => {
@@ -172,32 +147,54 @@ mobileMenuClose.addEventListener('click', closeMenu);
 // ─── ANIMATIONS ───────────────────────────────────────────────────────────────
 setTimeout(() => document.body.classList.add('loaded'), 80);
 
-// ─── CURSOR GLOW ──────────────────────────────────────────────────────────────
-let targetX = window.innerWidth / 2;
-let targetY = window.innerHeight / 2;
+// ─── CURSOR + GLOW ────────────────────────────────────────────────────────────
+const dot  = document.getElementById('cursor-dot');
+const ring = document.getElementById('cursor-ring');
+
+let targetX  = window.innerWidth / 2;
+let targetY  = window.innerHeight / 2;
 let currentX = targetX;
 let currentY = targetY;
+let ringX    = targetX;
+let ringY    = targetY;
+
+function lerp(a, b, t) { return a + (b - a) * t; }
 
 window.addEventListener('mousemove', (e) => {
   targetX = e.clientX;
   targetY = e.clientY;
 
-  const cx = window.innerWidth / 2;
+  // Dot follows instantly
+  if (dot) {
+    dot.style.left = targetX + 'px';
+    dot.style.top  = targetY + 'px';
+  }
+
+  // Background parallax
+  const cx = window.innerWidth  / 2;
   const cy = window.innerHeight / 2;
   const nx = (e.clientX - cx) / cx;
   const ny = (e.clientY - cy) / cy;
-  bg.style.transform = `translate(${nx * -18}px, ${ny * -12}px) scale(1.04)`;
+  bg.style.transform  = `translate(${nx * -18}px, ${ny * -12}px) scale(1.04)`;
   bg.style.transition = 'transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94)';
 });
 
-function lerp(a, b, t) { return a + (b - a) * t; }
-
 function animate() {
+  // Glow follows with lag
   currentX = lerp(currentX, targetX, 0.07);
   currentY = lerp(currentY, targetY, 0.07);
   glow.style.transform = `translate(calc(${currentX}px - 50%), calc(${currentY}px - 50%))`;
   glow.style.left = '0';
-  glow.style.top = '0';
+  glow.style.top  = '0';
+
+  // Ring follows with slightly more lag
+  if (ring) {
+    ringX = lerp(ringX, targetX, 0.14);
+    ringY = lerp(ringY, targetY, 0.14);
+    ring.style.left = ringX + 'px';
+    ring.style.top  = ringY + 'px';
+  }
+
   requestAnimationFrame(animate);
 }
 
