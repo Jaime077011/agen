@@ -6,6 +6,7 @@ const mobileMenuClose = document.getElementById('mobileMenuClose');
 const langToggle = document.getElementById('langToggle');
 const controlPanel = document.getElementById('controlPanel');
 const controlToggle = document.getElementById('controlToggle');
+const pageContent = document.getElementById('pageContent');
 const html = document.documentElement;
 
 // ─── TRANSLATIONS ─────────────────────────────────────────────────────────────
@@ -42,15 +43,12 @@ const translations = {
 
 let currentLang = 'en';
 
-function setLanguage(lang) {
-  currentLang = lang;
+function applyLanguage(lang) {
   const t = translations[lang];
-
   document.querySelectorAll('[data-key]').forEach(el => {
     const key = el.getAttribute('data-key');
     if (t[key] !== undefined) el.textContent = t[key];
   });
-
   if (lang === 'ar') {
     html.setAttribute('lang', 'ar');
     html.setAttribute('dir', 'rtl');
@@ -62,6 +60,27 @@ function setLanguage(lang) {
     document.body.classList.remove('ar');
     langToggle.textContent = 'AR';
   }
+}
+
+function setLanguage(lang) {
+  const goingAR = lang === 'ar';
+  currentLang = lang;
+
+  // 1. Exit — slide toward the new reading direction
+  pageContent.classList.add(goingAR ? 'lang-exit-ltr' : 'lang-exit-rtl');
+
+  setTimeout(() => {
+    // 2. Swap content while hidden
+    applyLanguage(lang);
+
+    // 3. Enter
+    pageContent.classList.remove('lang-exit-ltr', 'lang-exit-rtl');
+    pageContent.classList.add('lang-enter');
+
+    pageContent.addEventListener('animationend', () => {
+      pageContent.classList.remove('lang-enter');
+    }, { once: true });
+  }, 280);
 }
 
 langToggle.addEventListener('click', () => {
