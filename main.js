@@ -218,16 +218,27 @@ if (marqueeInner) {
   marqueeInner.innerHTML += marqueeInner.innerHTML;
 }
 
-// ─── PAIN SECTION — scroll reveal ─────────────────────────────────────────
+// ─── PAIN SECTION — sticky scroll phases ──────────────────────────────────
+const painWrapper = document.getElementById('painWrapper');
 const painSection = document.getElementById('painSection');
-if (painSection) {
-  const painObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('in-view');
-        painObserver.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.15 });
-  painObserver.observe(painSection);
+
+const PAIN_PHASES = [
+  { threshold: 0.12, cls: 'phase-hook'    },
+  { threshold: 0.30, cls: 'phase-truth-1' },
+  { threshold: 0.45, cls: 'phase-truth-2' },
+  { threshold: 0.60, cls: 'phase-truth-3' },
+  { threshold: 0.72, cls: 'phase-pivot'   },
+  { threshold: 0.84, cls: 'phase-cta'     },
+];
+
+function updatePainPhases() {
+  if (!painWrapper || !painSection || window.innerWidth <= 768) return;
+  const rect  = painWrapper.getBoundingClientRect();
+  const total = painWrapper.offsetHeight - window.innerHeight;
+  const p     = Math.max(0, Math.min(1, -rect.top / total));
+  PAIN_PHASES.forEach(({ threshold, cls }) => {
+    painSection.classList.toggle(cls, p >= threshold);
+  });
 }
+
+window.addEventListener('scroll', updatePainPhases, { passive: true });
