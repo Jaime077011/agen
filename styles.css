@@ -77,29 +77,50 @@ body {
   padding: 22px 48px;
 }
 
-.nav-actions {
+/* FLOATING CONTROL PANEL */
+.control-panel {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  z-index: 100;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 20px;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 10px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
-.lang-toggle {
+.control-btn {
   background: none;
-  border: 1px solid rgba(255,255,255,0.3);
-  color: var(--white);
-  font-size: 0.75rem;
+  border: none;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.8rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  padding: 5px 12px;
-  border-radius: 6px;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: border-color 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
   font-family: 'Cairo', 'Montserrat', sans-serif;
 }
 
-.lang-toggle:hover {
-  border-color: var(--accent);
-  color: var(--accent);
+.control-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--white);
+}
+
+.control-btn.active {
+  background: var(--accent);
+  color: var(--white);
 }
 
 /* Logo — PNG is 3840×2160 with content centered; clip to 150×49 */
@@ -510,6 +531,11 @@ body.ar .bottom-title {
 
 body.ar .bottom-right {
   text-align: left;
+}
+
+body.ar .control-panel {
+  right: auto;
+  left: 32px;
 }
 
 /* ANIMATIONS */
