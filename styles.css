@@ -80,7 +80,7 @@ body {
 /* FLOATING CONTROL PANEL */
 .control-panel {
   position: fixed;
-  bottom: 32px;
+  bottom: 48px;
   right: 32px;
   z-index: 100;
   width: 52px;
@@ -156,17 +156,17 @@ body {
 .arc-item:nth-child(1) { transition-delay: 0.05s; }
 .arc-item:nth-child(2) { transition-delay: 0.0s; }
 
-/* Open state — arc out in semicircle upward */
+/* Open state — arc out in semicircle to the left */
 .control-panel.open .arc-item:nth-child(1) {
-  /* AR: 120° — upper-left */
-  transform: translate(calc(4px - 35px), calc(4px - 62px)) scale(1);
+  /* AR: upper-left */
+  transform: translate(calc(4px - 68px), calc(4px - 38px)) scale(1);
   opacity: 1;
   pointer-events: all;
 }
 
 .control-panel.open .arc-item:nth-child(2) {
-  /* WhatsApp: 60° — upper-right */
-  transform: translate(calc(4px + 35px), calc(4px - 62px)) scale(1);
+  /* WhatsApp: lower-left */
+  transform: translate(calc(4px - 68px), calc(4px + 38px)) scale(1);
   opacity: 1;
   pointer-events: all;
 }
