@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Archetypers</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;900&family=Cairo:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -28,54 +28,57 @@
       </div>
     </a>
     <ul class="nav-links">
-      <li><a href="#">ARCHETYPERS</a></li>
-      <li><a href="#">SERVICES</a></li>
-      <li><a href="#">PROJECTS</a></li>
-      <li><a href="#">CONTACT</a></li>
+      <li><a href="#" data-key="nav1">ARCHETYPERS</a></li>
+      <li><a href="#" data-key="nav2">SERVICES</a></li>
+      <li><a href="#" data-key="nav3">PROJECTS</a></li>
+      <li><a href="#" data-key="nav4">CONTACT</a></li>
     </ul>
-    <button class="hamburger" id="hamburger" aria-label="Open menu">
-      <span></span><span></span><span></span>
-    </button>
+    <div class="nav-actions">
+      <button class="lang-toggle" id="langToggle">ع</button>
+      <button class="hamburger" id="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
   </nav>
 
   <!-- MOBILE MENU -->
   <div class="mobile-menu" id="mobileMenu">
     <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Close menu">✕</button>
     <ul>
-      <li><a href="#" onclick="closeMenu()">ARCHETYPERS</a></li>
-      <li><a href="#" onclick="closeMenu()">SERVICES</a></li>
-      <li><a href="#" onclick="closeMenu()">PROJECTS</a></li>
-      <li><a href="#" onclick="closeMenu()">CONTACT</a></li>
+      <li><a href="#" data-key="nav1" onclick="closeMenu()">ARCHETYPERS</a></li>
+      <li><a href="#" data-key="nav2" onclick="closeMenu()">SERVICES</a></li>
+      <li><a href="#" data-key="nav3" onclick="closeMenu()">PROJECTS</a></li>
+      <li><a href="#" data-key="nav4" onclick="closeMenu()">CONTACT</a></li>
     </ul>
   </div>
 
   <!-- HERO -->
   <section class="hero">
     <div class="hero-script-wrap anim-up" style="--delay:200ms">
-      <span class="hero-script">Finally</span>
+      <span class="hero-script" data-key="heroScript">Finally</span>
     </div>
     <div class="hero-headline-wrap anim-up" style="--delay:350ms">
-      <h1 class="hero-headline">built right.</h1>
+      <h1 class="hero-headline" data-key="heroHeadline">built right.</h1>
     </div>
     <div class="hero-tagline-wrap anim-up" style="--delay:480ms">
-      <p class="hero-tagline">Strategy, design, and growth — built as one system.</p>
+      <p class="hero-tagline" data-key="heroTagline">Strategy, design, and growth — built as one system.</p>
     </div>
     <div class="hero-cta-wrap anim-up" style="--delay:550ms">
-      <a href="#" class="hero-cta">LET'S SEE WHAT'S POSSIBLE</a>
-      <p class="hero-cta-note">Free call. Honest answers. Zero pressure.</p>
+      <a href="#" class="hero-cta" data-key="heroCta">LET'S SEE WHAT'S POSSIBLE</a>
+      <p class="hero-cta-note" data-key="heroNote">Free call. Honest answers. Zero pressure.</p>
     </div>
   </section>
 
   <!-- BOTTOM ROW -->
   <div class="bottom-row anim-fade" style="--delay:800ms">
     <div class="bottom-left">
-      <p>Rooted in Egypt and built for ambitious businesses, The Archetypers shapes brand
+      <p data-key="bottomLeft">Rooted in Egypt and built for ambitious businesses, The Archetypers shapes brand
       strategy, visual identity, and digital experiences that help companies stand out, earn
       trust, and grow with purpose.</p>
     </div>
     <div class="bottom-right">
-      <p class="bottom-title">DESIGNED FOR GROWTH</p>
-      <p>Our work goes beyond aesthetics. We build websites,
+      <p class="bottom-title" data-key="bottomRightTitle">DESIGNED FOR GROWTH</p>
+      <p data-key="bottomRight">Our work goes beyond aesthetics. We build websites,
       stores, and digital systems that support credibility,
       conversion, and long-term business growth.</p>
     </div>

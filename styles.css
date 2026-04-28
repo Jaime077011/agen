@@ -77,6 +77,31 @@ body {
   padding: 22px 48px;
 }
 
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.lang-toggle {
+  background: none;
+  border: 1px solid rgba(255,255,255,0.3);
+  color: var(--white);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+  font-family: 'Cairo', 'Montserrat', sans-serif;
+}
+
+.lang-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 /* Logo — PNG is 3840×2160 with content centered; clip to 150×49 */
 .nav-logo {
   text-decoration: none;
@@ -451,6 +476,40 @@ body {
     font-size: 0.55rem;
     letter-spacing: 0.06em;
   }
+}
+
+/* ARABIC / RTL */
+body.ar {
+  font-family: 'Cairo', sans-serif;
+}
+
+body.ar .hero-script {
+  font-family: 'Cairo', sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: 0;
+}
+
+body.ar .hero-headline {
+  font-family: 'Cairo', sans-serif;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+body.ar .hero-tagline,
+body.ar .hero-cta,
+body.ar .hero-cta-note,
+body.ar .nav-links a,
+body.ar .mobile-menu ul a,
+body.ar .bottom-left p,
+body.ar .bottom-right p,
+body.ar .bottom-title {
+  font-family: 'Cairo', sans-serif;
+  letter-spacing: 0;
+}
+
+body.ar .bottom-right {
+  text-align: left;
 }
 
 /* ANIMATIONS */

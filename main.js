@@ -3,21 +3,82 @@ const glow = document.getElementById('glow');
 const hamburger = document.getElementById('hamburger');
 const mobileMenu = document.getElementById('mobileMenu');
 const mobileMenuClose = document.getElementById('mobileMenuClose');
+const langToggle = document.getElementById('langToggle');
+const html = document.documentElement;
 
+// ─── TRANSLATIONS ─────────────────────────────────────────────────────────────
+const translations = {
+  en: {
+    nav1: 'ARCHETYPERS',
+    nav2: 'SERVICES',
+    nav3: 'PROJECTS',
+    nav4: 'CONTACT',
+    heroScript: 'Finally',
+    heroHeadline: 'built right.',
+    heroTagline: 'Strategy, design, and growth — built as one system.',
+    heroCta: "LET'S SEE WHAT'S POSSIBLE",
+    heroNote: 'Free call. Honest answers. Zero pressure.',
+    bottomLeft: 'Rooted in Egypt and built for ambitious businesses, The Archetypers shapes brand strategy, visual identity, and digital experiences that help companies stand out, earn trust, and grow with purpose.',
+    bottomRightTitle: 'DESIGNED FOR GROWTH',
+    bottomRight: 'Our work goes beyond aesthetics. We build websites, stores, and digital systems that support credibility, conversion, and long-term business growth.',
+  },
+  ar: {
+    nav1: 'أركيتايبرز',
+    nav2: 'خدماتنا',
+    nav3: 'مشاريعنا',
+    nav4: 'تواصل معنا',
+    heroScript: 'أخيراً',
+    heroHeadline: 'هوية مبنية بشكل صحيح.',
+    heroTagline: 'الاستراتيجية والتصميم والنمو — منظومة واحدة متكاملة.',
+    heroCta: 'لنرَ ما هو ممكن',
+    heroNote: 'مكالمة مجانية. إجابات صريحة. بدون ضغط.',
+    bottomLeft: 'متجذرون في مصر وبُنينا لخدمة الأعمال الطموحة. نحن في أركيتايبرز نُشكّل استراتيجية العلامة التجارية والهوية البصرية والتجارب الرقمية التي تساعد الشركات على التميز وكسب الثقة والنمو بهدف.',
+    bottomRightTitle: 'مصمم للنمو',
+    bottomRight: 'عملنا يتجاوز الجماليات. نبني مواقع ومتاجر وأنظمة رقمية تدعم المصداقية والتحويل والنمو التجاري على المدى الطويل.',
+  }
+};
+
+let currentLang = 'en';
+
+function setLanguage(lang) {
+  currentLang = lang;
+  const t = translations[lang];
+
+  document.querySelectorAll('[data-key]').forEach(el => {
+    const key = el.getAttribute('data-key');
+    if (t[key] !== undefined) el.textContent = t[key];
+  });
+
+  if (lang === 'ar') {
+    html.setAttribute('lang', 'ar');
+    html.setAttribute('dir', 'rtl');
+    document.body.classList.add('ar');
+    langToggle.textContent = 'EN';
+  } else {
+    html.setAttribute('lang', 'en');
+    html.setAttribute('dir', 'ltr');
+    document.body.classList.remove('ar');
+    langToggle.textContent = 'ع';
+  }
+}
+
+langToggle.addEventListener('click', () => {
+  setLanguage(currentLang === 'en' ? 'ar' : 'en');
+});
+
+// ─── MOBILE MENU ──────────────────────────────────────────────────────────────
 function openMenu() { mobileMenu.classList.add('open'); }
 function closeMenu() { mobileMenu.classList.remove('open'); }
 
 hamburger.addEventListener('click', openMenu);
 mobileMenuClose.addEventListener('click', closeMenu);
 
-// Trigger entrance animations
+// ─── ANIMATIONS ───────────────────────────────────────────────────────────────
 setTimeout(() => document.body.classList.add('loaded'), 80);
 
-// Target position (cursor)
+// ─── CURSOR GLOW ──────────────────────────────────────────────────────────────
 let targetX = window.innerWidth / 2;
 let targetY = window.innerHeight / 2;
-
-// Current position (lerped)
 let currentX = targetX;
 let currentY = targetY;
 
@@ -25,7 +86,6 @@ window.addEventListener('mousemove', (e) => {
   targetX = e.clientX;
   targetY = e.clientY;
 
-  // Background parallax
   const cx = window.innerWidth / 2;
   const cy = window.innerHeight / 2;
   const nx = (e.clientX - cx) / cx;
@@ -34,17 +94,14 @@ window.addEventListener('mousemove', (e) => {
   bg.style.transition = 'transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94)';
 });
 
-// Smooth glow follow via lerp
 function lerp(a, b, t) { return a + (b - a) * t; }
 
 function animate() {
   currentX = lerp(currentX, targetX, 0.07);
   currentY = lerp(currentY, targetY, 0.07);
-
   glow.style.transform = `translate(calc(${currentX}px - 50%), calc(${currentY}px - 50%))`;
   glow.style.left = '0';
   glow.style.top = '0';
-
   requestAnimationFrame(animate);
 }
 
