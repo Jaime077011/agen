@@ -17,14 +17,14 @@
 
 html {
   height: 100%;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
   width: 100%;
   max-width: 100vw;
   min-height: 100vh;
-  overflow-x: hidden;
+  overflow-x: clip;
   background: var(--bg);
   color: var(--white);
   font-family: 'Montserrat', sans-serif;
@@ -504,7 +504,7 @@ body {
   body {
     height: auto;
     min-height: 100dvh;
-    overflow-x: hidden;
+    overflow-x: clip;
     overflow-y: auto;
   }
 
@@ -723,6 +723,7 @@ body.loaded .anim-fade {
 /* ─── PAIN SECTION ────────────────────────────────────────────────────────── */
 .pain-scroll-wrapper {
   position: relative;
+  z-index: 10;
   height: 500vh;
 }
 
