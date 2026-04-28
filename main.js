@@ -4,6 +4,9 @@ const hamburger = document.getElementById('hamburger');
 const mobileMenu = document.getElementById('mobileMenu');
 const mobileMenuClose = document.getElementById('mobileMenuClose');
 const langToggle = document.getElementById('langToggle');
+const controlPanel = document.getElementById('controlPanel');
+const controlToggle = document.getElementById('controlToggle');
+const controlContent = document.getElementById('controlContent');
 const html = document.documentElement;
 
 // ─── TRANSLATIONS ─────────────────────────────────────────────────────────────
@@ -58,13 +61,61 @@ function setLanguage(lang) {
     html.setAttribute('lang', 'en');
     html.setAttribute('dir', 'ltr');
     document.body.classList.remove('ar');
-    langToggle.textContent = 'ع';
+    langToggle.textContent = 'AR';
   }
 }
 
 langToggle.addEventListener('click', () => {
   setLanguage(currentLang === 'en' ? 'ar' : 'en');
 });
+
+// ─── FLOATING PANEL — TOGGLE & DRAG ──────────────────────────────────────────
+let panelOpen = false;
+
+controlToggle.addEventListener('click', () => {
+  if (didDrag) return;
+  panelOpen = !panelOpen;
+  controlContent.classList.toggle('open', panelOpen);
+});
+
+let isDragging = false;
+let didDrag = false;
+let dragStartX, dragStartY, panelStartX, panelStartY;
+
+controlToggle.addEventListener('mousedown', startDrag);
+controlToggle.addEventListener('touchstart', startDrag, { passive: true });
+
+function startDrag(e) {
+  const touch = e.touches ? e.touches[0] : e;
+  dragStartX = touch.clientX;
+  dragStartY = touch.clientY;
+  const rect = controlPanel.getBoundingClientRect();
+  panelStartX = rect.left;
+  panelStartY = rect.top;
+  isDragging = true;
+  didDrag = false;
+  controlPanel.style.right = 'auto';
+  controlPanel.style.bottom = 'auto';
+  controlPanel.style.left = panelStartX + 'px';
+  controlPanel.style.top = panelStartY + 'px';
+}
+
+document.addEventListener('mousemove', onDrag);
+document.addEventListener('touchmove', onDrag, { passive: true });
+
+function onDrag(e) {
+  if (!isDragging) return;
+  const touch = e.touches ? e.touches[0] : e;
+  const dx = touch.clientX - dragStartX;
+  const dy = touch.clientY - dragStartY;
+  if (Math.abs(dx) > 4 || Math.abs(dy) > 4) didDrag = true;
+  if (!didDrag) return;
+  controlPanel.style.left = (panelStartX + dx) + 'px';
+  controlPanel.style.top = (panelStartY + dy) + 'px';
+}
+
+document.addEventListener('mouseup', () => { isDragging = false; });
+document.addEventListener('touchend', () => { isDragging = false; });
 
 // ─── MOBILE MENU ──────────────────────────────────────────────────────────────
 function openMenu() { mobileMenu.classList.add('open'); }

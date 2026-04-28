@@ -83,7 +83,19 @@
 
   <!-- FLOATING CONTROL PANEL -->
   <div class="control-panel" id="controlPanel">
-    <button class="control-btn lang-toggle" id="langToggle" title="Switch language">ع</button>
+    <div class="control-content" id="controlContent">
+      <button class="control-item" id="langToggle">AR</button>
+    </div>
+    <button class="control-toggle" id="controlToggle" aria-label="Toggle panel">
+      <svg width="18" height="14" viewBox="0 0 18 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="0" y1="1" x2="18" y2="1" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="0" y1="7" x2="18" y2="7" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="0" y1="13" x2="18" y2="13" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="5" cy="1" r="2.5" fill="white"/>
+        <circle cx="13" cy="7" r="2.5" fill="white"/>
+        <circle cx="7" cy="13" r="2.5" fill="white"/>
+      </svg>
+    </button>
   </div>
 
   <script src="main.js"></script>
