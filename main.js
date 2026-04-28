@@ -1,5 +1,14 @@
 const bg = document.getElementById('bg');
 const glow = document.getElementById('glow');
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+const mobileMenuClose = document.getElementById('mobileMenuClose');
+
+function openMenu() { mobileMenu.classList.add('open'); }
+function closeMenu() { mobileMenu.classList.remove('open'); }
+
+hamburger.addEventListener('click', openMenu);
+mobileMenuClose.addEventListener('click', closeMenu);
 
 // Trigger entrance animations
 setTimeout(() => document.body.classList.add('loaded'), 80);
