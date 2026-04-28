@@ -106,8 +106,9 @@ body {
 /* FLOATING CONTROL PANEL */
 .control-panel {
   position: fixed;
-  bottom: 48px;
+  top: 50%;
   right: 32px;
+  transform: translateY(-50%);
   z-index: 100;
   width: 52px;
   height: 52px;
@@ -615,13 +616,9 @@ body.ar .bottom-right {
   text-align: left;
 }
 
-body.ar .control-panel {
+body.ar .control-panel:not([style*="left"]) {
   right: auto;
   left: 32px;
-}
-
-body.ar .control-panel[style*="left"] {
-  right: auto;
 }
 
 /* ANIMATIONS */

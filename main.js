@@ -114,6 +114,7 @@ function startDrag(e) {
   didDrag = false;
   controlPanel.style.right = 'auto';
   controlPanel.style.bottom = 'auto';
+  controlPanel.style.transform = 'none';
   controlPanel.style.left = panelStartX + 'px';
   controlPanel.style.top = panelStartY + 'px';
 }
