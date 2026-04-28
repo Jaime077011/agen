@@ -724,7 +724,7 @@ body.loaded .anim-fade {
 .pain-scroll-wrapper {
   position: relative;
   z-index: 10;
-  height: 500vh;
+  height: 350vh;
 }
 
 .pain-section {

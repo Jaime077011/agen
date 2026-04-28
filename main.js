@@ -222,12 +222,22 @@ if (marqueeInner) {
 const painWrapper = document.getElementById('painWrapper');
 const painSection = document.getElementById('painSection');
 
+// Hook fires immediately when section enters viewport
+if (painSection) {
+  new IntersectionObserver((entries, obs) => {
+    if (entries[0].isIntersecting) {
+      painSection.classList.add('phase-hook');
+      obs.disconnect();
+    }
+  }, { threshold: 0.05 }).observe(painSection);
+}
+
+// Truths + pivot + CTA are scroll-driven
 const PAIN_PHASES = [
-  { threshold: 0.12, cls: 'phase-hook'    },
-  { threshold: 0.30, cls: 'phase-truth-1' },
-  { threshold: 0.45, cls: 'phase-truth-2' },
-  { threshold: 0.60, cls: 'phase-truth-3' },
-  { threshold: 0.72, cls: 'phase-pivot'   },
+  { threshold: 0.20, cls: 'phase-truth-1' },
+  { threshold: 0.38, cls: 'phase-truth-2' },
+  { threshold: 0.56, cls: 'phase-truth-3' },
+  { threshold: 0.70, cls: 'phase-pivot'   },
   { threshold: 0.84, cls: 'phase-cta'     },
 ];
 
