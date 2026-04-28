@@ -75,23 +75,16 @@ body {
   overflow: hidden;
 }
 
-/* Lang switch transition */
-@keyframes langExitLTR {
-  from { opacity: 1; transform: translateX(0) scale(1); filter: blur(0px); }
-  to   { opacity: 0; transform: translateX(-48px) scale(0.97); filter: blur(6px); }
+/* Lang switch — circle reveal overlay */
+.lang-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  background: radial-gradient(ellipse at center, #180608 0%, #0d0d0d 70%);
+  clip-path: circle(0% at 50% 50%);
+  pointer-events: none;
+  will-change: clip-path, opacity;
 }
-@keyframes langExitRTL {
-  from { opacity: 1; transform: translateX(0) scale(1); filter: blur(0px); }
-  to   { opacity: 0; transform: translateX(48px) scale(0.97); filter: blur(6px); }
-}
-@keyframes langEnter {
-  from { opacity: 0; transform: translateX(0) scale(0.97); filter: blur(6px); }
-  to   { opacity: 1; transform: translateX(0) scale(1); filter: blur(0px); }
-}
-
-.page-content.lang-exit-ltr { animation: langExitLTR 0.28s cubic-bezier(0.4,0,1,1) forwards; }
-.page-content.lang-exit-rtl { animation: langExitRTL 0.28s cubic-bezier(0.4,0,1,1) forwards; }
-.page-content.lang-enter     { animation: langEnter   0.38s cubic-bezier(0,0,0.2,1) forwards; }
 
 /* NAV */
 .nav {

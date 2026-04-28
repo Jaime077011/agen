@@ -7,6 +7,7 @@ const langToggle = document.getElementById('langToggle');
 const controlPanel = document.getElementById('controlPanel');
 const controlToggle = document.getElementById('controlToggle');
 const pageContent = document.getElementById('pageContent');
+const langOverlay = document.getElementById('langOverlay');
 const html = document.documentElement;
 
 // ─── TRANSLATIONS ─────────────────────────────────────────────────────────────
@@ -62,25 +63,50 @@ function applyLanguage(lang) {
   }
 }
 
+let langAnimating = false;
+
 function setLanguage(lang) {
-  const goingAR = lang === 'ar';
+  if (langAnimating) return;
+  langAnimating = true;
   currentLang = lang;
 
-  // 1. Exit — slide toward the new reading direction
-  pageContent.classList.add(goingAR ? 'lang-exit-ltr' : 'lang-exit-rtl');
+  // Origin: center of the lang toggle button
+  const rect = langToggle.getBoundingClientRect();
+  const ox = rect.left + rect.width  / 2;
+  const oy = rect.top  + rect.height / 2;
+
+  // ── Phase 1: circle expands from button ──────────────────────────────────
+  langOverlay.style.transition = 'none';
+  langOverlay.style.clipPath   = `circle(0% at ${ox}px ${oy}px)`;
+  langOverlay.style.opacity    = '1';
+  langOverlay.offsetHeight;                                        // force reflow
+
+  langOverlay.style.transition = 'clip-path 0.42s cubic-bezier(0.4, 0, 0.2, 1)';
+  langOverlay.style.clipPath   = `circle(150% at ${ox}px ${oy}px)`;
 
   setTimeout(() => {
-    // 2. Swap content while hidden
+    // ── Phase 2: swap content while screen is covered ──────────────────────
     applyLanguage(lang);
+    pageContent.style.opacity = '0';
 
-    // 3. Enter
-    pageContent.classList.remove('lang-exit-ltr', 'lang-exit-rtl');
-    pageContent.classList.add('lang-enter');
+    // ── Phase 3: circle contracts from screen center ───────────────────────
+    langOverlay.style.transition = 'clip-path 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+    langOverlay.style.clipPath   = `circle(0% at 50% 50%)`;
 
-    pageContent.addEventListener('animationend', () => {
-      pageContent.classList.remove('lang-enter');
-    }, { once: true });
-  }, 280);
+    // Fade content in as circle retreats
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        pageContent.style.transition = 'opacity 0.45s ease 0.08s';
+        pageContent.style.opacity    = '1';
+      });
+    });
+
+    setTimeout(() => {
+      pageContent.style.transition = '';
+      langAnimating = false;
+    }, 560);
+
+  }, 440);
 }
 
 langToggle.addEventListener('click', () => {
