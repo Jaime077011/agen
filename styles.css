@@ -732,7 +732,7 @@ body.loaded .anim-fade {
   top: 0;
   height: 100vh;
   z-index: 10;
-  background: #0d0d0d;
+  background: transparent;
   color: var(--white);
   display: flex;
   flex-direction: column;
@@ -766,7 +766,8 @@ body.loaded .anim-fade {
   font-size: clamp(1.5rem, 2.4vw, 2.6rem);
   font-weight: 800;
   line-height: 1.25;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
   color: var(--white);
   opacity: 0;
   transform: translateX(-60px);
