@@ -25,6 +25,12 @@ const translations = {
     bottomLeft: 'Rooted in Egypt and built for ambitious businesses, The Archetypers shapes brand strategy, visual identity, and digital experiences that help companies stand out, earn trust, and grow with purpose.',
     bottomRightTitle: 'DESIGNED FOR GROWTH',
     bottomRight: 'Our work goes beyond aesthetics. We build websites, stores, and digital systems that support credibility, conversion, and long-term business growth.',
+    painHook: "You're not behind because you're not working hard enough.",
+    painTruth1: "Your brand looks like 5 different businesses.",
+    painTruth2: "A competitor is winning your clients — not because they're better, but because they look it.",
+    painTruth3: "You've tried the obvious fixes. New logo. New website. Still the same results.",
+    painPivot: "That's not an effort problem. That's a brand problem. And it's exactly what we fix.",
+    painCta: "See how we think about this →",
   },
   ar: {
     nav1: 'أركيتايبرز',
@@ -39,6 +45,12 @@ const translations = {
     bottomLeft: 'متجذرون في مصر وبُنينا لخدمة الأعمال الطموحة. نحن في أركيتايبرز نُشكّل استراتيجية العلامة التجارية والهوية البصرية والتجارب الرقمية التي تساعد الشركات على التميز وكسب الثقة والنمو بهدف.',
     bottomRightTitle: 'مصمم للنمو',
     bottomRight: 'عملنا يتجاوز الجماليات. نبني مواقع ومتاجر وأنظمة رقمية تدعم المصداقية والتحويل والنمو التجاري على المدى الطويل.',
+    painHook: 'أنت لست متأخراً لأنك لا تبذل جهداً كافياً.',
+    painTruth1: 'علامتك التجارية تبدو كخمسة أعمال مختلفة.',
+    painTruth2: 'منافس يفوز بعملائك — ليس لأنه أفضل، بل لأنه يبدو أفضل.',
+    painTruth3: 'جربت الحلول الواضحة. شعار جديد. موقع جديد. نفس النتائج.',
+    painPivot: 'هذه ليست مشكلة جهد. هذه مشكلة هوية تجارية. وهذا بالضبط ما نصلحه.',
+    painCta: 'اكتشف كيف نفكر في هذا ←',
   }
 };
 
@@ -199,3 +211,23 @@ function animate() {
 }
 
 animate();
+
+// ─── MARQUEE — duplicate content for seamless loop ────────────────────────
+const marqueeInner = document.getElementById('marqueeInner');
+if (marqueeInner) {
+  marqueeInner.innerHTML += marqueeInner.innerHTML;
+}
+
+// ─── PAIN SECTION — scroll reveal ─────────────────────────────────────────
+const painSection = document.getElementById('painSection');
+if (painSection) {
+  const painObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        painObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  painObserver.observe(painSection);
+}
