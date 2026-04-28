@@ -769,14 +769,8 @@ body.loaded .anim-fade {
   letter-spacing: 0.01em;
   text-transform: uppercase;
   color: var(--white);
-  opacity: 0;
-  transform: translateX(-60px);
-  transition: opacity 0.9s ease, transform 0.9s ease;
-}
-
-.pain-section.phase-hook .pain-hook {
-  opacity: 1;
-  transform: translateX(0);
+  opacity: var(--hook-p, 0);
+  transform: translateX(calc(-50px * (1 - var(--hook-p, 0))));
 }
 
 .pain-truths-col {
@@ -886,10 +880,8 @@ body.loaded .anim-fade {
 body.ar .pain-hook {
   font-family: 'Cairo', sans-serif;
   letter-spacing: 0;
-  transform: translateX(60px);
+  transform: translateX(calc(50px * (1 - var(--hook-p, 0))));
 }
-
-body.ar .pain-section.phase-hook .pain-hook { transform: translateX(0); }
 
 body.ar .pain-truth {
   font-family: 'Cairo', sans-serif;
