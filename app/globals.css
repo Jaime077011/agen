@@ -2073,7 +2073,6 @@ body.ar .pain-link {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
 }
 
 .srv-hero-nav {
@@ -2084,29 +2083,20 @@ body.ar .pain-link {
   z-index: 200;
 }
 
-.srv-hero-body {
+/* Centered block — grows to fill space between nav and bottom strip */
+.srv-hero-center {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0 60px;
-  padding-top: 80px;
-}
-
-.srv-hero-kicker {
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.32em;
-  color: var(--accent);
-  text-transform: uppercase;
-  opacity: 0;
-  margin-bottom: 28px;
+  padding: 80px 60px 0;
+  gap: 28px;
 }
 
 .srv-hero-headline {
   font-family: var(--font-montserrat), sans-serif;
-  font-size: clamp(5rem, 16vw, 14rem);
+  font-size: clamp(4.5rem, 14vw, 13rem);
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: -0.03em;
@@ -2115,19 +2105,72 @@ body.ar .pain-link {
   line-height: 0.88;
   color: var(--white);
   text-align: center;
-  text-shadow: 0 2px 60px rgba(0,0,0,0.5);
+  text-shadow: 0 2px 60px rgba(0, 0, 0, 0.4);
   opacity: 0;
+  margin: 0;
 }
 
-.srv-hero-sub {
+.srv-hero-tagline {
   font-size: 0.68rem;
   font-weight: 500;
   letter-spacing: 0.24em;
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.35);
   text-transform: uppercase;
   text-align: center;
-  margin-top: 36px;
   opacity: 0;
+  margin: 0;
+}
+
+/* Bottom strip — mirrors the home hero's bottom-row */
+.srv-hero-bottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 20px 52px 36px;
+  opacity: 0;
+  flex-shrink: 0;
+}
+
+.srv-hero-desc {
+  font-size: 0.74rem;
+  font-weight: 400;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.45);
+  max-width: 340px;
+  margin: 0;
+}
+
+.srv-hero-link {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  text-decoration: none;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+  align-self: flex-end;
+}
+
+.srv-hero-link:hover { opacity: 0.7; }
+
+.srv-hero-link-arrow {
+  display: inline-block;
+  transition: transform 0.2s;
+}
+
+.srv-hero-link:hover .srv-hero-link-arrow { transform: translateX(4px); }
+
+/* Scroll indicator */
+.srv-hero-scroll {
+  position: absolute;
+  bottom: 2.2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--accent);
+  opacity: 0;
+  animation: arrow-bounce 1.6s ease-in-out infinite;
+  animation-play-state: paused;
 }
 
 /* ── Service section ────────────────────────────────────────────────────── */
@@ -2355,13 +2398,25 @@ body.ar .pain-link {
 
 /* ── Mobile overrides ───────────────────────────────────────────────────── */
 @media (max-width: 768px) {
-  .srv-hero-body {
-    padding: 0 24px;
-    padding-top: 80px;
+  .srv-hero-center {
+    padding: 80px 24px 0;
+    gap: 20px;
   }
 
   .srv-hero-headline {
-    font-size: clamp(4rem, 18vw, 7rem);
+    font-size: clamp(3.2rem, 14vw, 6rem);
+  }
+
+  .srv-hero-tagline {
+    letter-spacing: 0.12em;
+    font-size: 0.6rem;
+  }
+
+  .srv-hero-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px 24px 28px;
   }
 
   .srv-section { height: auto; }
