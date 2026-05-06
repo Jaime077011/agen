@@ -105,12 +105,12 @@ export function ProjectsSection() {
           '<+0.05');
 
         // Hold
-        tl.to({}, { duration: 1.5 });
+        tl.to({}, { duration: 2.5 });
 
-        // Exit
+        // Exit — chars blur out fully, then wrapper fades
         tl.to(mChars,
           { opacity: 0, filter: 'blur(12px)', stagger: 0.07, duration: 0.8, ease: 'power2.in' });
-        tl.to(momentRef.current, { opacity: 0, duration: 0.01 }, '<+1.4');
+        tl.to(momentRef.current, { opacity: 0, duration: 0.3 }, '>-0.1');
 
       }, sectionRef);
     })();

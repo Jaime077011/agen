@@ -86,15 +86,17 @@ void main(){
 }
 `;
 
-// Red palette: 15 shades from near-black → accent red (#c41230 = 0.769, 0.071, 0.188)
-const HUE_TB = (() => {
+function buildHueTb(hex: string): Float32Array {
+  const r = parseInt(hex.slice(1, 3), 16) / 255;
+  const g = parseInt(hex.slice(3, 5), 16) / 255;
+  const b = parseInt(hex.slice(5, 7), 16) / 255;
   const out: number[] = [];
   for (let k = 0; k < 15; k++) {
     const t = k / 14;
-    out.push(t * 0.769, t * 0.071, t * 0.188);
+    out.push(t * r, t * g, t * b);
   }
   return new Float32Array(out);
-})();
+}
 
 export function NoiseBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -165,7 +167,16 @@ export function NoiseBackground() {
     resize();
     gl.uniform1f(uS, 3.0);
     gl.uniform1f(uR, 220.0);
-    gl.uniform3fv(uHue, HUE_TB);
+
+    // Initial palette — use saved accent if available
+    const savedAccent = (() => { try { return localStorage.getItem('accent'); } catch { return null; } })();
+    gl.uniform3fv(uHue, buildHueTb(savedAccent ?? '#c41230'));
+
+    // Live palette updates
+    function onAccentChange(e: Event) {
+      gl!.uniform3fv(uHue, buildHueTb((e as CustomEvent<string>).detail));
+    }
+    window.addEventListener('accent-change', onAccentChange);
 
     window.addEventListener('resize', resize);
 
@@ -193,6 +204,7 @@ export function NoiseBackground() {
       cancelAnimationFrame(animId);
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('resize', resize);
+      window.removeEventListener('accent-change', onAccentChange);
     };
   }, []);
 

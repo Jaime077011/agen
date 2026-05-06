@@ -6,6 +6,7 @@ import { LangOverlay } from '@/components/LangOverlay';
 import { SiteSection } from '@/components/SiteSection';
 import { ProjectsSection } from '@/components/ProjectsSection';
 import { TestimonialsSection } from '@/components/TestimonialsSection';
+import { ContactSection } from '@/components/ContactSection';
 import { ControlPanel } from '@/components/ControlPanel';
 
 export default function Home() {
@@ -19,6 +20,7 @@ export default function Home() {
       <SiteSection />
       <ProjectsSection />
       <TestimonialsSection />
+      <ContactSection />
       <ControlPanel />
     </>
   );
