@@ -2071,8 +2071,6 @@ body.ar .pain-link {
   position: relative;
   z-index: 10;
   height: 100vh;
-  display: flex;
-  flex-direction: column;
 }
 
 .srv-hero-nav {
@@ -2083,14 +2081,18 @@ body.ar .pain-link {
   z-index: 200;
 }
 
-/* Centered block — grows to fill space between nav and bottom strip */
+/* Truly centered between nav (~72px) and bottom strip (~96px) */
 .srv-hero-center {
-  flex: 1;
+  position: absolute;
+  top: 72px;
+  bottom: 96px;
+  left: 0;
+  right: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 80px 60px 0;
+  padding: 0 60px;
   gap: 28px;
 }
 
@@ -2121,14 +2123,17 @@ body.ar .pain-link {
   margin: 0;
 }
 
-/* Bottom strip — mirrors the home hero's bottom-row */
+/* Bottom strip — anchored to the bottom of the viewport */
 .srv-hero-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   padding: 20px 52px 36px;
   opacity: 0;
-  flex-shrink: 0;
 }
 
 .srv-hero-desc {
@@ -2399,7 +2404,9 @@ body.ar .pain-link {
 /* ── Mobile overrides ───────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .srv-hero-center {
-    padding: 80px 24px 0;
+    top: 64px;
+    bottom: 88px;
+    padding: 0 24px;
     gap: 20px;
   }
 
@@ -2415,7 +2422,7 @@ body.ar .pain-link {
   .srv-hero-bottom {
     flex-direction: column;
     align-items: flex-start;
-    gap: 16px;
+    gap: 14px;
     padding: 16px 24px 28px;
   }
 
