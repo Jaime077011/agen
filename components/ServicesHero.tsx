@@ -25,6 +25,7 @@ export function ServicesHero() {
         const hChars = Array.from(headlineRef.current?.querySelectorAll('.char') ?? []);
         const tl = gsap.timeline({ delay: 0.25 });
 
+        tl.set(headlineRef.current, { opacity: 1 });
         tl.fromTo(hChars,
           { opacity: 0, filter: 'blur(14px)' },
           { opacity: 1, filter: 'blur(0px)', stagger: 0.04, duration: 0.7, ease });
