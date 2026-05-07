@@ -2,6 +2,9 @@ import type { Metadata } from 'next';
 import { Montserrat, Cairo } from 'next/font/google';
 import './globals.css';
 import { LangProvider } from '@/lib/lang-context';
+import { ConsentBanner } from '@/components/ConsentBanner';
+import { ScrollGuard } from '@/components/ScrollGuard';
+import { SoundManager } from '@/components/SoundManager';
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -29,6 +32,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <LangProvider>
           {children}
         </LangProvider>
+        <ConsentBanner />
+        <ScrollGuard />
+        <SoundManager />
       </body>
     </html>
   );

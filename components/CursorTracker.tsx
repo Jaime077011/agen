@@ -6,6 +6,9 @@ export function CursorTracker() {
     const dot     = document.getElementById('cursor-dot')     as HTMLElement | null;
     const ring    = document.getElementById('cursor-ring')    as HTMLElement | null;
     const service = document.getElementById('cursor-service') as HTMLElement | null;
+    const link    = document.getElementById('cursor-link')    as HTMLElement | null;
+    const consent = document.getElementById('cursor-consent') as HTMLElement | null;
+    const control = document.getElementById('cursor-control') as HTMLElement | null;
     const bg      = document.getElementById('bg')             as HTMLElement | null;
     const glow    = document.getElementById('glow')           as HTMLElement | null;
 
@@ -17,6 +20,12 @@ export function CursorTracker() {
     let ringY = targetY;
     let serviceX = targetX;
     let serviceY = targetY;
+    let linkX = targetX;
+    let linkY = targetY;
+    let consentX = targetX;
+    let consentY = targetY;
+    let controlX = targetX;
+    let controlY = targetY;
 
     function lerp(a: number, b: number, t: number) {
       return a + (b - a) * t;
@@ -51,11 +60,73 @@ export function CursorTracker() {
       if (ring) ring.style.opacity = '';
     }
 
+    function enterLink() {
+      if (link) link.classList.add('active');
+      if (dot)  dot.style.opacity  = '0';
+      if (ring) ring.style.opacity = '0';
+    }
+
+    function leaveLink() {
+      if (link) link.classList.remove('active');
+      if (dot)  dot.style.opacity  = '';
+      if (ring) ring.style.opacity = '';
+    }
+
+    function enterConsent() {
+      if (consent) consent.classList.add('active');
+      if (dot)  dot.style.opacity  = '0';
+      if (ring) ring.style.opacity = '0';
+    }
+
+    function leaveConsent() {
+      if (consent) consent.classList.remove('active', 'decline');
+      if (dot)  dot.style.opacity  = '';
+      if (ring) ring.style.opacity = '';
+    }
+
+    function enterControl() {
+      if (control) control.classList.add('active');
+      if (dot)  dot.style.opacity  = '0';
+      if (ring) ring.style.opacity = '0';
+    }
+
+    function leaveControl() {
+      if (control) control.classList.remove('active');
+      if (dot)  dot.style.opacity  = '';
+      if (ring) ring.style.opacity = '';
+    }
+
     const rows = document.querySelectorAll('.service-row');
     rows.forEach(row => {
       row.addEventListener('mouseenter', enterService);
       row.addEventListener('mouseleave', leaveService);
     });
+
+    function onDocOver(e: MouseEvent) {
+      const t = e.target as Element;
+      if (t.closest('.service-row')) return;
+      if (t.closest('.control-toggle')) {
+        enterControl();
+      } else if (t.closest('.consent-banner') && t.closest('a, button')) {
+        if (consent) consent.classList.toggle('decline', !!t.closest('.consent-btn-decline'));
+        enterConsent();
+      } else if (t.closest('a, button')) {
+        enterLink();
+      }
+    }
+    function onDocOut(e: MouseEvent) {
+      const related = e.relatedTarget as Element | null;
+      if (related?.closest('.service-row')) return;
+      if (!related?.closest('a, button')) {
+        leaveLink();
+        leaveConsent();
+      }
+      if (!related?.closest('.control-toggle')) {
+        leaveControl();
+      }
+    }
+    document.addEventListener('mouseover', onDocOver);
+    document.addEventListener('mouseout',  onDocOut);
 
     let rafId: number;
     function animate() {
@@ -78,8 +149,24 @@ export function CursorTracker() {
         service.style.left = serviceX + 'px';
         service.style.top  = serviceY + 'px';
       }
-      // If service cursor is active but mouse is no longer over a service row
-      // (e.g. user scrolled away without moving the mouse), deactivate it
+      if (link) {
+        linkX = lerp(linkX, targetX, 0.18);
+        linkY = lerp(linkY, targetY, 0.18);
+        link.style.left = linkX + 'px';
+        link.style.top  = linkY + 'px';
+      }
+      if (consent) {
+        consentX = lerp(consentX, targetX, 0.18);
+        consentY = lerp(consentY, targetY, 0.18);
+        consent.style.left = consentX + 'px';
+        consent.style.top  = consentY + 'px';
+      }
+      if (control) {
+        controlX = lerp(controlX, targetX, 0.18);
+        controlY = lerp(controlY, targetY, 0.18);
+        control.style.left = controlX + 'px';
+        control.style.top  = controlY + 'px';
+      }
       if (service?.classList.contains('active')) {
         const el = document.elementFromPoint(targetX, targetY);
         if (!el?.closest('.service-row')) leaveService();
@@ -96,6 +183,8 @@ export function CursorTracker() {
         row.removeEventListener('mouseenter', enterService);
         row.removeEventListener('mouseleave', leaveService);
       });
+      document.removeEventListener('mouseover', onDocOver);
+      document.removeEventListener('mouseout',  onDocOut);
       cancelAnimationFrame(rafId);
     };
   }, []);
@@ -107,6 +196,24 @@ export function CursorTracker() {
       <div className="cursor-service" id="cursor-service">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M7 17L17 7M17 7H7M17 7v10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </div>
+      <div className="cursor-link" id="cursor-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M7 17L17 7M17 7H7M17 7v10" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </div>
+      <div className="cursor-consent" id="cursor-consent">
+        <svg className="consent-icon-check" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        <svg className="consent-icon-x" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </div>
+      <div className="cursor-control" id="cursor-control" aria-hidden="true">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 2 L13 11 L22 12 L13 13 L12 22 L11 13 L2 12 L11 11 Z" />
         </svg>
       </div>
     </>

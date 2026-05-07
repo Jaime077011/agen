@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useRef } from 'react';
+import { playMoment } from '@/lib/sounds';
 import { Nav } from './Nav';
 import { Hero } from './Hero';
 import { BottomRow } from './BottomRow';
@@ -66,13 +67,13 @@ export function SiteSection() {
           const m1Chars = Array.from(moment1Ref.current?.querySelectorAll('.char') ?? []);
           gsap.set(moment1Ref.current, { opacity: 1 });
           gsap.fromTo(m1Chars, { opacity: 0, filter: 'blur(10px)' },
-            { opacity: 1, filter: 'blur(0px)', stagger: 0.06, duration: 0.7, ease, ...trigger(moment1Ref.current) });
+            { opacity: 1, filter: 'blur(0px)', stagger: 0.06, duration: 0.7, ease, onStart: playMoment, ...trigger(moment1Ref.current) });
 
           // Moment 2
           const m2Chars = Array.from(moment2Ref.current?.querySelectorAll('.char') ?? []);
           gsap.set(moment2Ref.current, { opacity: 1 });
           gsap.fromTo(m2Chars, { opacity: 0, filter: 'blur(10px)' },
-            { opacity: 1, filter: 'blur(0px)', stagger: 0.06, duration: 0.7, ease, ...trigger(moment2Ref.current) });
+            { opacity: 1, filter: 'blur(0px)', stagger: 0.06, duration: 0.7, ease, onStart: playMoment, ...trigger(moment2Ref.current) });
 
           // Headline
           gsap.set(headlineRef.current, { opacity: 1 });
@@ -101,13 +102,13 @@ export function SiteSection() {
           const m3Chars = Array.from(moment3Ref.current?.querySelectorAll('.char') ?? []);
           gsap.set(moment3Ref.current, { opacity: 1 });
           gsap.fromTo(m3Chars, { opacity: 0, filter: 'blur(10px)' },
-            { opacity: 1, filter: 'blur(0px)', stagger: 0.06, duration: 0.7, ease, ...trigger(moment3Ref.current) });
+            { opacity: 1, filter: 'blur(0px)', stagger: 0.06, duration: 0.7, ease, onStart: playMoment, ...trigger(moment3Ref.current) });
 
           // Moment 4
           const m4Chars = Array.from(moment4Ref.current?.querySelectorAll('.char') ?? []);
           gsap.set(moment4Ref.current, { opacity: 1 });
           gsap.fromTo(m4Chars, { opacity: 0, filter: 'blur(10px)' },
-            { opacity: 1, filter: 'blur(0px)', stagger: 0.06, duration: 0.7, ease, ...trigger(moment4Ref.current) });
+            { opacity: 1, filter: 'blur(0px)', stagger: 0.06, duration: 0.7, ease, onStart: playMoment, ...trigger(moment4Ref.current) });
 
         } else {
           // ── Desktop: single scrubbed timeline ────────────────────────────
@@ -135,7 +136,7 @@ export function SiteSection() {
           const m1Chars = Array.from(moment1Ref.current?.querySelectorAll('.char') ?? []);
           tl.fromTo(moment1Ref.current,
             { opacity: 0, scale: 0.91, filter: 'blur(24px)' },
-            { opacity: 1, scale: 1,    filter: 'blur(0px)',  duration: 1.4, ease: 'power2.out' },
+            { opacity: 1, scale: 1,    filter: 'blur(0px)',  duration: 1.4, ease: 'power2.out', onStart: playMoment },
             '>');
           tl.fromTo(m1Chars,
             { opacity: 0, filter: 'blur(10px)' },
@@ -152,7 +153,7 @@ export function SiteSection() {
 
           // ── Moment 2: chars blur in ───────────────────────────────────────
           const m2Chars = Array.from(moment2Ref.current?.querySelectorAll('.char') ?? []);
-          tl.fromTo(moment2Ref.current, { opacity: 0 }, { opacity: 1, duration: 0.1, ease }, '>+0.3');
+          tl.fromTo(moment2Ref.current, { opacity: 0 }, { opacity: 1, duration: 0.1, ease, onStart: playMoment }, '>+0.3');
           tl.fromTo(m2Chars,
             { opacity: 0, filter: 'blur(12px)' },
             { opacity: 1, filter: 'blur(0px)', stagger: 0.07, duration: 0.8, ease },
@@ -215,7 +216,7 @@ export function SiteSection() {
           const m3Chars = Array.from(moment3Ref.current?.querySelectorAll('.char') ?? []);
           tl.fromTo(moment3Ref.current,
             { opacity: 0, scale: 0.91, filter: 'blur(24px)' },
-            { opacity: 1, scale: 1,    filter: 'blur(0px)',  duration: 1.4, ease: 'power2.out' },
+            { opacity: 1, scale: 1,    filter: 'blur(0px)',  duration: 1.4, ease: 'power2.out', onStart: playMoment },
             '>');
           tl.fromTo(m3Chars,
             { opacity: 0, filter: 'blur(10px)' },
@@ -232,7 +233,7 @@ export function SiteSection() {
 
           // ── Moment 4: chars blur in ───────────────────────────────────────
           const m4Chars = Array.from(moment4Ref.current?.querySelectorAll('.char') ?? []);
-          tl.fromTo(moment4Ref.current, { opacity: 0 }, { opacity: 1, duration: 0.1, ease }, '>+0.3');
+          tl.fromTo(moment4Ref.current, { opacity: 0 }, { opacity: 1, duration: 0.1, ease, onStart: playMoment }, '>+0.3');
           tl.fromTo(m4Chars,
             { opacity: 0, filter: 'blur(12px)' },
             { opacity: 1, filter: 'blur(0px)', stagger: 0.07, duration: 0.8, ease },
