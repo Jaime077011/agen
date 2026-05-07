@@ -62,18 +62,21 @@ export function SiteSection() {
           const trigger = (el: Element | null) => ({
             scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' },
           });
+          const momentTrigger = (el: Element | null) => ({
+            scrollTrigger: { trigger: el, start: 'top 60%', toggleActions: 'play none none none' },
+          });
 
           // Moment 1
           const m1Chars = Array.from(moment1Ref.current?.querySelectorAll('.char') ?? []);
           gsap.set(moment1Ref.current, { opacity: 1 });
           gsap.fromTo(m1Chars, { opacity: 0, filter: 'blur(10px)' },
-            { opacity: 1, filter: 'blur(0px)', stagger: 0.06, duration: 0.7, ease, onStart: playMoment, ...trigger(moment1Ref.current) });
+            { opacity: 1, filter: 'blur(0px)', stagger: 0.06, duration: 0.7, ease, onStart: playMoment, ...momentTrigger(moment1Ref.current) });
 
           // Moment 2
           const m2Chars = Array.from(moment2Ref.current?.querySelectorAll('.char') ?? []);
           gsap.set(moment2Ref.current, { opacity: 1 });
           gsap.fromTo(m2Chars, { opacity: 0, filter: 'blur(10px)' },
-            { opacity: 1, filter: 'blur(0px)', stagger: 0.06, duration: 0.7, ease, onStart: playMoment, ...trigger(moment2Ref.current) });
+            { opacity: 1, filter: 'blur(0px)', stagger: 0.06, duration: 0.7, ease, onStart: playMoment, ...momentTrigger(moment2Ref.current) });
 
           // Headline
           gsap.set(headlineRef.current, { opacity: 1 });
@@ -102,13 +105,13 @@ export function SiteSection() {
           const m3Chars = Array.from(moment3Ref.current?.querySelectorAll('.char') ?? []);
           gsap.set(moment3Ref.current, { opacity: 1 });
           gsap.fromTo(m3Chars, { opacity: 0, filter: 'blur(10px)' },
-            { opacity: 1, filter: 'blur(0px)', stagger: 0.06, duration: 0.7, ease, onStart: playMoment, ...trigger(moment3Ref.current) });
+            { opacity: 1, filter: 'blur(0px)', stagger: 0.06, duration: 0.7, ease, onStart: playMoment, ...momentTrigger(moment3Ref.current) });
 
           // Moment 4
           const m4Chars = Array.from(moment4Ref.current?.querySelectorAll('.char') ?? []);
           gsap.set(moment4Ref.current, { opacity: 1 });
           gsap.fromTo(m4Chars, { opacity: 0, filter: 'blur(10px)' },
-            { opacity: 1, filter: 'blur(0px)', stagger: 0.06, duration: 0.7, ease, onStart: playMoment, ...trigger(moment4Ref.current) });
+            { opacity: 1, filter: 'blur(0px)', stagger: 0.06, duration: 0.7, ease, onStart: playMoment, ...momentTrigger(moment4Ref.current) });
 
         } else {
           // ── Desktop: single scrubbed timeline ────────────────────────────
