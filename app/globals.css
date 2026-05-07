@@ -1081,6 +1081,38 @@ body {
 
 /* Mobile */
 @media (max-width: 768px) {
+  .ts-section { height: auto; }
+
+  .ts-sticky {
+    position: relative;
+    height: auto;
+    overflow: visible;
+    mask-image: none;
+    -webkit-mask-image: none;
+    padding: 60px 20px 48px;
+    justify-content: flex-start;
+  }
+
+  .ts-tracks {
+    padding: 0;
+    flex-direction: column;
+    gap: 16px;
+    transform: none !important; /* override GSAP horizontal slide */
+  }
+
+  .ts-row {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .ts-card {
+    width: 100%;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+@media (max-width: 768px) {
   .ps-section { height: auto; }
 
   .ps-sticky {
@@ -1113,12 +1145,27 @@ body {
     padding: 32px 28px;
   }
 
+  /* GSAP sets card text to opacity:0 — override on mobile */
+  .ps-card-category,
+  .ps-card-title,
+  .ps-card-description,
+  .ps-card-cta {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
   .ps-moment {
     position: relative;
     inset: auto;
-    opacity: 1;
+    opacity: 1 !important;
     pointer-events: auto;
     padding: 60px 20px;
+  }
+
+  /* GSAP sets moment chars to opacity:0 + blur — override on mobile */
+  .ps-moment .char {
+    opacity: 1 !important;
+    filter: none !important;
   }
 }
 
@@ -1699,12 +1746,30 @@ body.ar .pain-link {
 
   .site-growth-layer {
     position: relative;
-    align-items: flex-start;
-    padding: 80px 24px 88px;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    padding: 0 0 80px;
     pointer-events: all;
   }
 
-  .growth-content { align-items: flex-start; }
+  /* Moments become normal flow blocks so the user can scroll to each one */
+  .growth-moment {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    min-height: 50dvh;
+    padding: 40px 24px;
+  }
+
+  .growth-moment-text {
+    font-size: clamp(2rem, 8.5vw, 2.8rem);
+  }
+
+  /* DOM order: m1 m2 m3 m4 content — desired: m1 m2 content m3 m4 */
+  .site-growth-layer > :nth-child(3) { order: 4; }
+  .site-growth-layer > :nth-child(4) { order: 5; }
+  .growth-content { order: 3; width: 100%; padding: 60px 24px 0; align-items: flex-start; }
 
   .growth-top {
     align-items: flex-start;
@@ -1721,9 +1786,13 @@ body.ar .pain-link {
     margin-bottom: 36px;
   }
 
-  .service-desc {
-    font-size: 0.74rem;
+  .service-row {
+    font-size: clamp(1.4rem, 6.5vw, 2rem);
+    padding: 18px 0 18px 16px;
+    letter-spacing: 0.02em;
   }
+
+  .service-hover-bg { padding-left: 16px; }
 
   .growth-cta-wrap {
     justify-content: flex-start;
