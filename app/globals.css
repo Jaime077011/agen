@@ -4084,13 +4084,14 @@ body.ar .pain-link {
 }
 
 @media (max-width: 768px) {
-  /* Center banner at bottom on mobile */
+  /* Center banner at bottom on mobile — use margin auto, not transform,
+     so the consent-up/down keyframe transforms don't conflict */
   .consent-banner {
-    right: auto;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 0;
+    right: 0;
     width: calc(100% - 48px);
     max-width: 340px;
+    margin-inline: auto;
     bottom: 28px;
   }
 
