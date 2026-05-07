@@ -17,10 +17,10 @@ export function Nav() {
           </div>
         </a>
         <ul className="nav-links">
-          <li><a href="/">{t.nav1}</a></li>
+          <li><a href="/archetypers">{t.nav1}</a></li>
           <li><a href="/services">{t.nav2}</a></li>
-          <li><a href="#">{t.nav3}</a></li>
-          <li><a href="/#contact">{t.nav4}</a></li>
+          <li><a href="/projects">{t.nav3}</a></li>
+          <li><a href="/contact">{t.nav4}</a></li>
         </ul>
         <button
           className="hamburger"

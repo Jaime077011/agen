@@ -7,7 +7,7 @@ function chars(text: string) {
   ));
 }
 
-export function ServicesClosing() {
+export function ProjectsClosing() {
   const sectionRef  = useRef<HTMLDivElement>(null);
   const wrapRef     = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
@@ -77,16 +77,16 @@ export function ServicesClosing() {
   }, []);
 
   return (
-    <div className="srvc-section" ref={sectionRef}>
-      <div className="srvc-sticky">
-        <div className="srvc-wrap" ref={wrapRef}>
-          <h2 className="srvc-headline" ref={headlineRef}>
-            {chars('Ready to ')}
-            <span className="srvc-accent">{chars('begin?')}</span>
+    <div className="prjc-section" ref={sectionRef}>
+      <div className="prjc-sticky">
+        <div className="prjc-wrap" ref={wrapRef}>
+          <h2 className="prjc-headline" ref={headlineRef}>
+            {chars('Ready to be ')}
+            <span className="prjc-accent">{chars('next?')}</span>
           </h2>
-          <div className="srvc-cta" ref={ctaRef}>
+          <div className="prjc-cta" ref={ctaRef}>
             <a href="/contact" className="hero-cta">Start your project</a>
-            <p className="srvc-note">No commitment. One conversation.</p>
+            <p className="prjc-note">No commitment. One conversation.</p>
           </div>
         </div>
       </div>

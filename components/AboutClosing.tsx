@@ -7,7 +7,7 @@ function chars(text: string) {
   ));
 }
 
-export function ServicesClosing() {
+export function AboutClosing() {
   const sectionRef  = useRef<HTMLDivElement>(null);
   const wrapRef     = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
@@ -77,16 +77,16 @@ export function ServicesClosing() {
   }, []);
 
   return (
-    <div className="srvc-section" ref={sectionRef}>
-      <div className="srvc-sticky">
-        <div className="srvc-wrap" ref={wrapRef}>
-          <h2 className="srvc-headline" ref={headlineRef}>
-            {chars('Ready to ')}
-            <span className="srvc-accent">{chars('begin?')}</span>
+    <div className="abtc-section" ref={sectionRef}>
+      <div className="abtc-sticky">
+        <div className="abtc-wrap" ref={wrapRef}>
+          <h2 className="abtc-headline" ref={headlineRef}>
+            {chars("Let's build something ")}
+            <span className="abtc-accent">{chars('great.')}</span>
           </h2>
-          <div className="srvc-cta" ref={ctaRef}>
-            <a href="/contact" className="hero-cta">Start your project</a>
-            <p className="srvc-note">No commitment. One conversation.</p>
+          <div className="abtc-cta" ref={ctaRef}>
+            <a href="/contact" className="hero-cta">Start a conversation</a>
+            <p className="abtc-note">Free call. Honest answers. No pressure.</p>
           </div>
         </div>
       </div>

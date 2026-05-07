@@ -11,31 +11,37 @@ interface Props {
   momentText: string;
   number: string;
   name: string;
-  tagline: string;
+  category: string;
+  client: string;
   description: string;
-  deliverables: string[];
+  outcomes: string[];
   ctaLabel: string;
+  href: string;
 }
 
-export function ServiceBlock({
+export function ProjectBlock({
   momentText,
   number,
   name,
-  tagline,
+  category,
+  client,
   description,
-  deliverables,
+  outcomes,
   ctaLabel,
+  href,
 }: Props) {
-  const sectionRef      = useRef<HTMLDivElement>(null);
-  const momentRef       = useRef<HTMLDivElement>(null);
-  const contentRef      = useRef<HTMLDivElement>(null);
-  const ghostRef        = useRef<HTMLSpanElement>(null);
-  const numTagRef       = useRef<HTMLSpanElement>(null);
-  const nameRef         = useRef<HTMLHeadingElement>(null);
-  const taglineRef      = useRef<HTMLParagraphElement>(null);
-  const descRef         = useRef<HTMLParagraphElement>(null);
-  const deliverablesRef = useRef<HTMLUListElement>(null);
-  const ctaWrapRef      = useRef<HTMLDivElement>(null);
+  const sectionRef  = useRef<HTMLDivElement>(null);
+  const momentRef   = useRef<HTMLDivElement>(null);
+  const contentRef  = useRef<HTMLDivElement>(null);
+  const ghostRef    = useRef<HTMLSpanElement>(null);
+  const numTagRef   = useRef<HTMLSpanElement>(null);
+  const imageRef    = useRef<HTMLDivElement>(null);
+  const categoryRef = useRef<HTMLSpanElement>(null);
+  const nameRef     = useRef<HTMLHeadingElement>(null);
+  const clientRef   = useRef<HTMLParagraphElement>(null);
+  const descRef     = useRef<HTMLParagraphElement>(null);
+  const outcomesRef = useRef<HTMLUListElement>(null);
+  const ctaWrapRef  = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let isCancelled = false;
@@ -63,20 +69,28 @@ export function ServiceBlock({
             { opacity: 0, x: -20 },
             { opacity: 1, x: 0, duration: 0.6, ease, ...trigger(numTagRef.current) });
 
+          gsap.fromTo(imageRef.current,
+            { opacity: 0, scale: 1.04 },
+            { opacity: 1, scale: 1, duration: 0.8, ease, ...trigger(imageRef.current) });
+
+          gsap.fromTo(categoryRef.current,
+            { opacity: 0, x: -20 },
+            { opacity: 1, x: 0, duration: 0.6, ease, ...trigger(categoryRef.current) });
+
           const nChars = Array.from(nameRef.current?.querySelectorAll('.char') ?? []);
           gsap.fromTo(nChars,
             { opacity: 0, filter: 'blur(10px)' },
             { opacity: 1, filter: 'blur(0px)', stagger: 0.03, duration: 0.6, ease, ...trigger(nameRef.current) });
 
-          gsap.fromTo(taglineRef.current,
+          gsap.fromTo(clientRef.current,
             { opacity: 0, x: -20 },
-            { opacity: 1, x: 0, duration: 0.7, ease, ...trigger(taglineRef.current) });
+            { opacity: 1, x: 0, duration: 0.6, ease, ...trigger(clientRef.current) });
 
           gsap.fromTo(descRef.current,
             { opacity: 0, x: -20 },
             { opacity: 1, x: 0, duration: 0.8, ease, ...trigger(descRef.current) });
 
-          const items = Array.from(deliverablesRef.current?.querySelectorAll('.srv-deliverable') ?? []);
+          const items = Array.from(outcomesRef.current?.querySelectorAll('.prj-outcome') ?? []);
           items.forEach(item => {
             gsap.fromTo(item,
               { opacity: 0, x: -16 },
@@ -97,7 +111,7 @@ export function ServiceBlock({
             },
           });
 
-          // ── Moment enters ────────────────────────────────────────────────
+          // ── Moment enters ───────────────────────────────────────────────
           const mChars = Array.from(momentRef.current?.querySelectorAll('.char') ?? []);
           tl.fromTo(momentRef.current, { opacity: 0 }, { opacity: 1, duration: 0.1 });
           tl.fromTo(mChars,
@@ -107,14 +121,14 @@ export function ServiceBlock({
 
           tl.to({}, { duration: 2 });
 
-          // ── Moment exits ─────────────────────────────────────────────────
+          // ── Moment exits ────────────────────────────────────────────────
           tl.to(mChars,
             { opacity: 0, filter: 'blur(12px)', stagger: 0.05, duration: 0.6, ease: 'power2.in' });
           tl.to(momentRef.current, { opacity: 0, duration: 0.3 }, '>-0.1');
 
           tl.to({}, { duration: 0.6 });
 
-          // ── Content reveals ───────────────────────────────────────────────
+          // ── Content reveals ─────────────────────────────────────────────
           tl.set(contentRef.current, { opacity: 1 });
 
           tl.fromTo(ghostRef.current,
@@ -126,37 +140,47 @@ export function ServiceBlock({
             { opacity: 1, x: 0, duration: 0.6, ease },
             '<+0.3');
 
+          tl.fromTo(imageRef.current,
+            { opacity: 0, scale: 1.06 },
+            { opacity: 1, scale: 1, duration: 1, ease },
+            '<+0.2');
+
+          tl.fromTo(categoryRef.current,
+            { opacity: 0, x: 28 },
+            { opacity: 1, x: 0, duration: 0.6, ease },
+            '<');
+
           const nChars = Array.from(nameRef.current?.querySelectorAll('.char') ?? []);
           tl.fromTo(nChars,
             { opacity: 0, filter: 'blur(10px)' },
             { opacity: 1, filter: 'blur(0px)', stagger: 0.04, duration: 0.7, ease },
-            '<+0.2');
+            '>+0.1');
 
-          tl.fromTo(taglineRef.current,
-            { opacity: 0, x: -28 },
-            { opacity: 1, x: 0, duration: 0.7, ease },
-            '>+0.2');
+          tl.fromTo(clientRef.current,
+            { opacity: 0, x: 28 },
+            { opacity: 1, x: 0, duration: 0.6, ease },
+            '>+0.1');
 
           tl.fromTo(descRef.current,
-            { opacity: 0, x: -28 },
+            { opacity: 0, x: 28 },
             { opacity: 1, x: 0, duration: 1, ease },
-            '>+0.3');
+            '>+0.2');
 
-          const items = Array.from(deliverablesRef.current?.querySelectorAll('.srv-deliverable') ?? []);
+          const items = Array.from(outcomesRef.current?.querySelectorAll('.prj-outcome') ?? []);
           tl.fromTo(items,
-            { opacity: 0, x: -20 },
+            { opacity: 0, x: 20 },
             { opacity: 1, x: 0, stagger: 0.1, duration: 0.6, ease },
             '>+0.2');
 
           tl.fromTo(ctaWrapRef.current,
-            { opacity: 0, x: -28 },
+            { opacity: 0, x: 28 },
             { opacity: 1, x: 0, duration: 0.8, ease },
             '>+0.3');
 
-          // ── Hold ─────────────────────────────────────────────────────────
+          // ── Hold ────────────────────────────────────────────────────────
           tl.to({}, { duration: 2 });
 
-          // ── Exit ─────────────────────────────────────────────────────────
+          // ── Exit ────────────────────────────────────────────────────────
           tl.to(contentRef.current, {
             opacity: 0,
             filter: 'blur(14px)',
@@ -175,36 +199,42 @@ export function ServiceBlock({
   }, []);
 
   return (
-    <div className="srv-section" ref={sectionRef}>
-      <div className="srv-sticky">
+    <div className="prj-section" ref={sectionRef}>
+      <div className="prj-sticky">
 
         {/* Moment */}
-        <div className="srv-moment" ref={momentRef}>
-          <p className="srv-moment-text">{chars(momentText)}</p>
+        <div className="prj-moment" ref={momentRef}>
+          <p className="prj-moment-text">{chars(momentText)}</p>
         </div>
 
         {/* Content */}
-        <div className="srv-content" ref={contentRef}>
-          <span className="srv-ghost-num" ref={ghostRef}>{number}</span>
+        <div className="prj-content" ref={contentRef}>
+          <span className="prj-ghost-num" ref={ghostRef}>{number}</span>
 
-          <div className="srv-left">
-            <span className="srv-num-tag" ref={numTagRef}>{number}</span>
-            <h2 className="srv-name" ref={nameRef}>{chars(name)}</h2>
-            <p className="srv-tagline" ref={taglineRef}>{tagline}</p>
+          {/* Left — image */}
+          <div className="prj-left">
+            <span className="prj-num-tag" ref={numTagRef}>{number}</span>
+            <div className="prj-image-wrap" ref={imageRef}>
+              <span className="prj-image-label">Project Visual</span>
+            </div>
           </div>
 
-          <div className="srv-right">
-            <p className="srv-description" ref={descRef}>{description}</p>
-            <ul className="srv-deliverables" ref={deliverablesRef}>
-              {deliverables.map((d, i) => (
-                <li key={i} className="srv-deliverable">
-                  <span className="srv-deliverable-bar" />
-                  <span className="srv-deliverable-text">{d}</span>
+          {/* Right — details */}
+          <div className="prj-right">
+            <span className="prj-category" ref={categoryRef}>{category}</span>
+            <h2 className="prj-name" ref={nameRef}>{chars(name)}</h2>
+            <p className="prj-client" ref={clientRef}>{client}</p>
+            <p className="prj-description" ref={descRef}>{description}</p>
+            <ul className="prj-outcomes" ref={outcomesRef}>
+              {outcomes.map((o, i) => (
+                <li key={i} className="prj-outcome">
+                  <span className="prj-outcome-dash" />
+                  <span className="prj-outcome-text">{o}</span>
                 </li>
               ))}
             </ul>
-            <div className="srv-cta-wrap" ref={ctaWrapRef}>
-              <a href="/contact" className="hero-cta">{ctaLabel}</a>
+            <div className="prj-cta-wrap" ref={ctaWrapRef}>
+              <a href={href} className="hero-cta">{ctaLabel}</a>
             </div>
           </div>
         </div>

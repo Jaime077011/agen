@@ -8,7 +8,7 @@ function chars(text: string) {
   ));
 }
 
-export function ServicesHero() {
+export function ArchetyperHero() {
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const taglineRef  = useRef<HTMLParagraphElement>(null);
   const bottomRef   = useRef<HTMLDivElement>(null);
@@ -28,7 +28,7 @@ export function ServicesHero() {
         tl.set(headlineRef.current, { opacity: 1 });
         tl.fromTo(hChars,
           { opacity: 0, filter: 'blur(14px)' },
-          { opacity: 1, filter: 'blur(0px)', stagger: 0.04, duration: 0.7, ease });
+          { opacity: 1, filter: 'blur(0px)', stagger: 0.035, duration: 0.7, ease });
 
         tl.fromTo(taglineRef.current,
           { opacity: 0, y: 14 },
@@ -60,30 +60,30 @@ export function ServicesHero() {
   }, []);
 
   return (
-    <section className="srv-hero-section">
-      <div className="srv-hero-nav">
+    <section className="ath-hero-section">
+      <div className="ath-hero-nav">
         <Nav />
       </div>
 
-      <div className="srv-hero-center">
-        <h1 className="srv-hero-headline" ref={headlineRef}>
-          {chars('SERVICES')}
+      <div className="ath-hero-center">
+        <h1 className="ath-hero-headline" ref={headlineRef}>
+          {chars('ARCHETYPERS')}
         </h1>
-        <p className="srv-hero-tagline" ref={taglineRef}>
-          Brand Identity&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;Web &amp; Store&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;AI Systems
+        <p className="ath-hero-tagline" ref={taglineRef}>
+          Strategy&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;Craft&nbsp;&nbsp;&nbsp;·&nbsp;&nbsp;&nbsp;Purpose
         </p>
       </div>
 
-      <div className="srv-hero-bottom" ref={bottomRef}>
-        <p className="srv-hero-desc">
-          Strategy-led work — built to position,<br />convert, and compound.
+      <div className="ath-hero-bottom" ref={bottomRef}>
+        <p className="ath-hero-desc">
+          A brand and digital studio rooted in Egypt,<br />built for ambitious businesses everywhere.
         </p>
-        <a href="/contact" className="srv-hero-link">
-          Start a project<span className="srv-hero-link-arrow"> →</span>
+        <a href="/contact" className="ath-hero-link">
+          Work with us<span className="ath-hero-link-arrow"> →</span>
         </a>
       </div>
 
-      <div className="srv-hero-scroll" ref={arrowRef}>
+      <div className="ath-hero-scroll" ref={arrowRef}>
         <svg width="16" height="24" viewBox="0 0 16 24" fill="none">
           <line x1="8" y1="0" x2="8" y2="16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
           <polyline points="3,11 8,16 13,11" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
