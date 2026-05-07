@@ -44,6 +44,8 @@ export function ConsentBanner() {
   if (!mounted || !visible) return null;
 
   return (
+    <>
+    <div className={`consent-overlay${leaving ? ' out' : ''}`} aria-hidden="true" />
     <div className={`consent-banner${leaving ? ' out' : ''}`} role="dialog" aria-label="Site preferences">
       <p className="consent-title">Preferences</p>
 
@@ -84,5 +86,6 @@ export function ConsentBanner() {
         Decline all
       </button>
     </div>
+    </>
   );
 }

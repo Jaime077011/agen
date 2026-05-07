@@ -3904,6 +3904,29 @@ body.ar .pain-link {
   }
 }
 
+/* CONSENT OVERLAY — mobile only, blurs everything behind the banner */
+.consent-overlay {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .consent-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 9999;
+    animation: consent-up 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  .consent-overlay.out {
+    animation: consent-down 0.38s cubic-bezier(0.4, 0, 0.6, 1) both;
+    pointer-events: none;
+  }
+}
+
 /* CONSENT BANNER */
 .consent-banner {
   position: fixed;
@@ -4058,4 +4081,34 @@ body.ar .pain-link {
 
 .consent-btn-decline:hover {
   color: rgba(255,255,255,0.55);
+}
+
+@media (max-width: 768px) {
+  /* Center banner at bottom on mobile */
+  .consent-banner {
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 48px);
+    max-width: 340px;
+    bottom: 28px;
+  }
+
+  /* Control panel: move from middle-right to bottom-right */
+  .control-panel {
+    top: auto;
+    bottom: 32px;
+    transform: none;
+  }
+
+  /* Fan arc upward so items don't fall off the bottom of the screen */
+  .control-panel.open .arc-item:nth-child(1) {
+    transform: translate(-64px, -126px) scale(1);
+  }
+  .control-panel.open .arc-item:nth-child(2) {
+    transform: translate(-84px, -60px) scale(1);
+  }
+  .control-panel.open .arc-item:nth-child(3) {
+    transform: translate(-64px, 0px) scale(1);
+  }
 }
