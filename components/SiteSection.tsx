@@ -68,7 +68,7 @@ export function SiteSection() {
           });
 
           // Mobile: hold so user fully reads the hero before anything transitions
-          if (isMobile) tl.to({}, { duration: 3 });
+          if (isMobile) tl.to({}, { duration: 5 });
 
           // Hero exit — whole layer dissolves as one scene change
           tl.fromTo(heroLayerRef.current,
