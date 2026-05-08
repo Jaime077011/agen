@@ -1676,7 +1676,18 @@ body.ar .pain-link {
   /* Narrower side padding for mobile viewport */
   .site-growth-layer { padding: 88px 24px 0; }
 
-  .growth-moment-text { font-size: clamp(2rem, 8.5vw, 2.8rem); }
+  /* Wrap at word boundaries (not mid-letter) at large sizes */
+  .site-growth-layer .char {
+    display: inline;
+    white-space: normal;
+  }
+
+  .growth-moment-text {
+    font-size: clamp(3rem, 24vw, 8rem);
+    line-height: 1.7;
+    letter-spacing: 0;
+    overflow-wrap: break-word;
+  }
 
   .growth-content { padding: 0; }
 
