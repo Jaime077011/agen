@@ -1676,7 +1676,7 @@ body.ar .pain-link {
   /* Narrower side padding for mobile viewport */
   .site-growth-layer { padding: 88px 24px 0; }
 
-  .growth-moment { padding-top: 12dvh; }
+  .growth-moment { align-items: flex-start; padding-top: 15dvh; }
 
   /* Wrap at word boundaries (not mid-letter) at large sizes */
   .site-growth-layer .char {
