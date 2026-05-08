@@ -54,8 +54,6 @@ export function SiteSection() {
       gsap.registerPlugin(ScrollTrigger);
       const ease = 'power2.out';
 
-      const isMobile = window.matchMedia('(max-width: 768px)').matches;
-
       ctx = gsap.context(() => {
           // ── Scrubbed timeline — all screen sizes ─────────────────────────
           const tl = gsap.timeline({
@@ -75,8 +73,8 @@ export function SiteSection() {
           // Disable pointer events so the invisible hero layer doesn't block the growth layer
           tl.set(heroLayerRef.current, { pointerEvents: 'none' });
 
-          // Dark pause after hero — longer on mobile so moment 1 doesn't rush in
-          tl.to({}, { duration: isMobile ? 5 : 1 });
+          // Breathing room — empty dark frame
+          tl.to({}, { duration: 1 });
 
           // ── Moment 1: camera rack-focus — materialises from depth ──
           const m1Chars = Array.from(moment1Ref.current?.querySelectorAll('.char') ?? []);
