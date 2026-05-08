@@ -1087,7 +1087,9 @@ body {
     mask-image: none;
     -webkit-mask-image: none;
     align-items: stretch;
+    justify-content: flex-start;
     padding: 100px 0 40px;
+    height: 100dvh;
   }
 
   .ts-tracks {
@@ -1109,6 +1111,7 @@ body {
 /* Mobile — restore sticky, adapt card to vertical layout */
 @media (max-width: 768px) {
   .ps-section { height: 500vh; }
+  .ps-sticky { height: 100dvh; }
 
   .ps-card {
     width: 88vw;
@@ -1668,6 +1671,7 @@ body.ar .pain-link {
 /* ── Mobile — restore sticky, reduce height, tighten padding ── */
 @media (max-width: 768px) {
   .site-wrapper { height: 700vh; }
+  .site-sticky { height: 100dvh; }
 
   /* Narrower side padding for mobile viewport */
   .site-growth-layer { padding: 88px 24px 0; }
@@ -1936,8 +1940,11 @@ body.ar .pain-link {
 @media (max-width: 768px) {
   .cs-section { height: 350vh; }
 
+  .cs-sticky { height: 100dvh; }
+
   .cs-content {
     flex-direction: column;
+    align-items: stretch;
     gap: 40px;
     padding: 80px 32px 24px;
   }
@@ -2058,6 +2065,7 @@ body.ar .pain-link {
 /* Mobile — restore sticky */
 @media (max-width: 768px) {
   .footer-section { height: 150vh; }
+  .footer-sticky { height: 100dvh; }
 
   .footer { padding: 48px 24px 44px; }
 
