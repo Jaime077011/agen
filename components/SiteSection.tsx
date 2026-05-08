@@ -67,8 +67,8 @@ export function SiteSection() {
             },
           });
 
-          // Mobile: long hold so user fully reads the hero before anything transitions
-          if (isMobile) tl.to({}, { duration: 6 });
+          // Mobile: hold so user fully reads the hero before anything transitions
+          if (isMobile) tl.to({}, { duration: 3 });
 
           // Hero exit — whole layer dissolves as one scene change
           tl.fromTo(heroLayerRef.current,
@@ -79,7 +79,7 @@ export function SiteSection() {
           tl.set(heroLayerRef.current, { pointerEvents: 'none' });
 
           // Breathing room — empty dark frame
-          tl.to({}, { duration: isMobile ? 3 : 1 });
+          tl.to({}, { duration: 1 });
 
           // ── Moment 1: camera rack-focus — materialises from depth ──
           const m1Chars = Array.from(moment1Ref.current?.querySelectorAll('.char') ?? []);
