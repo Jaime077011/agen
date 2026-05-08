@@ -67,9 +67,6 @@ export function SiteSection() {
             },
           });
 
-          // Mobile: hold so user fully reads the hero before anything transitions
-          if (isMobile) tl.to({}, { duration: 5 });
-
           // Hero exit — whole layer dissolves as one scene change
           tl.fromTo(heroLayerRef.current,
             { opacity: 1, filter: 'blur(0px)', scale: 1 },
@@ -78,8 +75,8 @@ export function SiteSection() {
           // Disable pointer events so the invisible hero layer doesn't block the growth layer
           tl.set(heroLayerRef.current, { pointerEvents: 'none' });
 
-          // Breathing room — empty dark frame
-          tl.to({}, { duration: 1 });
+          // Dark pause after hero — longer on mobile so moment 1 doesn't rush in
+          tl.to({}, { duration: isMobile ? 5 : 1 });
 
           // ── Moment 1: camera rack-focus — materialises from depth ──
           const m1Chars = Array.from(moment1Ref.current?.querySelectorAll('.char') ?? []);
