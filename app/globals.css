@@ -1676,7 +1676,13 @@ body.ar .pain-link {
   /* Narrower side padding for mobile viewport */
   .site-growth-layer { padding: 88px 24px 0; }
 
-  .growth-moment { align-items: flex-start; padding-top: 15dvh; }
+  /* Canvas: start at fixed top, shrink-wrap to content height — no overflow fight */
+  .growth-moment {
+    top: 18dvh;
+    bottom: auto;
+    align-items: center;
+    justify-content: center;
+  }
 
   /* Wrap at word boundaries (not mid-letter) at large sizes */
   .site-growth-layer .char {
