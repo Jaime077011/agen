@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { initAudio, playConsentIn, playAccept, playDecline, playPageOpen, startAmbient } from '@/lib/sounds';
+import { unlockAudioSync, initAudio, playConsentIn, playAccept, playDecline, playPageOpen, startAmbient } from '@/lib/sounds';
 import { getConsent, setConsent } from '@/lib/consent';
 
 export function ConsentBanner() {
@@ -19,6 +19,7 @@ export function ConsentBanner() {
   }, []);
 
   async function save(acceptToggles: boolean) {
+    unlockAudioSync(); // unblock iOS audio synchronously within the click gesture
     await initAudio();
     if (acceptToggles) playAccept(); else playDecline();
     setLeaving(true);

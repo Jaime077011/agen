@@ -1,30 +1,34 @@
 'use client';
 import { useEffect } from 'react';
-import { initAudio, playHover, playClick, playPageOpen, startAmbient, soundEnabled } from '@/lib/sounds';
+import { unlockAudioSync, initAudio, playHover, playClick, playPageOpen, startAmbient, soundEnabled } from '@/lib/sounds';
 
-const UNLOCK_EVENTS = ['click', 'keydown', 'touchstart'] as const;
+const UNLOCK_EVENTS = ['click', 'keydown', 'touchstart', 'touchend'] as const;
 const UNLOCK_PASSIVE = ['wheel', 'touchmove'] as const;
 
 export function SoundManager() {
   useEffect(() => {
     let unlocked = false;
 
-    async function unlock() {
+    function unlock() {
       if (unlocked) return;
       unlocked = true;
+      // Remove all unlock listeners synchronously before any await
       UNLOCK_EVENTS.forEach(e => window.removeEventListener(e, unlock));
-      const ok = await initAudio();
-      // Only play cinematic for returning visitors who already have consent saved
-      // New visitors hear it after accepting the consent banner
-      const hasConsent = !!localStorage.getItem('site-consent');
-      if (ok && hasConsent && soundEnabled()) {
-        document.body.classList.remove('loaded');
-        requestAnimationFrame(() => requestAnimationFrame(() => {
-          document.body.classList.add('loaded');
-          playPageOpen();
-          startAmbient();
-        }));
-      }
+      UNLOCK_PASSIVE.forEach(e => window.removeEventListener(e, unlock));
+      // Unblock iOS AudioContext synchronously within the gesture handler
+      unlockAudioSync();
+      // Then wait for full resume and play cinematic if returning visitor
+      initAudio().then(ok => {
+        const hasConsent = !!localStorage.getItem('site-consent');
+        if (ok && hasConsent && soundEnabled()) {
+          document.body.classList.remove('loaded');
+          requestAnimationFrame(() => requestAnimationFrame(() => {
+            document.body.classList.add('loaded');
+            playPageOpen();
+            startAmbient();
+          }));
+        }
+      });
     }
 
     UNLOCK_EVENTS.forEach(e => window.addEventListener(e, unlock));

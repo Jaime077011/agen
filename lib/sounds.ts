@@ -1,14 +1,28 @@
 let _ctx: AudioContext | null = null;
 
+function makeContext(): AudioContext {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const Ctx = window.AudioContext ?? (window as any).webkitAudioContext;
+  return new Ctx() as AudioContext;
+}
+
 export async function initAudio(): Promise<boolean> {
   try {
-    if (!_ctx) _ctx = new AudioContext();
+    if (!_ctx) _ctx = makeContext();
     if (_ctx.state !== 'running') await _ctx.resume();
     return _ctx.state === 'running';
   } catch (e) {
     console.error('[sound] init failed', e);
     return false;
   }
+}
+
+/** Call synchronously inside a gesture handler to unblock iOS audio. */
+export function unlockAudioSync() {
+  try {
+    if (!_ctx) _ctx = makeContext();
+    if (_ctx.state === 'suspended') void _ctx.resume();
+  } catch { /* ignore */ }
 }
 
 export function soundEnabled(): boolean {
