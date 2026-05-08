@@ -1676,14 +1676,6 @@ body.ar .pain-link {
   /* Narrower side padding for mobile viewport */
   .site-growth-layer { padding: 88px 24px 0; }
 
-  /* Canvas: start at fixed top, shrink-wrap to content height — no overflow fight */
-  .growth-moment {
-    top: 18dvh;
-    bottom: auto;
-    align-items: center;
-    justify-content: center;
-  }
-
   /* Wrap at word boundaries (not mid-letter) at large sizes */
   .site-growth-layer .char {
     display: inline;
@@ -1691,8 +1683,8 @@ body.ar .pain-link {
   }
 
   .growth-moment-text {
-    font-size: clamp(3rem, 24vw, 8rem);
-    line-height: 1.7;
+    font-size: clamp(3rem, 18vw, 6rem);
+    line-height: 1.25;
     letter-spacing: 0;
     overflow-wrap: break-word;
   }
