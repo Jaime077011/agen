@@ -46,7 +46,22 @@ export function TestimonialsSection() {
 
       ctx = gsap.context(() => {
         const cards = cardRefs.current;
+        const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
+        if (isMobile) {
+          // ── Mobile: scrubbed grid reveal + exit ─────────────────────────
+          const allCards = cards.filter(Boolean) as HTMLDivElement[];
+          gsap.set(allCards, { opacity: 0 });
+          const tl = gsap.timeline({
+            scrollTrigger: { trigger: sectionRef.current, start: 'top top', end: 'bottom bottom', scrub: 1.5 },
+          });
+          tl.to(allCards, { opacity: 1, stagger: 0.04, duration: 0.6, ease: 'power2.out' });
+          tl.to({}, { duration: 1.2 });
+          tl.to(tracksRef.current, { opacity: 0, filter: 'blur(16px)', scale: 1.03, duration: 1, ease: 'power2.inOut' });
+          return;
+        }
+
+        // ── Desktop: scrubbed horizontal carousel ────────────────────────
         gsap.set(cards.filter(Boolean), { opacity: 0 });
         gsap.set([cards[0], cards[1], cards[8], cards[9]], { x: -60 });
 

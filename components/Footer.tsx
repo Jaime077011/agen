@@ -36,28 +36,6 @@ export function Footer() {
       const ease = 'power2.out';
 
       ctx = gsap.context(() => {
-        const isMobile = window.matchMedia('(max-width: 768px)').matches;
-
-        if (isMobile) {
-          const trigger = (el: Element | null) => ({
-            scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' },
-          });
-
-          const wChars = Array.from(wordmarkRef.current?.querySelectorAll('.char') ?? []);
-          gsap.set(wordmarkRef.current, { opacity: 1 });
-          gsap.fromTo(wChars,
-            { opacity: 0, filter: 'blur(10px)' },
-            { opacity: 1, filter: 'blur(0px)', stagger: 0.04, duration: 0.7, ease, ...trigger(wordmarkRef.current) });
-
-          gsap.fromTo(metaRef.current,
-            { opacity: 0, y: 20 },
-            { opacity: 1, y: 0, duration: 0.8, ease, ...trigger(metaRef.current) });
-
-          gsap.fromTo(bottomRef.current,
-            { opacity: 0, y: 16 },
-            { opacity: 1, y: 0, duration: 0.7, ease, ...trigger(bottomRef.current) });
-
-        } else {
           const tl = gsap.timeline({
             scrollTrigger: {
               trigger: sectionRef.current,
@@ -92,7 +70,6 @@ export function Footer() {
 
           // Hold at end
           tl.to({}, { duration: 2 });
-        }
       }, sectionRef);
     })();
 

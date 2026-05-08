@@ -19,7 +19,7 @@ export function PainSection() {
     function updatePhases() {
       const wrapper = wrapperRef.current;
       const section = sectionRef.current;
-      if (!wrapper || !section || window.innerWidth <= 768) return;
+      if (!wrapper || !section) return;
       const rect = wrapper.getBoundingClientRect();
       const total = wrapper.offsetHeight - window.innerHeight;
       const p = Math.max(0, Math.min(1, -rect.top / total));
@@ -30,7 +30,10 @@ export function PainSection() {
     }
 
     window.addEventListener('scroll', updatePhases, { passive: true });
-    return () => window.removeEventListener('scroll', updatePhases);
+
+    return () => {
+      window.removeEventListener('scroll', updatePhases);
+    };
   }, []);
 
   return (

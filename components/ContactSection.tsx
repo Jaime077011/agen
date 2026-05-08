@@ -40,37 +40,6 @@ export function ContactSection() {
       const ease = 'power2.out';
 
       ctx = gsap.context(() => {
-        const isMobile = window.matchMedia('(max-width: 768px)').matches;
-
-        if (isMobile) {
-          const trigger = (el: Element | null) => ({
-            scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' },
-          });
-
-          const hChars = Array.from(headlineRef.current?.querySelectorAll('.char') ?? []);
-          gsap.set(contentRef.current, { opacity: 1 });
-          gsap.fromTo(hChars,
-            { opacity: 0, filter: 'blur(10px)' },
-            { opacity: 1, filter: 'blur(0px)', stagger: 0.03, duration: 0.6, ease, ...trigger(headlineRef.current) });
-
-          gsap.fromTo(subtextRef.current,
-            { opacity: 0, x: -30 },
-            { opacity: 1, x: 0, duration: 0.9, ease, ...trigger(subtextRef.current) });
-
-          const fields = Array.from(fieldsRef.current?.querySelectorAll('.cs-field') ?? []);
-          fields.forEach(field => {
-            gsap.fromTo(field,
-              { opacity: 0, x: -20 },
-              { opacity: 1, x: 0, duration: 0.7, ease, ...trigger(field) });
-          });
-
-          gsap.fromTo(ctaRef.current,
-            { opacity: 0, x: -30 },
-            { opacity: 1, x: 0, duration: 0.9, ease, ...trigger(ctaRef.current) });
-
-          gsap.set(footerStripRef.current, { opacity: 1 });
-
-        } else {
           const tl = gsap.timeline({
             scrollTrigger: {
               trigger: sectionRef.current,
@@ -134,7 +103,6 @@ export function ContactSection() {
 
           // Hold at end
           tl.to({}, { duration: 2.5 });
-        }
       }, sectionRef);
     })();
 

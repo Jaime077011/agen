@@ -3,6 +3,8 @@ import { useEffect } from 'react';
 
 export function CursorTracker() {
   useEffect(() => {
+    if (window.matchMedia('(pointer: coarse)').matches) return;
+
     const dot     = document.getElementById('cursor-dot')     as HTMLElement | null;
     const ring    = document.getElementById('cursor-ring')    as HTMLElement | null;
     const service = document.getElementById('cursor-service') as HTMLElement | null;

@@ -55,66 +55,7 @@ export function SiteSection() {
       const ease = 'power2.out';
 
       ctx = gsap.context(() => {
-        const isMobile = window.matchMedia('(max-width: 768px)').matches;
-
-        if (isMobile) {
-          // ── Mobile: viewport-enter triggers ──────────────────────────────
-          const trigger = (el: Element | null) => ({
-            scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' },
-          });
-          const momentTrigger = (el: Element | null) => ({
-            scrollTrigger: { trigger: el, start: 'top 60%', toggleActions: 'play none none none' },
-          });
-
-          // Moment 1
-          const m1Chars = Array.from(moment1Ref.current?.querySelectorAll('.char') ?? []);
-          gsap.set(moment1Ref.current, { opacity: 1 });
-          gsap.fromTo(m1Chars, { opacity: 0, filter: 'blur(10px)' },
-            { opacity: 1, filter: 'blur(0px)', stagger: 0.06, duration: 0.7, ease, onStart: playMoment, ...momentTrigger(moment1Ref.current) });
-
-          // Moment 2
-          const m2Chars = Array.from(moment2Ref.current?.querySelectorAll('.char') ?? []);
-          gsap.set(moment2Ref.current, { opacity: 1 });
-          gsap.fromTo(m2Chars, { opacity: 0, filter: 'blur(10px)' },
-            { opacity: 1, filter: 'blur(0px)', stagger: 0.06, duration: 0.7, ease, onStart: playMoment, ...momentTrigger(moment2Ref.current) });
-
-          // Headline
-          gsap.set(headlineRef.current, { opacity: 1 });
-          const hChars = Array.from(headlineRef.current?.querySelectorAll('.char') ?? []);
-          gsap.fromTo(hChars, { opacity: 0, filter: 'blur(10px)' },
-            { opacity: 1, filter: 'blur(0px)', stagger: 0.018, duration: 0.4, ease, ...trigger(headlineRef.current) });
-
-          // Subtext — slide from left
-          gsap.fromTo(subtextRef.current,
-            { opacity: 0, x: -40 },
-            { opacity: 1, x: 0, duration: 1.4, ease, ...trigger(subtextRef.current) });
-
-          // Services
-          Array.from(cardsRef.current?.querySelectorAll('.service-row') ?? []).forEach((row) => {
-            gsap.fromTo(row,
-              { opacity: 0, x: -24, pointerEvents: 'none' },
-              { opacity: 1, x: 0, duration: 0.75, ease, onComplete: () => gsap.set(row, { pointerEvents: 'auto' }), ...trigger(row) });
-          });
-
-          // CTA — slide from left
-          gsap.fromTo(ctaRef.current,
-            { opacity: 0, x: -40 },
-            { opacity: 1, x: 0, duration: 1.2, ease, ...trigger(ctaRef.current) });
-
-          // Moment 3
-          const m3Chars = Array.from(moment3Ref.current?.querySelectorAll('.char') ?? []);
-          gsap.set(moment3Ref.current, { opacity: 1 });
-          gsap.fromTo(m3Chars, { opacity: 0, filter: 'blur(10px)' },
-            { opacity: 1, filter: 'blur(0px)', stagger: 0.06, duration: 0.7, ease, onStart: playMoment, ...momentTrigger(moment3Ref.current) });
-
-          // Moment 4
-          const m4Chars = Array.from(moment4Ref.current?.querySelectorAll('.char') ?? []);
-          gsap.set(moment4Ref.current, { opacity: 1 });
-          gsap.fromTo(m4Chars, { opacity: 0, filter: 'blur(10px)' },
-            { opacity: 1, filter: 'blur(0px)', stagger: 0.06, duration: 0.7, ease, onStart: playMoment, ...momentTrigger(moment4Ref.current) });
-
-        } else {
-          // ── Desktop: single scrubbed timeline ────────────────────────────
+          // ── Scrubbed timeline — all screen sizes ─────────────────────────
           const tl = gsap.timeline({
             scrollTrigger: {
               trigger: wrapperRef.current,
@@ -249,7 +190,6 @@ export function SiteSection() {
           tl.to(m4Chars,
             { opacity: 0, filter: 'blur(12px)', stagger: 0.07, duration: 0.8, ease: 'power2.in' });
           tl.to(moment4Ref.current, { opacity: 0, duration: 0.01 }, '<+1.4');
-        }
       }, wrapperRef);
     })();
 
