@@ -54,6 +54,8 @@ export function SiteSection() {
       gsap.registerPlugin(ScrollTrigger);
       const ease = 'power2.out';
 
+      const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
       ctx = gsap.context(() => {
           // ── Scrubbed timeline — all screen sizes ─────────────────────────
           const tl = gsap.timeline({
@@ -65,6 +67,9 @@ export function SiteSection() {
             },
           });
 
+          // Mobile: long hold so user fully reads the hero before anything transitions
+          if (isMobile) tl.to({}, { duration: 6 });
+
           // Hero exit — whole layer dissolves as one scene change
           tl.fromTo(heroLayerRef.current,
             { opacity: 1, filter: 'blur(0px)', scale: 1 },
@@ -74,7 +79,7 @@ export function SiteSection() {
           tl.set(heroLayerRef.current, { pointerEvents: 'none' });
 
           // Breathing room — empty dark frame
-          tl.to({}, { duration: 1 });
+          tl.to({}, { duration: isMobile ? 3 : 1 });
 
           // ── Moment 1: camera rack-focus — materialises from depth ──
           const m1Chars = Array.from(moment1Ref.current?.querySelectorAll('.char') ?? []);

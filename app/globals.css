@@ -1670,7 +1670,7 @@ body.ar .pain-link {
 
 /* ── Mobile — restore sticky, reduce height, tighten padding ── */
 @media (max-width: 768px) {
-  .site-wrapper { height: 700vh; }
+  .site-wrapper { height: 1200vh; }
   .site-sticky { height: 100dvh; }
 
   /* Narrower side padding for mobile viewport */
