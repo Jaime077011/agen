@@ -53,6 +53,14 @@ export function SiteSection() {
 
       gsap.registerPlugin(ScrollTrigger);
       const ease = 'power2.out';
+      const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
+      // iOS Safari stops firing scroll events during momentum scrolling, which
+      // prevents GSAP scrub from updating. normalizeScroll replaces native iOS
+      // scroll handling so every position reaches GSAP reliably.
+      if (window.matchMedia('(any-pointer: coarse)').matches) {
+        ScrollTrigger.normalizeScroll(true);
+      }
 
       ctx = gsap.context(() => {
           // ── Scrubbed timeline — all screen sizes ─────────────────────────
@@ -65,11 +73,18 @@ export function SiteSection() {
             },
           });
 
-          // Hero exit — whole layer dissolves as one scene change
-          tl.fromTo(heroLayerRef.current,
-            { opacity: 1, filter: 'blur(0px)', scale: 1 },
-            { opacity: 0, filter: 'blur(18px)', scale: 1.05, duration: 0.9, ease: 'power2.inOut' },
-            '>');
+          // Hero exit — skip expensive blur filter on mobile to reduce GPU load
+          if (isMobile) {
+            tl.fromTo(heroLayerRef.current,
+              { opacity: 1, scale: 1 },
+              { opacity: 0, scale: 1.03, duration: 0.9, ease: 'power2.inOut' },
+              '>');
+          } else {
+            tl.fromTo(heroLayerRef.current,
+              { opacity: 1, filter: 'blur(0px)', scale: 1 },
+              { opacity: 0, filter: 'blur(18px)', scale: 1.05, duration: 0.9, ease: 'power2.inOut' },
+              '>');
+          }
           // Disable pointer events so the invisible hero layer doesn't block the growth layer
           tl.set(heroLayerRef.current, { pointerEvents: 'none' });
 
@@ -191,6 +206,9 @@ export function SiteSection() {
             { opacity: 0, filter: 'blur(12px)', stagger: 0.07, duration: 0.8, ease: 'power2.in' });
           tl.to(moment4Ref.current, { opacity: 0, duration: 0.01 }, '<+1.4');
       }, wrapperRef);
+
+      // Refresh after layout settles (fonts, images, iOS viewport resize)
+      setTimeout(() => { if (!isCancelled) ScrollTrigger.refresh(); }, 300);
     })();
 
     return () => {
