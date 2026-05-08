@@ -861,7 +861,7 @@ body {
   position: sticky;
   top: 0;
   height: 100vh;
-  overflow: hidden;
+  overflow: clip;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1003,7 +1003,7 @@ body {
   position: sticky;
   top: 0;
   height: 100vh;
-  overflow: hidden;
+  overflow: clip;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -1266,7 +1266,7 @@ body.loaded .anim-fade {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  overflow: hidden;
+  overflow: clip;
   padding: 0 52px;
 }
 
@@ -1458,7 +1458,7 @@ body.ar .pain-link {
   position: sticky;
   top: 0;
   height: 100vh;
-  overflow: hidden;
+  overflow: clip;
 }
 
 /* Nav floats above both layers */
@@ -1721,7 +1721,7 @@ body.ar .pain-link {
   position: sticky;
   top: 0;
   height: 100vh;
-  overflow: hidden;
+  overflow: clip;
   display: flex;
   flex-direction: column;
 }
@@ -1968,7 +1968,7 @@ body.ar .pain-link {
   position: sticky;
   top: 0;
   height: 100vh;
-  overflow: hidden;
+  overflow: clip;
 }
 
 .footer {
@@ -2226,7 +2226,7 @@ body.ar .pain-link {
   position: sticky;
   top: 0;
   height: 100vh;
-  overflow: hidden;
+  overflow: clip;
 }
 
 /* Moment */
@@ -2388,7 +2388,7 @@ body.ar .pain-link {
   position: sticky;
   top: 0;
   height: 100vh;
-  overflow: hidden;
+  overflow: clip;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2562,7 +2562,7 @@ body.ar .pain-link {
   position: sticky;
   top: 0;
   height: 100vh;
-  overflow: hidden;
+  overflow: clip;
 }
 
 .prj-moment {
@@ -2748,7 +2748,7 @@ body.ar .pain-link {
   position: sticky;
   top: 0;
   height: 100vh;
-  overflow: hidden;
+  overflow: clip;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3054,7 +3054,7 @@ body.ar .pain-link {
   position: sticky;
   top: 0;
   height: 100vh;
-  overflow: hidden;
+  overflow: clip;
 }
 
 .abt-moment {
@@ -3203,7 +3203,7 @@ body.ar .pain-link {
   position: sticky;
   top: 0;
   height: 100vh;
-  overflow: hidden;
+  overflow: clip;
   display: flex;
   align-items: center;
   justify-content: center;
