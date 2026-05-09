@@ -55,19 +55,19 @@ export function ProjectsSection() {
         const cards = Array.from(sectionRef.current?.querySelectorAll('.ps-card') ?? []);
         gsap.set(cards, { opacity: 0 });
 
-        // Intro: cards materialise left-to-right (index 0 → N-1)
+        // Intro: cards materialise right-to-left (index N-1 → 0)
         ScrollTrigger.create({
           trigger: sceneRef.current,
           start: 'top 75%',
           onEnter: () => gsap.to(cards, {
             opacity: 1,
-            stagger: { amount: 1.6, from: 'start' },
+            stagger: { amount: 1.6, from: 'end' },
             duration: 0.75, ease: 'power2.out',
           }),
-          // Reverse: cards vanish right-to-left when scrolling back up
+          // Reverse: cards vanish left-to-right when scrolling back up
           onLeaveBack: () => gsap.to(cards, {
             opacity: 0,
-            stagger: { amount: 0.8, from: 'end' },
+            stagger: { amount: 0.8, from: 'start' },
             duration: 0.5, ease: 'power2.in',
           }),
         });
