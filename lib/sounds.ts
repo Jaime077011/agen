@@ -8,20 +8,31 @@ function makeContext(): AudioContext {
   return new Ctx() as AudioContext;
 }
 
-export async function initAudio(): Promise<boolean> {
+export function initAudio(): Promise<boolean> {
   try {
     if (!_ctx) _ctx = makeContext();
-    if (_ctx.state === 'running') return true;
-    // Race resume() against 500 ms: on desktop Chrome, wheel/scroll events are not
-    // "user activations" so resume() may hang indefinitely. The timeout lets the
-    // unlocking flag reset so the next real click/keydown can retry successfully.
-    return await Promise.race([
-      _ctx.resume().then(() => true as const),
-      new Promise<false>(res => setTimeout(() => res(false), 500)),
-    ]);
+    if (_ctx.state === 'running') return Promise.resolve(true);
+    const ctx = _ctx;
+    return new Promise<boolean>(resolve => {
+      let settled = false;
+      const done = (ok: boolean) => {
+        if (settled) return;
+        settled = true;
+        ctx.onstatechange = null;
+        clearTimeout(timer);
+        resolve(ok);
+      };
+      // Give up after 1 s — non-user-activation scroll events on Chrome never
+      // resolve resume(), so this lets the unlocking flag reset for the next tap.
+      const timer = setTimeout(() => done(false), 1000);
+      // statechange fires when iOS actually transitions to running
+      ctx.onstatechange = () => { if (ctx.state === 'running') done(true); };
+      // resume() promise also resolves when running — whichever lands first wins
+      void ctx.resume().then(() => done(true)).catch(() => done(false));
+    });
   } catch (e) {
     console.error('[sound] init failed', e);
-    return false;
+    return Promise.resolve(false);
   }
 }
 

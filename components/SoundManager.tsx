@@ -3,8 +3,14 @@ import { useEffect } from 'react';
 import { unlockAudioSync, initAudio, playHover, playClick, playPageOpen, startAmbient, soundEnabled } from '@/lib/sounds';
 import { getConsent } from '@/lib/consent';
 
-const UNLOCK_EVENTS  = ['click', 'keydown', 'touchstart', 'touchend', 'pointerdown'] as const;
-const UNLOCK_PASSIVE = ['wheel', 'touchmove'] as const;
+// touchstart is sync-only prime — NOT in async unlock list.
+// On iOS the event order is: touchstart → pointerdown → touchend → click.
+// Setting unlocking=true on touchstart would block touchend/click (the events
+// browsers reliably treat as user-activations for AudioContext) from running
+// the real unlock when resume() takes longer than the timeout.
+const SYNC_PRIME_EVENTS = ['touchstart'] as const;
+const UNLOCK_EVENTS     = ['click', 'keydown', 'touchend', 'pointerdown'] as const;
+const UNLOCK_PASSIVE    = ['wheel', 'touchmove'] as const;
 
 export function SoundManager() {
   useEffect(() => {
@@ -14,6 +20,7 @@ export function SoundManager() {
     function onAudioReady() {
       if (unlocked) return;
       unlocked = true;
+      SYNC_PRIME_EVENTS.forEach(e => window.removeEventListener(e, primeSync));
       UNLOCK_EVENTS.forEach(e => window.removeEventListener(e, tryUnlock));
       UNLOCK_PASSIVE.forEach(e => window.removeEventListener(e, tryUnlock));
       if (!soundEnabled()) return;
@@ -25,9 +32,15 @@ export function SoundManager() {
       }));
     }
 
+    // touchstart: just prime the iOS AudioContext synchronously within the gesture.
+    // The actual async unlock runs on touchend/click which fire ~50 ms later.
+    function primeSync() {
+      if (!unlocked) unlockAudioSync();
+    }
+
     // Retries on every event until a real user-activation gesture lets resume() succeed.
     // wheel/scroll are NOT user activations on Chrome desktop so initAudio() returns
-    // false after the 300 ms timeout and the listeners stay alive for the next click.
+    // false after the 1 s timeout and the listeners stay alive for the next click.
     function tryUnlock() {
       if (unlocked || unlocking) return;
       unlocking = true;
@@ -39,6 +52,7 @@ export function SoundManager() {
       });
     }
 
+    SYNC_PRIME_EVENTS.forEach(e => window.addEventListener(e, primeSync, { passive: true }));
     UNLOCK_EVENTS.forEach(e => window.addEventListener(e, tryUnlock));
     UNLOCK_PASSIVE.forEach(e => window.addEventListener(e, tryUnlock, { passive: true }));
 
@@ -63,6 +77,7 @@ export function SoundManager() {
     document.addEventListener('click',     playClick);
 
     return () => {
+      SYNC_PRIME_EVENTS.forEach(e => window.removeEventListener(e, primeSync));
       UNLOCK_EVENTS.forEach(e => window.removeEventListener(e, tryUnlock));
       UNLOCK_PASSIVE.forEach(e => window.removeEventListener(e, tryUnlock));
       document.removeEventListener('mouseover', onOver);
