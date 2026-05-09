@@ -1558,6 +1558,12 @@ body.ar .pain-link {
   transform-origin: center center;
 }
 
+/* Space between word-line spans on desktop (split(' ') strips spaces from the source) */
+.word-line::after {
+  content: '\0020';
+  white-space: pre;
+}
+
 .growth-moment-text {
   font-family: var(--font-montserrat), sans-serif;
   font-size: clamp(2.8rem, 5.5vw, 5rem);
@@ -1739,6 +1745,9 @@ body.ar .pain-link {
   /* One word per line on mobile */
   .word-line {
     display: block;
+  }
+  .word-line::after {
+    content: none;
   }
 
   .growth-moment-text {
