@@ -268,7 +268,8 @@ export function NoiseBackground() {
       gl!.viewport(0, 0, canvas!.width, canvas!.height);
       gl!.uniform1f(uW, canvas!.width);
       gl!.uniform1f(uH, canvas!.height);
-      const radius = Math.min(canvas!.width, canvas!.height) * 0.52;
+      // Scale with screen on mobile; cap at 220 to preserve desktop cursor feel
+      const radius = Math.min(Math.min(canvas!.width, canvas!.height) * 0.52, 220);
       gl!.uniform1f(uR, radius);
     }
 
