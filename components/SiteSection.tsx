@@ -28,6 +28,16 @@ function chars(text: string, prefix: string) {
   ));
 }
 
+function wordChars(text: string, prefix: string) {
+  return text.split(' ').map((word, wi) => (
+    <span key={`${prefix}-w${wi}`} className="word-line">
+      {word.split('').map((c, ci) => (
+        <span key={`${prefix}-${wi}-${ci}`} className="char">{c}</span>
+      ))}
+    </span>
+  ));
+}
+
 export function SiteSection() {
   const wrapperRef        = useRef<HTMLDivElement>(null);
   const heroLayerRef      = useRef<HTMLDivElement>(null);
@@ -231,7 +241,7 @@ export function SiteSection() {
           {/* Moment 1 — full-screen centered headline */}
           <div className="growth-moment" ref={moment1Ref}>
             <p className="growth-moment-text">
-              {chars('We help you grow.', 'm1')}
+              {wordChars('We help you grow.', 'm1')}
             </p>
           </div>
 

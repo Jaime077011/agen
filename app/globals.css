@@ -1679,6 +1679,11 @@ body.ar .pain-link {
     white-space: normal;
   }
 
+  /* One word per line on mobile */
+  .word-line {
+    display: block;
+  }
+
   .growth-moment-text {
     font-size: clamp(3rem, 18vw, 6rem);
     line-height: 1.25;
