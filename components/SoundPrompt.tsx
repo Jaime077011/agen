@@ -8,9 +8,10 @@ export function SoundPrompt() {
 
   useEffect(() => {
     const consent = getConsent();
-    if (!consent || consent.sound === false) return;
-
-    const showTimer = setTimeout(() => setVisible(true), 1400);
+    // Show for any returning visitor who has sound enabled (or hasn't explicitly declined)
+    if (consent && consent.sound === false) return;
+    // Don't show to brand-new visitors — consent banner handles them
+    if (!consent) return;
 
     function dismiss() {
       window.removeEventListener('pointerdown', dismiss);
@@ -18,8 +19,13 @@ export function SoundPrompt() {
       setLeaving(true);
     }
 
-    window.addEventListener('pointerdown', dismiss);
-    window.addEventListener('keydown',     dismiss);
+    // Add dismiss listeners only AFTER the prompt is visible —
+    // otherwise any click during the 1.4s window silently kills it before it appears
+    const showTimer = setTimeout(() => {
+      setVisible(true);
+      window.addEventListener('pointerdown', dismiss);
+      window.addEventListener('keydown',     dismiss);
+    }, 1400);
 
     return () => {
       clearTimeout(showTimer);
