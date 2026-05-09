@@ -7,6 +7,17 @@ function chars(text: string) {
   ));
 }
 
+function wordChars(text: string, prefix: string) {
+  const words = text.split(' ');
+  return words.map((word, wi) => (
+    <span key={`${prefix}-w${wi}`} className="word-line">
+      {word.split('').map((c, ci) => (
+        <span key={`${prefix}-${wi}-${ci}`} className="char">{c}</span>
+      ))}
+    </span>
+  ));
+}
+
 const PROJECTS = [
   {
     number: '01',
@@ -142,7 +153,7 @@ export function ProjectsSection() {
 
         {/* CTA moment */}
         <div className="ps-moment" ref={momentRef}>
-          <p className="ps-moment-text">{chars('Hear from our clients.')}</p>
+          <p className="ps-moment-text">{wordChars('Hear from our clients.', 'ps-m')}</p>
         </div>
 
       </div>
