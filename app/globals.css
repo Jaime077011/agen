@@ -941,6 +941,72 @@ body {
   text-transform: uppercase;
 }
 
+/* Pause spin on hover so the CTA is reachable */
+.ps-scene:hover .ps-a3d {
+  animation-play-state: paused;
+}
+
+/* Dark scrim that fades in behind the CTA */
+.ps-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 8, 8, 0.58);
+  opacity: 0;
+  transition: opacity 0.38s ease;
+  z-index: 1;
+}
+
+.ps-card:hover::before {
+  opacity: 1;
+}
+
+/* CTA pill */
+.ps-card-cta {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, calc(-50% + 18px));
+  opacity: 0;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 26px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--white);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 0.38s ease, transform 0.38s ease, border-color 0.25s;
+}
+
+.ps-card:hover .ps-card-cta {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+}
+
+.ps-card-cta:hover {
+  border-color: var(--accent);
+}
+
+/* Accent arrow circle — matches site-wide pill style */
+.ps-card-cta-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--accent);
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
 /* Moment area */
 .ps-moment-area {
   height: 300vh;
