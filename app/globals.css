@@ -854,38 +854,50 @@ body {
   padding-top: 120px;
 }
 
-/* Carousel */
-.ps-carousel {
-  display: flex;
-  gap: 20px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  cursor: grab;
-  padding-bottom: 40px;
-  /* first/last card centering handled via padding */
-  padding-left: calc((100vw - 65vw) / 2);
-  padding-right: calc((100vw - 65vw) / 2);
-}
+/* 3D scene — ported from Ana Tudor's pure-css carousel */
+.ps-scene, .ps-a3d { display: grid; }
 
-.ps-carousel::-webkit-scrollbar { display: none; }
-.ps-carousel.is-dragging { cursor: grabbing; scroll-snap-type: none; }
-
-.ps-carousel-card {
-  flex-shrink: 0;
-  width: 65vw;
-  height: 75vh;
-  border-radius: 24px;
+.ps-scene {
   overflow: hidden;
-  scroll-snap-align: center;
-  position: relative;
-  box-shadow:
-    0 32px 80px rgba(0,0,0,0.7),
-    0 0 0 1px rgba(255,255,255,0.06);
+  perspective: 40em;
+  /* lateral fade so cards blend into the dark bg at the edges */
+  mask: linear-gradient(90deg, #0000, #fff 18% 82%, #0000);
+  -webkit-mask: linear-gradient(90deg, #0000, #fff 18% 82%, #0000);
+  height: 78vh;
 }
 
-.ps-carousel-img {
+.ps-a3d {
+  place-self: center;
+  transform-style: preserve-3d;
+  animation: ps-spin 28s linear infinite;
+}
+
+@keyframes ps-spin {
+  to { transform: rotateY(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ps-a3d { animation-duration: 120s; }
+}
+
+.ps-card {
+  --w: 22em;
+  --ba: calc(1turn / var(--n));
+  grid-area: 1 / 1; /* stack all cards in the same cell */
+  width: var(--w);
+  aspect-ratio: 7 / 10;
+  border-radius: 1.5em;
+  backface-visibility: hidden;
+  /* rotate each card to its slice of the circle, then push it outward */
+  transform:
+    rotateY(calc(var(--i) * var(--ba)))
+    translateZ(calc(-1 * (.5 * var(--w) + .5em) / tan(.5 * var(--ba))));
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.07);
+}
+
+.ps-card-img {
   width: 100%;
   height: 100%;
   background: linear-gradient(
@@ -896,27 +908,27 @@ body {
   );
 }
 
-.ps-carousel-overlay {
+.ps-card-overlay {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 32px 32px 28px;
-  background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%);
+  padding: 2.4em 1.8em 1.6em;
+  background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, transparent 100%);
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 0.3em;
 }
 
 .ps-overlay-num {
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 0.14em;
   color: var(--accent);
 }
 
 .ps-overlay-cat {
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.06em;
   color: rgba(255,255,255,0.85);
@@ -1078,23 +1090,11 @@ body {
   }
 }
 
-/* Mobile — tighter carousel */
+/* Mobile — smaller cards */
 @media (max-width: 768px) {
   .ps-section { padding-top: 80px; }
-
-  .ps-carousel {
-    gap: 14px;
-    padding-left: calc((100vw - 82vw) / 2);
-    padding-right: calc((100vw - 82vw) / 2);
-  }
-
-  .ps-carousel-card {
-    width: 82vw;
-    height: 62vh;
-    border-radius: 18px;
-  }
-
-  .ps-carousel-overlay { padding: 20px 20px 18px; }
+  .ps-scene { height: 60vh; perspective: 28em; }
+  .ps-card { --w: 13em; }
 }
 
 /* ARABIC / RTL */

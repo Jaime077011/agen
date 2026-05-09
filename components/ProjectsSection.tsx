@@ -20,9 +20,11 @@ const PROJECTS = [
   { number: '06', category: 'AI Systems' },
 ];
 
+const N = PROJECTS.length;
+
 export function ProjectsSection() {
   const sectionRef    = useRef<HTMLDivElement>(null);
-  const carouselRef   = useRef<HTMLDivElement>(null);
+  const sceneRef      = useRef<HTMLDivElement>(null);
   const momentAreaRef = useRef<HTMLDivElement>(null);
   const momentRef     = useRef<HTMLDivElement>(null);
 
@@ -30,43 +32,6 @@ export function ProjectsSection() {
     let isCancelled = false;
     let ctx: { revert: () => void } | null = null;
 
-    // ── Drag-to-scroll (desktop) ──
-    const carousel = carouselRef.current;
-    let cleanupDrag = () => {};
-
-    if (carousel) {
-      let isDown = false;
-      let startX = 0;
-      let scrollLeft = 0;
-
-      const onDown  = (e: MouseEvent) => {
-        isDown = true;
-        carousel.classList.add('is-dragging');
-        startX = e.pageX - carousel.offsetLeft;
-        scrollLeft = carousel.scrollLeft;
-      };
-      const onLeave = () => { isDown = false; carousel.classList.remove('is-dragging'); };
-      const onUp    = () => { isDown = false; carousel.classList.remove('is-dragging'); };
-      const onMove  = (e: MouseEvent) => {
-        if (!isDown) return;
-        e.preventDefault();
-        carousel.scrollLeft = scrollLeft - (e.pageX - carousel.offsetLeft - startX) * 1.4;
-      };
-
-      carousel.addEventListener('mousedown', onDown);
-      carousel.addEventListener('mouseleave', onLeave);
-      carousel.addEventListener('mouseup', onUp);
-      carousel.addEventListener('mousemove', onMove);
-
-      cleanupDrag = () => {
-        carousel.removeEventListener('mousedown', onDown);
-        carousel.removeEventListener('mouseleave', onLeave);
-        carousel.removeEventListener('mouseup', onUp);
-        carousel.removeEventListener('mousemove', onMove);
-      };
-    }
-
-    // ── GSAP ──
     (async () => {
       const { default: gsap } = await import('gsap');
       const { ScrollTrigger }  = await import('gsap/ScrollTrigger');
@@ -78,15 +43,13 @@ export function ProjectsSection() {
         const dispatchNoiseMode = (mode: number) =>
           window.dispatchEvent(new CustomEvent('noise-mode', { detail: mode }));
 
-        // Carousel fade-in
-        gsap.set(carouselRef.current, { opacity: 0, y: 60 });
+        // Scene fade-in
+        gsap.set(sceneRef.current, { opacity: 0 });
         ScrollTrigger.create({
-          trigger: carouselRef.current,
-          start: 'top 90%',
-          onEnter: () => gsap.to(carouselRef.current, {
-            opacity: 1, y: 0, duration: 1.1, ease: 'power2.out',
-          }),
-          onLeaveBack: () => gsap.set(carouselRef.current, { opacity: 0, y: 60 }),
+          trigger: sceneRef.current,
+          start: 'top 85%',
+          onEnter: () => gsap.to(sceneRef.current, { opacity: 1, duration: 1.4, ease: 'power2.out' }),
+          onLeaveBack: () => gsap.set(sceneRef.current, { opacity: 0 }),
         });
 
         // Moment
@@ -119,7 +82,6 @@ export function ProjectsSection() {
     })();
 
     return () => {
-      cleanupDrag();
       isCancelled = true;
       ctx?.revert();
     };
@@ -128,18 +90,29 @@ export function ProjectsSection() {
   return (
     <div className="ps-section" ref={sectionRef}>
 
-      <div className="ps-carousel" ref={carouselRef}>
-        {PROJECTS.map((p, i) => (
-          <div key={i} className="ps-carousel-card">
-            <div className="ps-carousel-img" />
-            <div className="ps-carousel-overlay">
-              <span className="ps-overlay-num">#{p.number}</span>
-              <span className="ps-overlay-cat">{p.category}</span>
+      {/* 3D carousel */}
+      <div className="ps-scene" ref={sceneRef}>
+        <div
+          className="ps-a3d"
+          style={{ '--n': N } as React.CSSProperties}
+        >
+          {PROJECTS.map((p, i) => (
+            <div
+              key={i}
+              className="ps-card"
+              style={{ '--i': i } as React.CSSProperties}
+            >
+              <div className="ps-card-img" />
+              <div className="ps-card-overlay">
+                <span className="ps-overlay-num">#{p.number}</span>
+                <span className="ps-overlay-cat">{p.category}</span>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
+      {/* Moment */}
       <div className="ps-moment-area" ref={momentAreaRef}>
         <div className="ps-moment-sticky">
           <div className="ps-moment" ref={momentRef}>
