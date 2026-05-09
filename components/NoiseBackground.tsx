@@ -80,11 +80,13 @@ void main(){
   float cursorGlow=smoothstep(revealRadius*2.2,0.0,dist)*0.12;
 
   // Edge/border reveal — noise glows at the screen perimeter, dark in centre
-  float edgeDist=min(min(gl_FragCoord.x,width-gl_FragCoord.x),min(gl_FragCoord.y,height-gl_FragCoord.y));
-  float edgeReveal=(1.0-smoothstep(0.0,revealRadius*0.75,edgeDist))*0.45;
+  // Half-circle: centred at screen bottom-middle, intense there, fades upward
+  vec2  bottomCentre=vec2(width*0.5,0.0);
+  float halfDist=length(gl_FragCoord.xy-bottomCentre);
+  float halfReveal=(1.0-smoothstep(0.0,height*1.1,halfDist))*0.65;
 
-  float reveal=mix(cursorReveal,edgeReveal,revealMode);
-  float glow  =mix(cursorGlow,  0.0,       revealMode);
+  float reveal=mix(cursorReveal,halfReveal,revealMode);
+  float glow  =mix(cursorGlow,  0.0,      revealMode);
   float alpha=intensity*reveal*0.80+glow*0.5;
   vec3  rgb=hue*(reveal*0.80+glow);
   fragColor=vec4(rgb*alpha,alpha);
@@ -172,11 +174,13 @@ void main(){
   float cursorReveal=smoothstep(revealRadius,revealRadius*0.05,dist);
   float cursorGlow=smoothstep(revealRadius*2.2,0.0,dist)*0.12;
 
-  float edgeDist=min(min(gl_FragCoord.x,width-gl_FragCoord.x),min(gl_FragCoord.y,height-gl_FragCoord.y));
-  float edgeReveal=(1.0-smoothstep(0.0,revealRadius*0.75,edgeDist))*0.45;
+  // Half-circle: centred at screen bottom-middle, intense there, fades upward
+  vec2  bottomCentre=vec2(width*0.5,0.0);
+  float halfDist=length(gl_FragCoord.xy-bottomCentre);
+  float halfReveal=(1.0-smoothstep(0.0,height*1.1,halfDist))*0.65;
 
-  float reveal=mix(cursorReveal,edgeReveal,revealMode);
-  float glow  =mix(cursorGlow,  0.0,       revealMode);
+  float reveal=mix(cursorReveal,halfReveal,revealMode);
+  float glow  =mix(cursorGlow,  0.0,      revealMode);
   float alpha=intensity*reveal*0.80+glow*0.5;
   vec3  rgb=hue*(reveal*0.80+glow);
   gl_FragColor=vec4(rgb*alpha,alpha);
