@@ -3,35 +3,39 @@ import { useEffect } from 'react';
 import { unlockAudioSync, initAudio, playHover, playClick, playPageOpen, startAmbient, soundEnabled } from '@/lib/sounds';
 import { getConsent } from '@/lib/consent';
 
-const UNLOCK_EVENTS  = ['click', 'keydown', 'touchstart', 'touchend'] as const;
+const UNLOCK_EVENTS  = ['click', 'keydown', 'touchstart', 'touchend', 'pointerdown'] as const;
 const UNLOCK_PASSIVE = ['wheel', 'touchmove'] as const;
 
 export function SoundManager() {
   useEffect(() => {
     let unlocked  = false;
-    let unlocking = false; // true while initAudio() is in-flight
+    let unlocking = false;
 
+    function onAudioReady() {
+      if (unlocked) return;
+      unlocked = true;
+      UNLOCK_EVENTS.forEach(e => window.removeEventListener(e, tryUnlock));
+      UNLOCK_PASSIVE.forEach(e => window.removeEventListener(e, tryUnlock));
+      if (!soundEnabled()) return;
+      document.body.classList.remove('loaded');
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        document.body.classList.add('loaded');
+        playPageOpen();
+        startAmbient();
+      }));
+    }
+
+    // Retries on every event until a real user-activation gesture lets resume() succeed.
+    // wheel/scroll are NOT user activations on Chrome desktop so initAudio() returns
+    // false after the 300 ms timeout and the listeners stay alive for the next click.
     function tryUnlock() {
       if (unlocked || unlocking) return;
       unlocking = true;
-      // Unblock iOS AudioContext synchronously within the gesture handler
       unlockAudioSync();
       initAudio().then(ok => {
         unlocking = false;
-        if (!ok) return; // wheel/scroll isn't a user-activation on desktop Chrome —
-                         // keep listeners alive so the next real click can retry
-        unlocked = true;
-        UNLOCK_EVENTS.forEach(e => window.removeEventListener(e, tryUnlock));
-        UNLOCK_PASSIVE.forEach(e => window.removeEventListener(e, tryUnlock));
-        const hasConsent = !!getConsent();
-        if (hasConsent && soundEnabled()) {
-          document.body.classList.remove('loaded');
-          requestAnimationFrame(() => requestAnimationFrame(() => {
-            document.body.classList.add('loaded');
-            playPageOpen();
-            startAmbient();
-          }));
-        }
+        if (!ok) return;
+        if (getConsent()) onAudioReady();
       });
     }
 
