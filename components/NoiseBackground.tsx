@@ -76,12 +76,13 @@ void main(){
   float reveal=smoothstep(revealRadius,revealRadius*0.05,dist);
   float glow=smoothstep(revealRadius*2.2,0.0,dist)*0.12;
   float alpha=intensity*reveal*0.80+glow*0.5;
-  fragColor=vec4(hue*(reveal*0.80+glow),alpha);
+  vec3  rgb=hue*(reveal*0.80+glow);
+  // Premultiplied alpha output — required for premultipliedAlpha:true (iOS-safe)
+  fragColor=vec4(rgb*alpha,alpha);
 }
 `;
 
-// WebGL1 shaders (GLSL ES 1.00) — fallback for iOS Safari < 15
-// Dynamic array indexing is spec-undefined in GLSL ES 1.0, so we use a loop.
+// WebGL1 shaders (GLSL ES 1.00) — fallback for older iOS / no WebGL2
 const VERT1 = `
 precision mediump float;
 attribute vec2 position;
@@ -144,6 +145,7 @@ float snoise(vec3 v){
   return 42.0*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
 }
 
+// Loop-based lookup — dynamic array index is undefined in GLSL ES 1.0
 vec3 hueLookup(int idx){
   for(int i=0;i<15;i++){ if(i==idx) return hueTb[i]; }
   return hueTb[14];
@@ -160,7 +162,8 @@ void main(){
   float reveal=smoothstep(revealRadius,revealRadius*0.05,dist);
   float glow=smoothstep(revealRadius*2.2,0.0,dist)*0.12;
   float alpha=intensity*reveal*0.80+glow*0.5;
-  gl_FragColor=vec4(hue*(reveal*0.80+glow),alpha);
+  vec3  rgb=hue*(reveal*0.80+glow);
+  gl_FragColor=vec4(rgb*alpha,alpha);
 }
 `;
 
@@ -183,9 +186,9 @@ export function NoiseBackground() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctxOpts = { alpha: true, premultipliedAlpha: false };
+    // premultipliedAlpha: true (default) — premultipliedAlpha:false is broken on iOS Safari
+    const ctxOpts = { alpha: true, antialias: false, premultipliedAlpha: true };
 
-    // Try WebGL2 first; fall back to WebGL1 for iOS Safari < 15
     let gl: WebGLRenderingContext | null = null;
     let isGL2 = false;
     const gl2 = canvas.getContext('webgl2', ctxOpts);
@@ -206,7 +209,6 @@ export function NoiseBackground() {
     let autoTime = 0;
     let prevT    = performance.now();
 
-    // Start in auto mode; first real mousemove switches to cursor tracking
     let autoMode = true;
     let targetX  = window.innerWidth  / 2;
     let targetY  = window.innerHeight / 2;
@@ -224,6 +226,9 @@ export function NoiseBackground() {
       const s = gl!.createShader(type)!;
       gl!.shaderSource(s, src);
       gl!.compileShader(s);
+      if (!gl!.getShaderParameter(s, gl!.COMPILE_STATUS)) {
+        console.error('[noise] shader error:', gl!.getShaderInfoLog(s));
+      }
       return s;
     }
 
@@ -231,6 +236,10 @@ export function NoiseBackground() {
     gl.attachShader(prog, compile(VERT, gl.VERTEX_SHADER));
     gl.attachShader(prog, compile(FRAG, gl.FRAGMENT_SHADER));
     gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+      console.error('[noise] link error:', gl.getProgramInfoLog(prog));
+      return;
+    }
     gl.useProgram(prog);
 
     const buf = gl.createBuffer();
@@ -249,7 +258,8 @@ export function NoiseBackground() {
     const uHue = gl.getUniformLocation(prog, 'hueTb');
 
     gl.enable(gl.BLEND);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    // ONE, ONE_MINUS_SRC_ALPHA — correct blend for premultiplied alpha output
+    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
     gl.clearColor(0, 0, 0, 0);
 
     function resize() {
