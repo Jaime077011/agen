@@ -18,6 +18,7 @@ uniform float time;
 uniform float scale;
 uniform vec2  cursor;
 uniform float revealRadius;
+uniform float revealMode;
 uniform vec3  hueTb[15];
 
 vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x,289.0);}
@@ -72,12 +73,20 @@ void main(){
   n=15.0*n;
   vec3  hue=hueTb[int(floor(n))];
   float intensity=(1.0-cos(n*2.0*PI))*0.5;
+
+  // Cursor torch reveal
   float dist=length(gl_FragCoord.xy-cursor);
-  float reveal=smoothstep(revealRadius,revealRadius*0.05,dist);
-  float glow=smoothstep(revealRadius*2.2,0.0,dist)*0.12;
+  float cursorReveal=smoothstep(revealRadius,revealRadius*0.05,dist);
+  float cursorGlow=smoothstep(revealRadius*2.2,0.0,dist)*0.12;
+
+  // Edge/border reveal — noise glows at the screen perimeter, dark in centre
+  float edgeDist=min(min(gl_FragCoord.x,width-gl_FragCoord.x),min(gl_FragCoord.y,height-gl_FragCoord.y));
+  float edgeReveal=1.0-smoothstep(0.0,revealRadius*1.4,edgeDist);
+
+  float reveal=mix(cursorReveal,edgeReveal,revealMode);
+  float glow  =mix(cursorGlow,  0.0,       revealMode);
   float alpha=intensity*reveal*0.80+glow*0.5;
   vec3  rgb=hue*(reveal*0.80+glow);
-  // Premultiplied alpha output — required for premultipliedAlpha:true (iOS-safe)
   fragColor=vec4(rgb*alpha,alpha);
 }
 `;
@@ -98,6 +107,7 @@ uniform float time;
 uniform float scale;
 uniform vec2  cursor;
 uniform float revealRadius;
+uniform float revealMode;
 uniform vec3  hueTb[15];
 
 vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x,289.0);}
@@ -145,7 +155,6 @@ float snoise(vec3 v){
   return 42.0*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
 }
 
-// Loop-based lookup — dynamic array index is undefined in GLSL ES 1.0
 vec3 hueLookup(int idx){
   for(int i=0;i<15;i++){ if(i==idx) return hueTb[i]; }
   return hueTb[14];
@@ -158,9 +167,16 @@ void main(){
   n=15.0*n;
   vec3  hue=hueLookup(int(floor(n)));
   float intensity=(1.0-cos(n*2.0*PI))*0.5;
+
   float dist=length(gl_FragCoord.xy-cursor);
-  float reveal=smoothstep(revealRadius,revealRadius*0.05,dist);
-  float glow=smoothstep(revealRadius*2.2,0.0,dist)*0.12;
+  float cursorReveal=smoothstep(revealRadius,revealRadius*0.05,dist);
+  float cursorGlow=smoothstep(revealRadius*2.2,0.0,dist)*0.12;
+
+  float edgeDist=min(min(gl_FragCoord.x,width-gl_FragCoord.x),min(gl_FragCoord.y,height-gl_FragCoord.y));
+  float edgeReveal=1.0-smoothstep(0.0,revealRadius*1.4,edgeDist);
+
+  float reveal=mix(cursorReveal,edgeReveal,revealMode);
+  float glow  =mix(cursorGlow,  0.0,       revealMode);
   float alpha=intensity*reveal*0.80+glow*0.5;
   vec3  rgb=hue*(reveal*0.80+glow);
   gl_FragColor=vec4(rgb*alpha,alpha);
@@ -215,6 +231,14 @@ export function NoiseBackground() {
     let smoothX  = targetX;
     let smoothY  = targetY;
 
+    // revealMode: 0 = cursor torch, 1 = edge/border glow (moment 1)
+    let noiseModeTarget = 0;
+    let noiseModeSmooth = 0;
+    function onNoiseMode(e: Event) {
+      noiseModeTarget = (e as CustomEvent<number>).detail;
+    }
+    window.addEventListener('noise-mode', onNoiseMode);
+
     function onMouseMove(e: MouseEvent) {
       autoMode = false;
       targetX  = e.clientX;
@@ -249,13 +273,14 @@ export function NoiseBackground() {
     gl.enableVertexAttribArray(posAttr);
     gl.vertexAttribPointer(posAttr, 2, gl.FLOAT, false, 8, 0);
 
-    const uW   = gl.getUniformLocation(prog, 'width');
-    const uH   = gl.getUniformLocation(prog, 'height');
-    const uT   = gl.getUniformLocation(prog, 'time');
-    const uS   = gl.getUniformLocation(prog, 'scale');
-    const uC   = gl.getUniformLocation(prog, 'cursor');
-    const uR   = gl.getUniformLocation(prog, 'revealRadius');
-    const uHue = gl.getUniformLocation(prog, 'hueTb');
+    const uW    = gl.getUniformLocation(prog, 'width');
+    const uH    = gl.getUniformLocation(prog, 'height');
+    const uT    = gl.getUniformLocation(prog, 'time');
+    const uS    = gl.getUniformLocation(prog, 'scale');
+    const uC    = gl.getUniformLocation(prog, 'cursor');
+    const uR    = gl.getUniformLocation(prog, 'revealRadius');
+    const uMode = gl.getUniformLocation(prog, 'revealMode');
+    const uHue  = gl.getUniformLocation(prog, 'hueTb');
 
     gl.enable(gl.BLEND);
     // ONE, ONE_MINUS_SRC_ALPHA — correct blend for premultiplied alpha output
@@ -304,9 +329,11 @@ export function NoiseBackground() {
       const lerpK = autoMode ? 0.025 : 0.08;
       smoothX = lerp(smoothX, targetX, lerpK);
       smoothY = lerp(smoothY, targetY, lerpK);
+      noiseModeSmooth = lerp(noiseModeSmooth, noiseModeTarget, 0.03);
 
       gl!.clear(gl!.COLOR_BUFFER_BIT);
       gl!.uniform1f(uT, runTime);
+      gl!.uniform1f(uMode, noiseModeSmooth);
       gl!.uniform2f(uC, smoothX, canvas!.height - smoothY);
       gl!.drawArrays(gl!.TRIANGLE_STRIP, 0, 4);
       animId = requestAnimationFrame(draw);
@@ -318,6 +345,7 @@ export function NoiseBackground() {
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('resize', resize);
       window.removeEventListener('accent-change', onAccentChange);
+      window.removeEventListener('noise-mode', onNoiseMode);
     };
   }, []);
 

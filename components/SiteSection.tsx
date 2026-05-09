@@ -96,9 +96,14 @@ export function SiteSection() {
 
           // ── Moment 1: camera rack-focus — materialises from depth ──
           const m1Chars = Array.from(moment1Ref.current?.querySelectorAll('.char') ?? []);
+          const dispatchNoiseMode = (mode: number) =>
+            window.dispatchEvent(new CustomEvent('noise-mode', { detail: mode }));
+
           tl.fromTo(moment1Ref.current,
             { opacity: 0, scale: 0.91, ...(isMobile ? {} : { filter: 'blur(24px)' }) },
-            { opacity: 1, scale: 1,    ...(isMobile ? {} : { filter: 'blur(0px)' }),  duration: 1.4, ease: 'power2.out', onStart: playMoment },
+            { opacity: 1, scale: 1,    ...(isMobile ? {} : { filter: 'blur(0px)' }),  duration: 1.4, ease: 'power2.out',
+              onStart: () => { playMoment(); dispatchNoiseMode(1); },
+              onReverseComplete: () => dispatchNoiseMode(0) },
             '>');
           tl.fromTo(m1Chars,
             { opacity: 0, ...(isMobile ? {} : { filter: 'blur(10px)' }) },
@@ -110,7 +115,9 @@ export function SiteSection() {
 
           // Moment 1 exits char by char
           tl.to(m1Chars,
-            { opacity: 0, ...(isMobile ? {} : { filter: 'blur(12px)' }), stagger: 0.07, duration: 0.8, ease: 'power2.in' });
+            { opacity: 0, ...(isMobile ? {} : { filter: 'blur(12px)' }), stagger: 0.07, duration: 0.8, ease: 'power2.in',
+              onStart: () => dispatchNoiseMode(0),
+              onReverseComplete: () => dispatchNoiseMode(1) });
           tl.to(moment1Ref.current, { opacity: 0, duration: 0.01 }, '<+1.4');
 
           // ── Moment 2: chars blur in ───────────────────────────────────────
