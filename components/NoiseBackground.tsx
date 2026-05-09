@@ -85,8 +85,9 @@ void main(){
   float halfDist=length(gl_FragCoord.xy-bottomCentre);
   float halfReveal=(1.0-smoothstep(0.0,height*1.1,halfDist))*0.65;
 
-  float reveal=mix(cursorReveal,halfReveal,revealMode);
-  float glow  =mix(cursorGlow,  0.0,      revealMode);
+  // Additive: half-circle fades in as a base layer, cursor torch always on top
+  float reveal=clamp(cursorReveal+halfReveal*revealMode,0.0,1.0);
+  float glow  =cursorGlow;
   float alpha=intensity*reveal*0.80+glow*0.5;
   vec3  rgb=hue*(reveal*0.80+glow);
   fragColor=vec4(rgb*alpha,alpha);
@@ -182,8 +183,9 @@ void main(){
   float halfDist=length(gl_FragCoord.xy-bottomCentre);
   float halfReveal=(1.0-smoothstep(0.0,height*1.1,halfDist))*0.65;
 
-  float reveal=mix(cursorReveal,halfReveal,revealMode);
-  float glow  =mix(cursorGlow,  0.0,      revealMode);
+  // Additive: half-circle fades in as a base layer, cursor torch always on top
+  float reveal=clamp(cursorReveal+halfReveal*revealMode,0.0,1.0);
+  float glow  =cursorGlow;
   float alpha=intensity*reveal*0.80+glow*0.5;
   vec3  rgb=hue*(reveal*0.80+glow);
   gl_FragColor=vec4(rgb*alpha,alpha);
