@@ -122,7 +122,9 @@ export function SiteSection() {
 
           // ── Moment 2: chars blur in ───────────────────────────────────────
           const m2Chars = Array.from(moment2Ref.current?.querySelectorAll('.char') ?? []);
-          tl.fromTo(moment2Ref.current, { opacity: 0 }, { opacity: 1, duration: 0.1, ease, onStart: playMoment }, '>+0.3');
+          tl.fromTo(moment2Ref.current, { opacity: 0 }, { opacity: 1, duration: 0.1, ease,
+            onStart: () => { playMoment(); dispatchNoiseMode(1); },
+            onReverseComplete: () => dispatchNoiseMode(0) }, '>+0.3');
           tl.fromTo(m2Chars,
             { opacity: 0, ...(isMobile ? {} : { filter: 'blur(12px)' }) },
             { opacity: 1, ...(isMobile ? {} : { filter: 'blur(0px)' }), stagger: 0.07, duration: 0.8, ease },
@@ -133,7 +135,9 @@ export function SiteSection() {
 
           // Moment 2 exits char by char
           tl.to(m2Chars,
-            { opacity: 0, ...(isMobile ? {} : { filter: 'blur(12px)' }), stagger: 0.07, duration: 0.8, ease: 'power2.in' });
+            { opacity: 0, ...(isMobile ? {} : { filter: 'blur(12px)' }), stagger: 0.07, duration: 0.8, ease: 'power2.in',
+              onStart: () => dispatchNoiseMode(0),
+              onReverseComplete: () => dispatchNoiseMode(1) });
           tl.to(moment2Ref.current, { opacity: 0, duration: 0.01 }, '<+1.4');
 
           // ── Headline: char-by-char blur L→R ──────────────────────────────
@@ -185,7 +189,9 @@ export function SiteSection() {
           const m3Chars = Array.from(moment3Ref.current?.querySelectorAll('.char') ?? []);
           tl.fromTo(moment3Ref.current,
             { opacity: 0, scale: 0.91, ...(isMobile ? {} : { filter: 'blur(24px)' }) },
-            { opacity: 1, scale: 1,    ...(isMobile ? {} : { filter: 'blur(0px)' }),  duration: 1.4, ease: 'power2.out', onStart: playMoment },
+            { opacity: 1, scale: 1,    ...(isMobile ? {} : { filter: 'blur(0px)' }),  duration: 1.4, ease: 'power2.out',
+              onStart: () => { playMoment(); dispatchNoiseMode(1); },
+              onReverseComplete: () => dispatchNoiseMode(0) },
             '>');
           tl.fromTo(m3Chars,
             { opacity: 0, ...(isMobile ? {} : { filter: 'blur(10px)' }) },
@@ -197,12 +203,16 @@ export function SiteSection() {
 
           // Moment 3 exits char by char
           tl.to(m3Chars,
-            { opacity: 0, ...(isMobile ? {} : { filter: 'blur(12px)' }), stagger: 0.07, duration: 0.8, ease: 'power2.in' });
+            { opacity: 0, ...(isMobile ? {} : { filter: 'blur(12px)' }), stagger: 0.07, duration: 0.8, ease: 'power2.in',
+              onStart: () => dispatchNoiseMode(0),
+              onReverseComplete: () => dispatchNoiseMode(1) });
           tl.to(moment3Ref.current, { opacity: 0, duration: 0.01 }, '<+1.4');
 
           // ── Moment 4: chars blur in ───────────────────────────────────────
           const m4Chars = Array.from(moment4Ref.current?.querySelectorAll('.char') ?? []);
-          tl.fromTo(moment4Ref.current, { opacity: 0 }, { opacity: 1, duration: 0.1, ease, onStart: playMoment }, '>+0.3');
+          tl.fromTo(moment4Ref.current, { opacity: 0 }, { opacity: 1, duration: 0.1, ease,
+            onStart: () => { playMoment(); dispatchNoiseMode(1); },
+            onReverseComplete: () => dispatchNoiseMode(0) }, '>+0.3');
           tl.fromTo(m4Chars,
             { opacity: 0, ...(isMobile ? {} : { filter: 'blur(12px)' }) },
             { opacity: 1, ...(isMobile ? {} : { filter: 'blur(0px)' }), stagger: 0.07, duration: 0.8, ease },
@@ -213,7 +223,9 @@ export function SiteSection() {
 
           // Moment 4 exits
           tl.to(m4Chars,
-            { opacity: 0, ...(isMobile ? {} : { filter: 'blur(12px)' }), stagger: 0.07, duration: 0.8, ease: 'power2.in' });
+            { opacity: 0, ...(isMobile ? {} : { filter: 'blur(12px)' }), stagger: 0.07, duration: 0.8, ease: 'power2.in',
+              onStart: () => dispatchNoiseMode(0),
+              onReverseComplete: () => dispatchNoiseMode(1) });
           tl.to(moment4Ref.current, { opacity: 0, duration: 0.01 }, '<+1.4');
       }, wrapperRef);
 

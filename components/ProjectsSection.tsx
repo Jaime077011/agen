@@ -109,7 +109,12 @@ export function ProjectsSection() {
         // CTA moment — matches SiteSection moment style
         const mChars = Array.from(momentRef.current?.querySelectorAll('.char') ?? []);
 
-        tl.fromTo(momentRef.current, { opacity: 0 }, { opacity: 1, duration: 0.1 }, '>+0.2');
+        const dispatchNoiseMode = (mode: number) =>
+          window.dispatchEvent(new CustomEvent('noise-mode', { detail: mode }));
+
+        tl.fromTo(momentRef.current, { opacity: 0 }, { opacity: 1, duration: 0.1,
+          onStart: () => dispatchNoiseMode(1),
+          onReverseComplete: () => dispatchNoiseMode(0) }, '>+0.2');
         tl.fromTo(mChars,
           { opacity: 0, filter: 'blur(12px)' },
           { opacity: 1, filter: 'blur(0px)', stagger: 0.07, duration: 0.8, ease: 'power2.out' },
@@ -120,7 +125,9 @@ export function ProjectsSection() {
 
         // Exit — chars blur out fully, then wrapper fades
         tl.to(mChars,
-          { opacity: 0, filter: 'blur(12px)', stagger: 0.07, duration: 0.8, ease: 'power2.in' });
+          { opacity: 0, filter: 'blur(12px)', stagger: 0.07, duration: 0.8, ease: 'power2.in',
+            onStart: () => dispatchNoiseMode(0),
+            onReverseComplete: () => dispatchNoiseMode(1) });
         tl.to(momentRef.current, { opacity: 0, duration: 0.3 }, '>-0.1');
 
       }, sectionRef);
