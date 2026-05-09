@@ -248,21 +248,21 @@ export function SiteSection() {
           {/* Moment 2 — full-screen centered headline */}
           <div className="growth-moment" ref={moment2Ref}>
             <p className="growth-moment-text">
-              {chars('We get you results.', 'm2')}
+              {wordChars('We get you results.', 'm2')}
             </p>
           </div>
 
           {/* Moment 3 — after services, leads into projects */}
           <div className="growth-moment" ref={moment3Ref}>
             <p className="growth-moment-text">
-              {chars('Built to perform.', 'm3')}
+              {wordChars('Built to perform.', 'm3')}
             </p>
           </div>
 
           {/* Moment 4 — transitions into projects showcase */}
           <div className="growth-moment" ref={moment4Ref}>
             <p className="growth-moment-text">
-              {chars('Proof, not promises.', 'm4')}
+              {wordChars('Proof, not promises.', 'm4')}
             </p>
           </div>
 
