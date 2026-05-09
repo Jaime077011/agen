@@ -1751,8 +1751,8 @@ body.ar .pain-link {
   }
 
   .growth-moment-text {
-    font-size: clamp(3rem, 18vw, 6rem);
-    line-height: 1.25;
+    font-size: clamp(1.8rem, 9vw, 3rem);
+    line-height: 1.3;
     letter-spacing: 0;
     overflow-wrap: break-word;
   }
