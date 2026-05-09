@@ -851,6 +851,7 @@ body {
 .ps-section {
   position: relative;
   z-index: 10;
+  isolation: isolate;
   padding-top: 120px;
 }
 
