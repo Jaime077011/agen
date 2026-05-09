@@ -109,18 +109,21 @@ export function NoiseBackground() {
     if (!gl) return;
 
     let animId: number;
-    let runTime = 0;
-    let prevT     = performance.now();
+    let runTime  = 0;
+    let autoTime = 0; // real-seconds clock for autonomous path
+    let prevT    = performance.now();
 
-    // Cursor tracking with lerp for smooth reveal movement
-    let targetX = window.innerWidth  / 2;
-    let targetY = window.innerHeight / 2;
-    let smoothX = targetX;
-    let smoothY = targetY;
+    // Start in auto mode; first real mousemove switches to cursor tracking
+    let autoMode = true;
+    let targetX  = window.innerWidth  / 2;
+    let targetY  = window.innerHeight / 2;
+    let smoothX  = targetX;
+    let smoothY  = targetY;
 
     function onMouseMove(e: MouseEvent) {
-      targetX = e.clientX;
-      targetY = e.clientY;
+      autoMode = false;
+      targetX  = e.clientX;
+      targetY  = e.clientY;
     }
     window.addEventListener('mousemove', onMouseMove);
 
@@ -162,11 +165,13 @@ export function NoiseBackground() {
       gl!.viewport(0, 0, canvas!.width, canvas!.height);
       gl!.uniform1f(uW, canvas!.width);
       gl!.uniform1f(uH, canvas!.height);
+      // Larger reveal on small screens so the autonomous light is clearly visible
+      const radius = Math.min(canvas!.width, canvas!.height) * 0.52;
+      gl!.uniform1f(uR, radius);
     }
 
     resize();
     gl.uniform1f(uS, 3.0);
-    gl.uniform1f(uR, 220.0);
 
     // Initial palette — use saved accent if available
     const savedAccent = (() => { try { return localStorage.getItem('accent'); } catch { return null; } })();
@@ -183,13 +188,24 @@ export function NoiseBackground() {
     function lerp(a: number, b: number, t: number) { return a + (b - a) * t; }
 
     function draw() {
-      const now = performance.now();
-      runTime += Math.min(now - prevT, 100) * 0.00028;
+      const now   = performance.now();
+      const delta = Math.min(now - prevT, 100);
+      runTime  += delta * 0.00028;
+      autoTime += delta / 1000; // real seconds
       prevT = now;
 
-      // Smooth cursor follow
-      smoothX = lerp(smoothX, targetX, 0.08);
-      smoothY = lerp(smoothY, targetY, 0.08);
+      // Auto mode: slow Lissajous drift so mobile has a living light
+      if (autoMode) {
+        const cx = canvas!.width  / 2;
+        const cy = canvas!.height / 2;
+        targetX = cx + Math.sin(autoTime * 0.38) * cx * 0.55;
+        targetY = cy + Math.cos(autoTime * 0.25) * cy * 0.50;
+      }
+
+      // Smooth cursor / autonomous follow
+      const lerpK = autoMode ? 0.025 : 0.08; // slower drift on mobile
+      smoothX = lerp(smoothX, targetX, lerpK);
+      smoothY = lerp(smoothY, targetY, lerpK);
 
       gl!.clear(gl!.COLOR_BUFFER_BIT);
       gl!.uniform1f(uT, runTime);
