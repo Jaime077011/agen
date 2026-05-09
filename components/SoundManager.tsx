@@ -3,25 +3,28 @@ import { useEffect } from 'react';
 import { unlockAudioSync, initAudio, playHover, playClick, playPageOpen, startAmbient, soundEnabled } from '@/lib/sounds';
 import { getConsent } from '@/lib/consent';
 
-const UNLOCK_EVENTS = ['click', 'keydown', 'touchstart', 'touchend'] as const;
+const UNLOCK_EVENTS  = ['click', 'keydown', 'touchstart', 'touchend'] as const;
 const UNLOCK_PASSIVE = ['wheel', 'touchmove'] as const;
 
 export function SoundManager() {
   useEffect(() => {
-    let unlocked = false;
+    let unlocked  = false;
+    let unlocking = false; // true while initAudio() is in-flight
 
-    function unlock() {
-      if (unlocked) return;
-      unlocked = true;
-      // Remove all unlock listeners synchronously before any await
-      UNLOCK_EVENTS.forEach(e => window.removeEventListener(e, unlock));
-      UNLOCK_PASSIVE.forEach(e => window.removeEventListener(e, unlock));
+    function tryUnlock() {
+      if (unlocked || unlocking) return;
+      unlocking = true;
       // Unblock iOS AudioContext synchronously within the gesture handler
       unlockAudioSync();
-      // Then wait for full resume and play cinematic if returning visitor
       initAudio().then(ok => {
+        unlocking = false;
+        if (!ok) return; // wheel/scroll isn't a user-activation on desktop Chrome —
+                         // keep listeners alive so the next real click can retry
+        unlocked = true;
+        UNLOCK_EVENTS.forEach(e => window.removeEventListener(e, tryUnlock));
+        UNLOCK_PASSIVE.forEach(e => window.removeEventListener(e, tryUnlock));
         const hasConsent = !!getConsent();
-        if (ok && hasConsent && soundEnabled()) {
+        if (hasConsent && soundEnabled()) {
           document.body.classList.remove('loaded');
           requestAnimationFrame(() => requestAnimationFrame(() => {
             document.body.classList.add('loaded');
@@ -32,8 +35,8 @@ export function SoundManager() {
       });
     }
 
-    UNLOCK_EVENTS.forEach(e => window.addEventListener(e, unlock));
-    UNLOCK_PASSIVE.forEach(e => window.addEventListener(e, unlock, { passive: true }));
+    UNLOCK_EVENTS.forEach(e => window.addEventListener(e, tryUnlock));
+    UNLOCK_PASSIVE.forEach(e => window.addEventListener(e, tryUnlock, { passive: true }));
 
     let lastHover: Element | null = null;
 
@@ -56,8 +59,8 @@ export function SoundManager() {
     document.addEventListener('click',     playClick);
 
     return () => {
-      UNLOCK_EVENTS.forEach(e => window.removeEventListener(e, unlock));
-      UNLOCK_PASSIVE.forEach(e => window.removeEventListener(e, unlock));
+      UNLOCK_EVENTS.forEach(e => window.removeEventListener(e, tryUnlock));
+      UNLOCK_PASSIVE.forEach(e => window.removeEventListener(e, tryUnlock));
       document.removeEventListener('mouseover', onOver);
       document.removeEventListener('mouseout',  onOut);
       document.removeEventListener('click',     playClick);

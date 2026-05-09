@@ -11,8 +11,14 @@ function makeContext(): AudioContext {
 export async function initAudio(): Promise<boolean> {
   try {
     if (!_ctx) _ctx = makeContext();
-    if (_ctx.state !== 'running') await _ctx.resume();
-    return _ctx.state === 'running';
+    if (_ctx.state === 'running') return true;
+    // Race resume() against 300 ms: on desktop Chrome, wheel/scroll events are not
+    // "user activations" so resume() may hang indefinitely. The timeout lets the
+    // unlocking flag reset so the next real click/keydown can retry successfully.
+    return await Promise.race([
+      _ctx.resume().then(() => true as const),
+      new Promise<false>(res => setTimeout(() => res(false), 300)),
+    ]);
   } catch (e) {
     console.error('[sound] init failed', e);
     return false;
