@@ -1180,6 +1180,63 @@ body.loaded .anim-fade {
   transform: translateY(0);
 }
 
+/* ─── SOUND PROMPT ───────────────────────────────────────────────────────── */
+.sound-prompt {
+  position: fixed;
+  bottom: 28px;
+  left: 32px;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px 9px 12px;
+  background: rgba(13, 13, 13, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 100px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.57rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  pointer-events: none;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  animation: sp-in 0.5s ease forwards;
+  user-select: none;
+}
+
+.sound-prompt.out {
+  animation: sp-out 0.35s ease forwards;
+}
+
+.sound-prompt-icon {
+  color: var(--accent);
+  flex-shrink: 0;
+  animation: sp-pulse 2s ease-in-out infinite;
+}
+
+@keyframes sp-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes sp-out {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(8px); }
+}
+
+@keyframes sp-pulse {
+  0%, 100% { opacity: 0.6; }
+  50%       { opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  .sound-prompt {
+    bottom: 20px;
+    left: 16px;
+  }
+}
+
 /* ─── SCROLL ARROW ───────────────────────────────────────────────────────── */
 .hero-scroll-arrow {
   position: absolute;

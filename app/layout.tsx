@@ -5,6 +5,7 @@ import { LangProvider } from '@/lib/lang-context';
 import { ConsentBanner } from '@/components/ConsentBanner';
 import { ScrollGuard } from '@/components/ScrollGuard';
 import { SoundManager } from '@/components/SoundManager';
+import { SoundPrompt } from '@/components/SoundPrompt';
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -35,6 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ConsentBanner />
         <ScrollGuard />
         <SoundManager />
+        <SoundPrompt />
       </body>
     </html>
   );
