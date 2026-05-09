@@ -11,20 +11,18 @@ function wordChars(text: string, prefix: string) {
   ));
 }
 
-const FAN_ITEMS = [
-  { number: null, category: null },
+const PROJECTS = [
   { number: '01', category: 'Brand Identity' },
   { number: '02', category: 'Web & Store' },
   { number: '03', category: 'AI Systems' },
-  { number: null, category: null },
+  { number: '04', category: 'Brand Identity' },
+  { number: '05', category: 'Web & Store' },
+  { number: '06', category: 'AI Systems' },
 ];
-
-const FAN_ROTATIONS = [-24, -12, 0, 12, 24];
 
 export function ProjectsSection() {
   const sectionRef    = useRef<HTMLDivElement>(null);
-  const headerRef     = useRef<HTMLDivElement>(null);
-  const fanRef        = useRef<HTMLDivElement>(null);
+  const carouselRef   = useRef<HTMLDivElement>(null);
   const momentAreaRef = useRef<HTMLDivElement>(null);
   const momentRef     = useRef<HTMLDivElement>(null);
 
@@ -32,6 +30,43 @@ export function ProjectsSection() {
     let isCancelled = false;
     let ctx: { revert: () => void } | null = null;
 
+    // ── Drag-to-scroll (desktop) ──
+    const carousel = carouselRef.current;
+    let cleanupDrag = () => {};
+
+    if (carousel) {
+      let isDown = false;
+      let startX = 0;
+      let scrollLeft = 0;
+
+      const onDown  = (e: MouseEvent) => {
+        isDown = true;
+        carousel.classList.add('is-dragging');
+        startX = e.pageX - carousel.offsetLeft;
+        scrollLeft = carousel.scrollLeft;
+      };
+      const onLeave = () => { isDown = false; carousel.classList.remove('is-dragging'); };
+      const onUp    = () => { isDown = false; carousel.classList.remove('is-dragging'); };
+      const onMove  = (e: MouseEvent) => {
+        if (!isDown) return;
+        e.preventDefault();
+        carousel.scrollLeft = scrollLeft - (e.pageX - carousel.offsetLeft - startX) * 1.4;
+      };
+
+      carousel.addEventListener('mousedown', onDown);
+      carousel.addEventListener('mouseleave', onLeave);
+      carousel.addEventListener('mouseup', onUp);
+      carousel.addEventListener('mousemove', onMove);
+
+      cleanupDrag = () => {
+        carousel.removeEventListener('mousedown', onDown);
+        carousel.removeEventListener('mouseleave', onLeave);
+        carousel.removeEventListener('mouseup', onUp);
+        carousel.removeEventListener('mousemove', onMove);
+      };
+    }
+
+    // ── GSAP ──
     (async () => {
       const { default: gsap } = await import('gsap');
       const { ScrollTrigger }  = await import('gsap/ScrollTrigger');
@@ -43,33 +78,18 @@ export function ProjectsSection() {
         const dispatchNoiseMode = (mode: number) =>
           window.dispatchEvent(new CustomEvent('noise-mode', { detail: mode }));
 
-        // ── Header entrance ──
-        const headerEls = Array.from(headerRef.current?.children ?? []);
-        gsap.set(headerEls, { opacity: 0, y: 36 });
-
+        // Carousel fade-in
+        gsap.set(carouselRef.current, { opacity: 0, y: 60 });
         ScrollTrigger.create({
-          trigger: headerRef.current,
-          start: 'top 80%',
-          onEnter: () => gsap.to(headerEls, {
-            opacity: 1, y: 0, duration: 0.9, ease: 'power2.out', stagger: 0.13,
+          trigger: carouselRef.current,
+          start: 'top 90%',
+          onEnter: () => gsap.to(carouselRef.current, {
+            opacity: 1, y: 0, duration: 1.1, ease: 'power2.out',
           }),
-          onLeaveBack: () => gsap.set(headerEls, { opacity: 0, y: 36 }),
+          onLeaveBack: () => gsap.set(carouselRef.current, { opacity: 0, y: 60 }),
         });
 
-        // ── Fan entrance ──
-        const fanItems = Array.from(fanRef.current?.querySelectorAll('.ps-fan-item') ?? []);
-        gsap.set(fanItems, { opacity: 0, y: 50 });
-
-        ScrollTrigger.create({
-          trigger: fanRef.current,
-          start: 'top 85%',
-          onEnter: () => gsap.to(fanItems, {
-            opacity: 1, y: 0, duration: 1.0, ease: 'power2.out', stagger: 0.1,
-          }),
-          onLeaveBack: () => gsap.set(fanItems, { opacity: 0, y: 50 }),
-        });
-
-        // ── Moment ──
+        // Moment
         const mChars = Array.from(momentRef.current?.querySelectorAll('.char') ?? []);
 
         const momentTl = gsap.timeline({
@@ -99,6 +119,7 @@ export function ProjectsSection() {
     })();
 
     return () => {
+      cleanupDrag();
       isCancelled = true;
       ctx?.revert();
     };
@@ -107,46 +128,18 @@ export function ProjectsSection() {
   return (
     <div className="ps-section" ref={sectionRef}>
 
-      {/* Fan content */}
-      <div className="ps-fan-area">
-
-        <div className="ps-header" ref={headerRef}>
-          <span className="ps-label">Selected Work</span>
-          <h2 className="ps-headline">Projects That<br />Deliver.</h2>
-          <p className="ps-subtext">
-            Brand identity, web, and AI systems — built for growth, not just good looks.
-          </p>
-          <a href="/projects" className="ps-cta-pill">
-            View all projects
-            <span className="ps-cta-arrow">→</span>
-          </a>
-        </div>
-
-        <div className="ps-fan-row" ref={fanRef}>
-          {FAN_ITEMS.map((item, i) => (
-            <div
-              key={i}
-              className="ps-fan-item"
-              style={{ '--fan-rot': `${FAN_ROTATIONS[i]}deg` } as React.CSSProperties}
-            >
-              <div className="ps-fan-card">
-                <div className="ps-fan-img" />
-              </div>
-              <div className="ps-fan-label-group">
-                {item.number && (
-                  <>
-                    <span className="ps-fan-num">#{item.number}</span>
-                    <span className="ps-fan-name">{item.category}</span>
-                  </>
-                )}
-              </div>
+      <div className="ps-carousel" ref={carouselRef}>
+        {PROJECTS.map((p, i) => (
+          <div key={i} className="ps-carousel-card">
+            <div className="ps-carousel-img" />
+            <div className="ps-carousel-overlay">
+              <span className="ps-overlay-num">#{p.number}</span>
+              <span className="ps-overlay-cat">{p.category}</span>
             </div>
-          ))}
-        </div>
-
+          </div>
+        ))}
       </div>
 
-      {/* Moment — brief sticky before Testimonials */}
       <div className="ps-moment-area" ref={momentAreaRef}>
         <div className="ps-moment-sticky">
           <div className="ps-moment" ref={momentRef}>
