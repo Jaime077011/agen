@@ -1,13 +1,14 @@
 'use client';
 import { useEffect, useRef } from 'react';
 
-const VERT = `#version 300 es
+// WebGL2 shaders (GLSL ES 3.00) — preferred path
+const VERT2 = `#version 300 es
 precision mediump float;
 in vec2 position;
 void main() { gl_Position = vec4(position, 0.0, 1.0); }
 `;
 
-const FRAG = `#version 300 es
+const FRAG2 = `#version 300 es
 precision mediump float;
 out vec4 fragColor;
 #define PI 3.14159265358979323846
@@ -21,7 +22,6 @@ uniform vec3  hueTb[15];
 
 vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x,289.0);}
 vec4 taylorInvSqrt(vec4 r){return 1.79284291400159-0.85373472095314*r;}
-
 float snoise(vec3 v){
   const vec2 C=vec2(1.0/6.0,1.0/3.0);
   const vec4 D=vec4(0.0,0.5,1.0,2.0);
@@ -66,23 +66,101 @@ float snoise(vec3 v){
 }
 
 void main(){
-  vec2 res = vec2(width, height);
-  vec2 uv  = (gl_FragCoord.xy - res * 0.5) / min(res.x, res.y);
+  vec2 res=vec2(width,height);
+  vec2 uv=(gl_FragCoord.xy-res*0.5)/min(res.x,res.y);
+  float n=(snoise(vec3(uv*scale,time))+1.0)/2.0;
+  n=15.0*n;
+  vec3  hue=hueTb[int(floor(n))];
+  float intensity=(1.0-cos(n*2.0*PI))*0.5;
+  float dist=length(gl_FragCoord.xy-cursor);
+  float reveal=smoothstep(revealRadius,revealRadius*0.05,dist);
+  float glow=smoothstep(revealRadius*2.2,0.0,dist)*0.12;
+  float alpha=intensity*reveal*0.80+glow*0.5;
+  fragColor=vec4(hue*(reveal*0.80+glow),alpha);
+}
+`;
 
-  float n = (snoise(vec3(uv * scale, time)) + 1.0) / 2.0;
-  n = 15.0 * n;
-  vec3  hue       = hueTb[int(floor(n))];
-  float intensity = (1.0 - cos(n * 2.0 * PI)) * 0.5;
+// WebGL1 shaders (GLSL ES 1.00) — fallback for iOS Safari < 15
+// Dynamic array indexing is spec-undefined in GLSL ES 1.0, so we use a loop.
+const VERT1 = `
+precision mediump float;
+attribute vec2 position;
+void main() { gl_Position = vec4(position, 0.0, 1.0); }
+`;
 
-  // Torch reveal — smooth radial falloff around cursor
-  // gl_FragCoord.y is flipped vs browser coords, so cursor.y is pre-flipped on JS side
-  float dist   = length(gl_FragCoord.xy - cursor);
-  float reveal = smoothstep(revealRadius, revealRadius * 0.05, dist);
-  // Soft outer glow beyond the hard edge
-  float glow   = smoothstep(revealRadius * 2.2, 0.0, dist) * 0.12;
+const FRAG1 = `
+precision mediump float;
+#define PI 3.14159265358979323846
+uniform float width;
+uniform float height;
+uniform float time;
+uniform float scale;
+uniform vec2  cursor;
+uniform float revealRadius;
+uniform vec3  hueTb[15];
 
-  float alpha = intensity * reveal * 0.80 + glow * 0.5;
-  fragColor = vec4(hue * (reveal * 0.80 + glow), alpha);
+vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x,289.0);}
+vec4 taylorInvSqrt(vec4 r){return 1.79284291400159-0.85373472095314*r;}
+float snoise(vec3 v){
+  const vec2 C=vec2(1.0/6.0,1.0/3.0);
+  const vec4 D=vec4(0.0,0.5,1.0,2.0);
+  vec3 i=floor(v+dot(v,C.yyy));
+  vec3 x0=v-i+dot(i,C.xxx);
+  vec3 g=step(x0.yzx,x0.xyz);
+  vec3 l=1.0-g;
+  vec3 i1=min(g.xyz,l.zxy);
+  vec3 i2=max(g.xyz,l.zxy);
+  vec3 x1=x0-i1+C.xxx;
+  vec3 x2=x0-i2+2.0*C.xxx;
+  vec3 x3=x0-1.0+3.0*C.xxx;
+  i=mod(i,289.0);
+  vec4 p=permute(permute(permute(
+    i.z+vec4(0.0,i1.z,i2.z,1.0))
+    +i.y+vec4(0.0,i1.y,i2.y,1.0))
+    +i.x+vec4(0.0,i1.x,i2.x,1.0));
+  float n_=1.0/7.0;
+  vec3 ns=n_*D.wyz-D.xzx;
+  vec4 j=p-49.0*floor(p*ns.z*ns.z);
+  vec4 x_=floor(j*ns.z);
+  vec4 y_=floor(j-7.0*x_);
+  vec4 x=x_*ns.x+ns.yyyy;
+  vec4 y=y_*ns.x+ns.yyyy;
+  vec4 h=1.0-abs(x)-abs(y);
+  vec4 b0=vec4(x.xy,y.xy);
+  vec4 b1=vec4(x.zw,y.zw);
+  vec4 s0=floor(b0)*2.0+1.0;
+  vec4 s1=floor(b1)*2.0+1.0;
+  vec4 sh=-step(h,vec4(0.0));
+  vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;
+  vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
+  vec3 p0=vec3(a0.xy,h.x);
+  vec3 p1=vec3(a0.zw,h.y);
+  vec3 p2=vec3(a1.xy,h.z);
+  vec3 p3=vec3(a1.zw,h.w);
+  vec4 norm=taylorInvSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));
+  p0*=norm.x; p1*=norm.y; p2*=norm.z; p3*=norm.w;
+  vec4 m=max(0.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.0);
+  m=m*m;
+  return 42.0*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
+}
+
+vec3 hueLookup(int idx){
+  for(int i=0;i<15;i++){ if(i==idx) return hueTb[i]; }
+  return hueTb[14];
+}
+
+void main(){
+  vec2 res=vec2(width,height);
+  vec2 uv=(gl_FragCoord.xy-res*0.5)/min(res.x,res.y);
+  float n=(snoise(vec3(uv*scale,time))+1.0)/2.0;
+  n=15.0*n;
+  vec3  hue=hueLookup(int(floor(n)));
+  float intensity=(1.0-cos(n*2.0*PI))*0.5;
+  float dist=length(gl_FragCoord.xy-cursor);
+  float reveal=smoothstep(revealRadius,revealRadius*0.05,dist);
+  float glow=smoothstep(revealRadius*2.2,0.0,dist)*0.12;
+  float alpha=intensity*reveal*0.80+glow*0.5;
+  gl_FragColor=vec4(hue*(reveal*0.80+glow),alpha);
 }
 `;
 
@@ -105,12 +183,27 @@ export function NoiseBackground() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const gl = canvas.getContext('webgl2', { alpha: true, premultipliedAlpha: false });
+    const ctxOpts = { alpha: true, premultipliedAlpha: false };
+
+    // Try WebGL2 first; fall back to WebGL1 for iOS Safari < 15
+    let gl: WebGLRenderingContext | null = null;
+    let isGL2 = false;
+    const gl2 = canvas.getContext('webgl2', ctxOpts);
+    if (gl2) {
+      gl = gl2 as unknown as WebGLRenderingContext;
+      isGL2 = true;
+    } else {
+      gl = (canvas.getContext('webgl', ctxOpts) ??
+            canvas.getContext('experimental-webgl', ctxOpts)) as WebGLRenderingContext | null;
+    }
     if (!gl) return;
+
+    const VERT = isGL2 ? VERT2 : VERT1;
+    const FRAG = isGL2 ? FRAG2 : FRAG1;
 
     let animId: number;
     let runTime  = 0;
-    let autoTime = 0; // real-seconds clock for autonomous path
+    let autoTime = 0;
     let prevT    = performance.now();
 
     // Start in auto mode; first real mousemove switches to cursor tracking
@@ -147,12 +240,12 @@ export function NoiseBackground() {
     gl.enableVertexAttribArray(posAttr);
     gl.vertexAttribPointer(posAttr, 2, gl.FLOAT, false, 8, 0);
 
-    const uW  = gl.getUniformLocation(prog, 'width');
-    const uH  = gl.getUniformLocation(prog, 'height');
-    const uT  = gl.getUniformLocation(prog, 'time');
-    const uS  = gl.getUniformLocation(prog, 'scale');
-    const uC  = gl.getUniformLocation(prog, 'cursor');
-    const uR  = gl.getUniformLocation(prog, 'revealRadius');
+    const uW   = gl.getUniformLocation(prog, 'width');
+    const uH   = gl.getUniformLocation(prog, 'height');
+    const uT   = gl.getUniformLocation(prog, 'time');
+    const uS   = gl.getUniformLocation(prog, 'scale');
+    const uC   = gl.getUniformLocation(prog, 'cursor');
+    const uR   = gl.getUniformLocation(prog, 'revealRadius');
     const uHue = gl.getUniformLocation(prog, 'hueTb');
 
     gl.enable(gl.BLEND);
@@ -165,7 +258,6 @@ export function NoiseBackground() {
       gl!.viewport(0, 0, canvas!.width, canvas!.height);
       gl!.uniform1f(uW, canvas!.width);
       gl!.uniform1f(uH, canvas!.height);
-      // Larger reveal on small screens so the autonomous light is clearly visible
       const radius = Math.min(canvas!.width, canvas!.height) * 0.52;
       gl!.uniform1f(uR, radius);
     }
@@ -173,16 +265,13 @@ export function NoiseBackground() {
     resize();
     gl.uniform1f(uS, 3.0);
 
-    // Initial palette — use saved accent if available
     const savedAccent = (() => { try { return localStorage.getItem('accent'); } catch { return null; } })();
     gl.uniform3fv(uHue, buildHueTb(savedAccent ?? '#c41230'));
 
-    // Live palette updates
     function onAccentChange(e: Event) {
       gl!.uniform3fv(uHue, buildHueTb((e as CustomEvent<string>).detail));
     }
     window.addEventListener('accent-change', onAccentChange);
-
     window.addEventListener('resize', resize);
 
     function lerp(a: number, b: number, t: number) { return a + (b - a) * t; }
@@ -191,10 +280,9 @@ export function NoiseBackground() {
       const now   = performance.now();
       const delta = Math.min(now - prevT, 100);
       runTime  += delta * 0.00028;
-      autoTime += delta / 1000; // real seconds
+      autoTime += delta / 1000;
       prevT = now;
 
-      // Auto mode: slow Lissajous drift so mobile has a living light
       if (autoMode) {
         const cx = canvas!.width  / 2;
         const cy = canvas!.height / 2;
@@ -202,14 +290,12 @@ export function NoiseBackground() {
         targetY = cy + Math.cos(autoTime * 0.25) * cy * 0.50;
       }
 
-      // Smooth cursor / autonomous follow
-      const lerpK = autoMode ? 0.025 : 0.08; // slower drift on mobile
+      const lerpK = autoMode ? 0.025 : 0.08;
       smoothX = lerp(smoothX, targetX, lerpK);
       smoothY = lerp(smoothY, targetY, lerpK);
 
       gl!.clear(gl!.COLOR_BUFFER_BIT);
       gl!.uniform1f(uT, runTime);
-      // Flip Y: WebGL origin is bottom-left, browser is top-left
       gl!.uniform2f(uC, smoothX, canvas!.height - smoothY);
       gl!.drawArrays(gl!.TRIANGLE_STRIP, 0, 4);
       animId = requestAnimationFrame(draw);
