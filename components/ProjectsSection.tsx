@@ -187,7 +187,6 @@ export function ProjectsSection() {
               </div>
               <a href="/projects" className="ps-card-cta">
                 View Project
-                <span className="ps-card-cta-arrow">→</span>
               </a>
             </div>
           ))}

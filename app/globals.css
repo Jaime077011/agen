@@ -957,7 +957,7 @@ body {
   opacity: 1;
 }
 
-/* CTA pill */
+/* CTA — matches .hero-cta / .growth-cta style */
 .ps-card-cta {
   position: absolute;
   top: 50%;
@@ -967,18 +967,20 @@ body {
   z-index: 2;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 13px 26px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 999px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  justify-content: center;
+  padding: 16px 44px;
+  background: var(--accent);
   color: var(--white);
   text-decoration: none;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  border-radius: 10px;
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 28px rgba(var(--accent-rgb), 0.45);
   white-space: nowrap;
-  transition: opacity 0.38s ease, transform 0.38s ease, border-color 0.25s;
+  transition: opacity 0.38s ease, transform 0.38s ease, box-shadow 0.2s, filter 0.2s;
 }
 
 .ps-card:hover .ps-card-cta {
@@ -987,20 +989,8 @@ body {
 }
 
 .ps-card-cta:hover {
-  border-color: var(--accent);
-}
-
-/* Accent arrow circle — matches site-wide pill style */
-.ps-card-cta-arrow {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: var(--accent);
-  font-size: 0.8rem;
-  flex-shrink: 0;
+  filter: brightness(1.12);
+  box-shadow: 0 0 38px rgba(var(--accent-rgb), 0.6);
 }
 
 /* Moment area */
