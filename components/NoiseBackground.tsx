@@ -81,7 +81,7 @@ void main(){
 
   // Edge/border reveal — noise glows at the screen perimeter, dark in centre
   float edgeDist=min(min(gl_FragCoord.x,width-gl_FragCoord.x),min(gl_FragCoord.y,height-gl_FragCoord.y));
-  float edgeReveal=1.0-smoothstep(0.0,revealRadius*1.4,edgeDist);
+  float edgeReveal=(1.0-smoothstep(0.0,revealRadius*0.75,edgeDist))*0.45;
 
   float reveal=mix(cursorReveal,edgeReveal,revealMode);
   float glow  =mix(cursorGlow,  0.0,       revealMode);
@@ -173,7 +173,7 @@ void main(){
   float cursorGlow=smoothstep(revealRadius*2.2,0.0,dist)*0.12;
 
   float edgeDist=min(min(gl_FragCoord.x,width-gl_FragCoord.x),min(gl_FragCoord.y,height-gl_FragCoord.y));
-  float edgeReveal=1.0-smoothstep(0.0,revealRadius*1.4,edgeDist);
+  float edgeReveal=(1.0-smoothstep(0.0,revealRadius*0.75,edgeDist))*0.45;
 
   float reveal=mix(cursorReveal,edgeReveal,revealMode);
   float glow  =mix(cursorGlow,  0.0,       revealMode);
