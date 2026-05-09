@@ -1,6 +1,7 @@
 'use client';
 import { useEffect } from 'react';
 import { unlockAudioSync, initAudio, playHover, playClick, playPageOpen, startAmbient, soundEnabled } from '@/lib/sounds';
+import { getConsent } from '@/lib/consent';
 
 const UNLOCK_EVENTS = ['click', 'keydown', 'touchstart', 'touchend'] as const;
 const UNLOCK_PASSIVE = ['wheel', 'touchmove'] as const;
@@ -19,7 +20,7 @@ export function SoundManager() {
       unlockAudioSync();
       // Then wait for full resume and play cinematic if returning visitor
       initAudio().then(ok => {
-        const hasConsent = !!localStorage.getItem('site-consent');
+        const hasConsent = !!getConsent();
         if (ok && hasConsent && soundEnabled()) {
           document.body.classList.remove('loaded');
           requestAnimationFrame(() => requestAnimationFrame(() => {

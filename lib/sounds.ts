@@ -1,3 +1,5 @@
+import { getConsent } from './consent';
+
 let _ctx: AudioContext | null = null;
 
 function makeContext(): AudioContext {
@@ -27,13 +29,9 @@ export function unlockAudioSync() {
 
 export function soundEnabled(): boolean {
   if (typeof window === 'undefined') return false;
-  try {
-    const raw = localStorage.getItem('site-consent');
-    if (!raw) return true;
-    const d = JSON.parse(raw);
-    if (!d.v) return true;
-    return d.sound !== false;
-  } catch { return true; }
+  const consent = getConsent();
+  if (!consent) return true; // no preference stored yet — default on (banner will ask)
+  return consent.sound !== false;
 }
 
 function play(freq: number, dur: number, vol = 0.08) {
