@@ -735,10 +735,8 @@ body {
 /* RESPONSIVE */
 @media (max-width: 768px) {
   body {
-    height: auto;
     min-height: 100dvh;
     overflow-x: clip;
-    overflow-y: auto;
   }
 
   .page-content {
@@ -1676,9 +1674,8 @@ body.ar .pain-link {
   /* Narrower side padding for mobile viewport */
   .site-growth-layer { padding: 88px 24px 0; }
 
-  /* Wrap at word boundaries (not mid-letter) at large sizes */
+  /* Keep inline-block so GSAP can animate opacity/filter; normal white-space allows word wrapping */
   .site-growth-layer .char {
-    display: inline;
     white-space: normal;
   }
 
