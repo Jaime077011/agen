@@ -10,7 +10,7 @@ export function Nav() {
   return (
     <>
       <nav className="nav anim-fade" style={{ '--delay': '100ms' } as React.CSSProperties}>
-        <a href="#" className="nav-logo">
+        <a href="/" className="nav-logo">
           <div className="logo-clip">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/TheArchetypers-02.png" alt="The Archetypers" />
