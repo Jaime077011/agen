@@ -171,8 +171,11 @@ void main(){
   float intensity=(1.0-cos(n*2.0*PI))*0.5;
 
   float dist=length(gl_FragCoord.xy-cursor);
-  float cursorReveal=smoothstep(revealRadius,revealRadius*0.05,dist);
-  float cursorGlow=smoothstep(revealRadius*2.2,0.0,dist)*0.12;
+  // Cursor: soft reveal + wide glow halo + bright core = torch light feel
+  float cursorReveal=smoothstep(revealRadius,revealRadius*0.12,dist);
+  float cursorHalo  =smoothstep(revealRadius*3.0,0.0,dist)*0.28;
+  float cursorCore  =smoothstep(revealRadius*0.28,0.0,dist)*0.50;
+  float cursorGlow  =cursorHalo+cursorCore;
 
   // Half-circle: centred at screen bottom-middle, intense there, fades upward
   vec2  bottomCentre=vec2(width*0.5,0.0);
