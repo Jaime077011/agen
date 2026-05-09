@@ -941,11 +941,6 @@ body {
   text-transform: uppercase;
 }
 
-/* Pause spin on hover so the CTA is reachable */
-.ps-scene:hover .ps-a3d {
-  animation-play-state: paused;
-}
-
 /* Dark scrim that fades in behind the CTA */
 .ps-card::before {
   content: '';

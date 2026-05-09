@@ -38,6 +38,45 @@ export function ProjectsSection() {
     let isCancelled = false;
     let ctx: { revert: () => void } | null = null;
 
+    // ── Hover: pause spin + enable only front-facing cards ─────────────────
+    // backface-visibility:hidden hides rear cards visually but they still
+    // intercept pointer events. We calculate which cards are geometrically
+    // front-facing from the CSS animation's current time and block the rest.
+    const scene  = sceneRef.current;
+    const a3dEl  = scene?.querySelector('.ps-a3d') as HTMLElement | null;
+    const hCards = Array.from(scene?.querySelectorAll('.ps-card') ?? []) as HTMLElement[];
+
+    hCards.forEach(c => { c.style.pointerEvents = 'none'; });
+
+    const onSceneEnter = () => {
+      if (!a3dEl) return;
+      a3dEl.style.animationPlayState = 'paused';
+
+      requestAnimationFrame(() => {
+        const anim = a3dEl.getAnimations()[0];
+        const elapsed = typeof anim?.currentTime === 'number' ? (anim.currentTime as number) : 0;
+        const animMs  = parseFloat(getComputedStyle(a3dEl).animationDuration) * 1000 || 28000;
+        const a3dDeg  = ((elapsed % animMs) / animMs) * 360;
+
+        hCards.forEach((card, i) => {
+          // Card i's effective Y-rotation in world space
+          const effectiveDeg = a3dDeg + i * (360 / N);
+          // cos > 0 means card's front normal points toward the viewer
+          const front = Math.cos((effectiveDeg * Math.PI) / 180) > 0;
+          card.style.pointerEvents = front ? 'auto' : 'none';
+        });
+      });
+    };
+
+    const onSceneLeave = () => {
+      if (!a3dEl) return;
+      a3dEl.style.animationPlayState = '';
+      hCards.forEach(c => { c.style.pointerEvents = 'none'; });
+    };
+
+    scene?.addEventListener('mouseenter', onSceneEnter);
+    scene?.addEventListener('mouseleave', onSceneLeave);
+
     (async () => {
       const { default: gsap } = await import('gsap');
       const { ScrollTrigger }  = await import('gsap/ScrollTrigger');
@@ -119,6 +158,8 @@ export function ProjectsSection() {
     })();
 
     return () => {
+      scene?.removeEventListener('mouseenter', onSceneEnter);
+      scene?.removeEventListener('mouseleave', onSceneLeave);
       isCancelled = true;
       ctx?.revert();
     };
