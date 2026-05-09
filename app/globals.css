@@ -859,10 +859,10 @@ body {
 
 .ps-scene {
   overflow: hidden;
-  perspective: 40em;
-  /* lateral fade so cards blend into the dark bg at the edges */
-  mask: linear-gradient(90deg, #0000, #fff 18% 82%, #0000);
-  -webkit-mask: linear-gradient(90deg, #0000, #fff 18% 82%, #0000);
+  perspective: 55em;
+  /* subtle edge fade — wide stops let cards reach the screen edges */
+  mask: linear-gradient(90deg, #0000, #fff 4% 96%, #0000);
+  -webkit-mask: linear-gradient(90deg, #0000, #fff 4% 96%, #0000);
   height: 78vh;
 }
 

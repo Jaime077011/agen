@@ -18,6 +18,12 @@ const PROJECTS = [
   { number: '04', category: 'Brand Identity' },
   { number: '05', category: 'Web & Store' },
   { number: '06', category: 'AI Systems' },
+  { number: '07', category: 'Brand Identity' },
+  { number: '08', category: 'Web & Store' },
+  { number: '09', category: 'AI Systems' },
+  { number: '10', category: 'Brand Identity' },
+  { number: '11', category: 'Web & Store' },
+  { number: '12', category: 'AI Systems' },
 ];
 
 const N = PROJECTS.length;
