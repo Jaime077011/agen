@@ -12,12 +12,12 @@ export async function initAudio(): Promise<boolean> {
   try {
     if (!_ctx) _ctx = makeContext();
     if (_ctx.state === 'running') return true;
-    // Race resume() against 300 ms: on desktop Chrome, wheel/scroll events are not
+    // Race resume() against 500 ms: on desktop Chrome, wheel/scroll events are not
     // "user activations" so resume() may hang indefinitely. The timeout lets the
     // unlocking flag reset so the next real click/keydown can retry successfully.
     return await Promise.race([
       _ctx.resume().then(() => true as const),
-      new Promise<false>(res => setTimeout(() => res(false), 300)),
+      new Promise<false>(res => setTimeout(() => res(false), 500)),
     ]);
   } catch (e) {
     console.error('[sound] init failed', e);
@@ -29,6 +29,13 @@ export async function initAudio(): Promise<boolean> {
 export function unlockAudioSync() {
   try {
     if (!_ctx) _ctx = makeContext();
+    // Silent 1-sample buffer: iOS Safari requires actual audio playback
+    // within the gesture — resume() alone is unreliable on iOS.
+    const buf = _ctx.createBuffer(1, 1, 22050);
+    const src = _ctx.createBufferSource();
+    src.buffer = buf;
+    src.connect(_ctx.destination);
+    src.start(0);
     if (_ctx.state === 'suspended') void _ctx.resume();
   } catch { /* ignore */ }
 }
