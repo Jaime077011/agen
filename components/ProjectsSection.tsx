@@ -49,13 +49,44 @@ export function ProjectsSection() {
         const dispatchNoiseMode = (mode: number) =>
           window.dispatchEvent(new CustomEvent('noise-mode', { detail: mode }));
 
-        // Scene fade-in
-        gsap.set(sceneRef.current, { opacity: 0 });
+        // ── Card-by-card intro / exit ──────────────────────────────────────
+        // We only animate opacity — transform is owned by the CSS spin animation
+        // and cannot be touched by GSAP without breaking it.
+        const cards = Array.from(sectionRef.current?.querySelectorAll('.ps-card') ?? []);
+        gsap.set(cards, { opacity: 0 });
+
+        // Intro: cards materialise left-to-right (index 0 → N-1)
         ScrollTrigger.create({
           trigger: sceneRef.current,
-          start: 'top 85%',
-          onEnter: () => gsap.to(sceneRef.current, { opacity: 1, duration: 1.4, ease: 'power2.out' }),
-          onLeaveBack: () => gsap.set(sceneRef.current, { opacity: 0 }),
+          start: 'top 75%',
+          onEnter: () => gsap.to(cards, {
+            opacity: 1,
+            stagger: { amount: 1.6, from: 'start' },
+            duration: 0.75, ease: 'power2.out',
+          }),
+          // Reverse: cards vanish right-to-left when scrolling back up
+          onLeaveBack: () => gsap.to(cards, {
+            opacity: 0,
+            stagger: { amount: 0.8, from: 'end' },
+            duration: 0.5, ease: 'power2.in',
+          }),
+        });
+
+        // Exit: cards fade out left-to-right as section leaves
+        ScrollTrigger.create({
+          trigger: sceneRef.current,
+          start: 'bottom 35%',
+          onLeave: () => gsap.to(cards, {
+            opacity: 0,
+            stagger: { amount: 0.9, from: 'start' },
+            duration: 0.55, ease: 'power2.in',
+          }),
+          // Re-enter from below: restore right-to-left
+          onEnterBack: () => gsap.to(cards, {
+            opacity: 1,
+            stagger: { amount: 1.2, from: 'end' },
+            duration: 0.75, ease: 'power2.out',
+          }),
         });
 
         // Moment
