@@ -41,11 +41,84 @@ export function ProjectsSection() {
     const scene = sceneRef.current;
     const a3dEl = scene?.querySelector('.ps-a3d') as HTMLElement | null;
 
-    const onSceneEnter = () => { if (a3dEl) a3dEl.style.animationPlayState = 'paused'; };
-    const onSceneLeave = () => { if (a3dEl) a3dEl.style.animationPlayState = ''; };
+    // ── Ambient drone ──────────────────────────────────────────────────────
+    let audioCtx: AudioContext | null = null;
+    let gainNode: GainNode | null = null;
+    let sectionInView = false;
+    let isHovered = false;
+
+    const rampGain = (target: number, dur = 0.8) => {
+      if (!gainNode || !audioCtx) return;
+      const t = audioCtx.currentTime;
+      gainNode.gain.cancelScheduledValues(t);
+      gainNode.gain.setValueAtTime(gainNode.gain.value, t);
+      gainNode.gain.linearRampToValueAtTime(target, t + dur);
+    };
+
+    const buildAudio = () => {
+      if (audioCtx) return;
+      try {
+        audioCtx = new AudioContext();
+        gainNode = audioCtx.createGain();
+        gainNode.gain.value = 0;
+
+        // Warm low-pass filter
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = 900;
+        filter.Q.value = 0.7;
+        gainNode.connect(filter);
+        filter.connect(audioCtx.destination);
+
+        // Musical chord: A2 · E3 · A3 · E4
+        const notes = [
+          { freq: 110,    vol: 0.38 },
+          { freq: 165,    vol: 0.28 },
+          { freq: 220,    vol: 0.22 },
+          { freq: 329.63, vol: 0.12 },
+        ];
+
+        notes.forEach(({ freq, vol }, i) => {
+          const osc  = audioCtx!.createOscillator();
+          const gain = audioCtx!.createGain();
+
+          // Slow per-harmonic vibrato — gives it life
+          const lfo     = audioCtx!.createOscillator();
+          const lfoAmt  = audioCtx!.createGain();
+          lfo.frequency.value  = 0.17 + i * 0.055;
+          lfoAmt.gain.value    = freq * 0.0028;
+          lfo.connect(lfoAmt);
+          lfoAmt.connect(osc.frequency);
+          lfo.start();
+
+          osc.type          = 'sine';
+          osc.frequency.value = freq;
+          gain.gain.value   = vol;
+          osc.connect(gain);
+          gain.connect(gainNode!);
+          osc.start();
+        });
+
+        if (sectionInView && !isHovered) rampGain(0.14);
+      } catch {}
+    };
+
+    const onSceneEnter = () => {
+      isHovered = true;
+      rampGain(0, 0.35);
+      if (a3dEl) a3dEl.style.animationPlayState = 'paused';
+    };
+    const onSceneLeave = () => {
+      isHovered = false;
+      if (sectionInView) rampGain(0.14);
+      if (a3dEl) a3dEl.style.animationPlayState = '';
+    };
 
     scene?.addEventListener('mouseenter', onSceneEnter);
     scene?.addEventListener('mouseleave', onSceneLeave);
+
+    const initAudio = () => { buildAudio(); window.removeEventListener('pointerdown', initAudio); };
+    window.addEventListener('pointerdown', initAudio);
 
     (async () => {
       const { default: gsap } = await import('gsap');
@@ -71,11 +144,14 @@ export function ProjectsSection() {
           onEnter: () => {
             gsap.to(cards, { opacity: 1, stagger: { amount: 1.6, from: 'end' }, duration: 0.75, ease: 'power2.out' });
             dispatchNoiseMode(1);
+            sectionInView = true;
+            if (!isHovered) rampGain(0.14);
           },
-          // Reverse: cards vanish left-to-right when scrolling back up
           onLeaveBack: () => {
             gsap.to(cards, { opacity: 0, stagger: { amount: 0.8, from: 'start' }, duration: 0.5, ease: 'power2.in' });
             dispatchNoiseMode(0);
+            sectionInView = false;
+            rampGain(0);
           },
         });
 
@@ -83,17 +159,16 @@ export function ProjectsSection() {
         ScrollTrigger.create({
           trigger: sceneRef.current,
           start: 'bottom 35%',
-          onLeave: () => gsap.to(cards, {
-            opacity: 0,
-            stagger: { amount: 0.9, from: 'start' },
-            duration: 0.55, ease: 'power2.in',
-          }),
-          // Re-enter from below: restore right-to-left
-          onEnterBack: () => gsap.to(cards, {
-            opacity: 1,
-            stagger: { amount: 1.2, from: 'end' },
-            duration: 0.75, ease: 'power2.out',
-          }),
+          onLeave: () => {
+            gsap.to(cards, { opacity: 0, stagger: { amount: 0.9, from: 'start' }, duration: 0.55, ease: 'power2.in' });
+            sectionInView = false;
+            rampGain(0);
+          },
+          onEnterBack: () => {
+            gsap.to(cards, { opacity: 1, stagger: { amount: 1.2, from: 'end' }, duration: 0.75, ease: 'power2.out' });
+            sectionInView = true;
+            if (!isHovered) rampGain(0.14);
+          },
         });
 
         // Moment
@@ -128,8 +203,10 @@ export function ProjectsSection() {
     return () => {
       scene?.removeEventListener('mouseenter', onSceneEnter);
       scene?.removeEventListener('mouseleave', onSceneLeave);
+      window.removeEventListener('pointerdown', initAudio);
       isCancelled = true;
       ctx?.revert();
+      audioCtx?.close();
     };
   }, []);
 
