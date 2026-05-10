@@ -861,16 +861,29 @@ body {
 .ps-scene {
   overflow: hidden;
   perspective: 55em;
-  /* intersect horizontal + vertical fades → smooth on all four edges */
-  mask:
-    linear-gradient(to right,  #0000, #fff 4% 96%, #0000),
-    linear-gradient(to bottom, #0000, #fff 8% 92%, #0000);
-  mask-composite: intersect;
-  -webkit-mask:
-    linear-gradient(to right,  #0000, #fff 4% 96%, #0000),
-    linear-gradient(to bottom, #0000, #fff 8% 92%, #0000);
-  -webkit-mask-composite: source-in;
   height: 78vh;
+  position: relative;
+}
+
+.ps-scene::before,
+.ps-scene::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 22%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.ps-scene::before {
+  top: 0;
+  background: linear-gradient(to bottom, var(--bg), transparent);
+}
+
+.ps-scene::after {
+  bottom: 0;
+  background: linear-gradient(to top, var(--bg), transparent);
 }
 
 .ps-a3d {
