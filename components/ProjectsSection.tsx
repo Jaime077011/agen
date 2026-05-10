@@ -65,9 +65,11 @@ export function ProjectsSection() {
         card.style.pointerEvents = front ? 'auto' : 'none';
       });
 
-      // Force browsers that don't re-evaluate :hover on pointer-events change to pick up the card
+      // Dispatch on the element actually under the cursor so :hover fires on the correct card,
+      // not just the scene boundary where mouseenter was triggered.
       const me = e as MouseEvent;
-      scene?.dispatchEvent(new MouseEvent('mousemove', {
+      const target = document.elementFromPoint(me.clientX, me.clientY) ?? scene;
+      (target as Element).dispatchEvent(new MouseEvent('mousemove', {
         bubbles: true, cancelable: true, clientX: me.clientX, clientY: me.clientY,
       }));
     };
