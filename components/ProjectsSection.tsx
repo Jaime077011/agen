@@ -98,17 +98,15 @@ export function ProjectsSection() {
         ScrollTrigger.create({
           trigger: sceneRef.current,
           start: 'top 75%',
-          onEnter: () => gsap.to(cards, {
-            opacity: 1,
-            stagger: { amount: 1.6, from: 'end' },
-            duration: 0.75, ease: 'power2.out',
-          }),
+          onEnter: () => {
+            gsap.to(cards, { opacity: 1, stagger: { amount: 1.6, from: 'end' }, duration: 0.75, ease: 'power2.out' });
+            dispatchNoiseMode(1);
+          },
           // Reverse: cards vanish left-to-right when scrolling back up
-          onLeaveBack: () => gsap.to(cards, {
-            opacity: 0,
-            stagger: { amount: 0.8, from: 'start' },
-            duration: 0.5, ease: 'power2.in',
-          }),
+          onLeaveBack: () => {
+            gsap.to(cards, { opacity: 0, stagger: { amount: 0.8, from: 'start' }, duration: 0.5, ease: 'power2.in' });
+            dispatchNoiseMode(0);
+          },
         });
 
         // Exit: cards fade out left-to-right as section leaves
