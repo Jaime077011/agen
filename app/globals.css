@@ -2080,12 +2080,25 @@ body.ar .pain-link {
 
 .footer-tagline {
   font-family: var(--font-montserrat), sans-serif;
-  font-size: clamp(0.9rem, 1.8vw, 1.35rem);
+  font-size: 3vw;
   font-weight: 800;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--white);
   margin: 0;
+  white-space: nowrap;
+  width: 100%;
+  text-align: justify;
+  text-align-last: justify;
+}
+
+@media (max-width: 768px) {
+  .footer-tagline {
+    font-size: 4.2vw;
+    white-space: normal;
+    text-align: left;
+    text-align-last: left;
+  }
 }
 
 .footer-rule {
