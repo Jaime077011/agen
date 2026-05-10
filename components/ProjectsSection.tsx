@@ -31,6 +31,7 @@ const N = PROJECTS.length;
 export function ProjectsSection() {
   const sectionRef    = useRef<HTMLDivElement>(null);
   const sceneRef      = useRef<HTMLDivElement>(null);
+  const ctaRef        = useRef<HTMLDivElement>(null);
   const momentAreaRef = useRef<HTMLDivElement>(null);
   const momentRef     = useRef<HTMLDivElement>(null);
 
@@ -136,6 +137,7 @@ export function ProjectsSection() {
         // and cannot be touched by GSAP without breaking it.
         const cards = Array.from(sectionRef.current?.querySelectorAll('.ps-card') ?? []);
         gsap.set(cards, { opacity: 0 });
+        gsap.set(ctaRef.current, { opacity: 0, y: 16 });
 
         // Intro: cards materialise right-to-left (index N-1 → 0)
         ScrollTrigger.create({
@@ -143,12 +145,14 @@ export function ProjectsSection() {
           start: 'top 75%',
           onEnter: () => {
             gsap.to(cards, { opacity: 1, stagger: { amount: 1.6, from: 'end' }, duration: 0.75, ease: 'power2.out' });
+            gsap.to(ctaRef.current, { opacity: 1, y: 0, duration: 0.9, ease: 'power2.out', delay: 1 });
             dispatchNoiseMode(1);
             sectionInView = true;
             if (!isHovered) rampGain(0.14);
           },
           onLeaveBack: () => {
             gsap.to(cards, { opacity: 0, stagger: { amount: 0.8, from: 'start' }, duration: 0.5, ease: 'power2.in' });
+            gsap.to(ctaRef.current, { opacity: 0, duration: 0.3 });
             dispatchNoiseMode(0);
             sectionInView = false;
             rampGain(0);
@@ -161,11 +165,13 @@ export function ProjectsSection() {
           start: 'bottom 35%',
           onLeave: () => {
             gsap.to(cards, { opacity: 0, stagger: { amount: 0.9, from: 'start' }, duration: 0.55, ease: 'power2.in' });
+            gsap.to(ctaRef.current, { opacity: 0, duration: 0.3 });
             sectionInView = false;
             rampGain(0);
           },
           onEnterBack: () => {
             gsap.to(cards, { opacity: 1, stagger: { amount: 1.2, from: 'end' }, duration: 0.75, ease: 'power2.out' });
+            gsap.to(ctaRef.current, { opacity: 1, duration: 0.6, ease: 'power2.out' });
             sectionInView = true;
             if (!isHovered) rampGain(0.14);
           },
@@ -233,6 +239,12 @@ export function ProjectsSection() {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* CTA */}
+      <div className="ps-cta" ref={ctaRef}>
+        <span className="ps-cta-eyebrow">Brand Identity · Web & Store · AI Systems</span>
+        <a href="/projects" className="hero-cta">See all projects</a>
       </div>
 
       {/* Moment */}
