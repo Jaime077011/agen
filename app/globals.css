@@ -1059,6 +1059,7 @@ body {
 }
 
 .ts-card {
+  position: relative;
   width: 420px;
   flex-shrink: 0;
   padding: 24px 32px;
@@ -1071,6 +1072,16 @@ body {
   backdrop-filter: blur(32px) saturate(1.6);
   -webkit-backdrop-filter: blur(32px) saturate(1.6);
   box-shadow: 0 4px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.ts-card-num {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  font-family: var(--font-mono, monospace);
+  color: rgba(255, 255, 255, 0.22);
 }
 
 .ts-card-glyph {

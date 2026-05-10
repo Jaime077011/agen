@@ -61,13 +61,8 @@ export function TestimonialsSection() {
           return;
         }
 
-        // ── Desktop: scrubbed horizontal carousel ────────────────────────
+        // ── Desktop: column-by-column numbered intro + horizontal slide ──
         gsap.set(cards.filter(Boolean), { opacity: 0 });
-        gsap.set([cards[0], cards[1], cards[8], cards[9]], { x: -60 });
-
-        // Cards 4-7 / 12-15 only enter after the slide
-        const overflowEls = [4, 5, 6, 7, 12, 13, 14, 15]
-          .map(i => cards[i]).filter(Boolean) as HTMLDivElement[];
 
         const tl = gsap.timeline({
           scrollTrigger: {
@@ -75,28 +70,29 @@ export function TestimonialsSection() {
             start: 'top top',
             end: 'bottom bottom',
             scrub: 2.5,
-            onEnter:     () => gsap.set(overflowEls, { opacity: 1 }),
-            onLeaveBack: () => gsap.set(overflowEls, { opacity: 0 }),
           },
         });
 
-        // ── Entry pair slides in; cards 3-4 of each row fade in together ──
-        tl.to(
-          [cards[0], cards[8], cards[1], cards[9]],
-          { opacity: 1, x: 0, stagger: 0.12, duration: 0.55, ease: 'power2.out' },
-        );
-        tl.to(
-          [cards[2], cards[3], cards[10], cards[11]],
-          { opacity: 1, stagger: 0.06, duration: 0.45, ease: 'power2.out' },
-          '<',
-        );
-        tl.to({}, { duration: 0.7 });
+        // Columns 0-3: both rows enter together, left to right
+        ([[0,8],[1,9],[2,10],[3,11]] as [number,number][]).forEach(([a, b], idx) => {
+          const targets = [cards[a], cards[b]].filter(Boolean) as HTMLDivElement[];
+          tl.to(targets, { opacity: 1, stagger: 0.06, duration: 0.42, ease: 'power2.out' },
+            idx === 0 ? 0 : '<+0.22');
+        });
+        tl.to({}, { duration: 0.6 });
 
-        // ── Both rows slide left ───────────────────────────────────────────
+        // Both rows slide left
         tl.to(tracksRef.current, { x: -STEP, duration: 2.2, ease: 'power2.inOut' });
+
+        // Columns 4-7: enter during the slide, left to right
+        ([[4,12],[5,13],[6,14],[7,15]] as [number,number][]).forEach(([a, b], idx) => {
+          const targets = [cards[a], cards[b]].filter(Boolean) as HTMLDivElement[];
+          tl.to(targets, { opacity: 1, stagger: 0.06, duration: 0.42, ease: 'power2.out' },
+            idx === 0 ? '<' : '<+0.4');
+        });
         tl.to({}, { duration: 0.7 });
 
-        // ── Exit — tracks blur and dissolve out ───────────────────────────
+        // Exit — tracks blur and dissolve out
         tl.to(tracksRef.current, {
           opacity: 0,
           filter: 'blur(16px)',
@@ -126,6 +122,7 @@ export function TestimonialsSection() {
                   className="ts-card"
                   ref={el => { cardRefs.current[ri * 8 + ci] = el; }}
                 >
+                  <span className="ts-card-num">#{String(ri * 8 + ci + 1).padStart(2, '0')}</span>
                   <span className="ts-card-glyph">&ldquo;</span>
                   <p className="ts-card-quote">{t.quote}</p>
                   <div className="ts-card-author">
