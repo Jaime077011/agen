@@ -48,24 +48,28 @@ export function ProjectsSection() {
 
     hCards.forEach(c => { c.style.pointerEvents = 'none'; });
 
-    const onSceneEnter = () => {
+    const onSceneEnter = (e: Event) => {
       if (!a3dEl) return;
       a3dEl.style.animationPlayState = 'paused';
 
-      requestAnimationFrame(() => {
-        const anim = a3dEl.getAnimations()[0];
-        const elapsed = typeof anim?.currentTime === 'number' ? (anim.currentTime as number) : 0;
-        const animMs  = parseFloat(getComputedStyle(a3dEl).animationDuration) * 1000 || 28000;
-        const a3dDeg  = ((elapsed % animMs) / animMs) * 360;
+      const anim = a3dEl.getAnimations()[0];
+      const elapsed = typeof anim?.currentTime === 'number' ? (anim.currentTime as number) : 0;
+      const animMs  = parseFloat(getComputedStyle(a3dEl).animationDuration) * 1000 || 28000;
+      const a3dDeg  = ((elapsed % animMs) / animMs) * 360;
 
-        hCards.forEach((card, i) => {
-          // Card i's effective Y-rotation in world space
-          const effectiveDeg = a3dDeg + i * (360 / N);
-          // cos > 0 means card's front normal points toward the viewer
-          const front = Math.cos((effectiveDeg * Math.PI) / 180) > 0;
-          card.style.pointerEvents = front ? 'auto' : 'none';
-        });
+      hCards.forEach((card, i) => {
+        // Card i's effective Y-rotation in world space
+        const effectiveDeg = a3dDeg + i * (360 / N);
+        // cos > 0 means card's front normal points toward the viewer
+        const front = Math.cos((effectiveDeg * Math.PI) / 180) > 0;
+        card.style.pointerEvents = front ? 'auto' : 'none';
       });
+
+      // Force browsers that don't re-evaluate :hover on pointer-events change to pick up the card
+      const me = e as MouseEvent;
+      scene?.dispatchEvent(new MouseEvent('mousemove', {
+        bubbles: true, cancelable: true, clientX: me.clientX, clientY: me.clientY,
+      }));
     };
 
     const onSceneLeave = () => {
