@@ -1938,75 +1938,6 @@ body.ar .pain-link {
   gap: 0;
 }
 
-/* Footer strip — locked to the bottom of the viewport */
-.cs-footer-strip {
-  padding: 20px 52px 36px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  opacity: 0;
-  flex-shrink: 0;
-  position: relative;
-  z-index: 1;
-}
-
-.cs-footer-meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-.cs-footer-tagline {
-  font-size: 0.68rem;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.3);
-}
-
-.cs-footer-socials {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.cs-footer-social {
-  font-size: 0.6rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.32);
-  text-decoration: none;
-  padding: 4px 8px;
-  transition: color 0.2s;
-}
-
-.cs-footer-social:hover { color: var(--accent); }
-
-.cs-footer-sep {
-  color: rgba(255, 255, 255, 0.12);
-  font-size: 0.55rem;
-}
-
-.cs-footer-bottom {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.cs-footer-copy,
-.cs-footer-location {
-  font-size: 0.58rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.18);
-}
 
 .cs-headline {
   font-family: var(--font-montserrat), sans-serif;
@@ -2114,10 +2045,6 @@ body.ar .pain-link {
 
   .cs-headline { font-size: clamp(2.4rem, 10vw, 3.6rem); }
 
-  .cs-footer-strip { padding: 20px 32px 36px; }
-
-  .cs-footer-meta { flex-direction: column; align-items: flex-start; gap: 12px; }
-  .cs-footer-bottom { flex-direction: column; align-items: flex-start; }
 }
 
 /* ── FOOTER ───────────────────────────────────────────────────────────────── */

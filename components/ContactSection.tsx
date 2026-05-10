@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useRef } from 'react';
-import { useLang } from '@/lib/lang-context';
 
 function chars(text: string) {
   return text.split('').map((c, i) => (
@@ -8,24 +7,15 @@ function chars(text: string) {
   ));
 }
 
-const SOCIALS = [
-  { label: 'Instagram', href: '#' },
-  { label: 'LinkedIn', href: '#' },
-  { label: 'Behance', href: '#' },
-];
-
 export function ContactSection() {
-  const { lang } = useLang();
-  const isAr = lang === 'ar';
 
-  const sectionRef      = useRef<HTMLDivElement>(null);
-  const momentRef       = useRef<HTMLDivElement>(null);
-  const contentRef      = useRef<HTMLDivElement>(null);
-  const headlineRef     = useRef<HTMLHeadingElement>(null);
-  const subtextRef      = useRef<HTMLParagraphElement>(null);
-  const fieldsRef       = useRef<HTMLDivElement>(null);
-  const ctaRef          = useRef<HTMLDivElement>(null);
-  const footerStripRef  = useRef<HTMLDivElement>(null);
+  const sectionRef  = useRef<HTMLDivElement>(null);
+  const momentRef   = useRef<HTMLDivElement>(null);
+  const contentRef  = useRef<HTMLDivElement>(null);
+  const headlineRef = useRef<HTMLHeadingElement>(null);
+  const subtextRef  = useRef<HTMLParagraphElement>(null);
+  const fieldsRef   = useRef<HTMLDivElement>(null);
+  const ctaRef      = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let isCancelled = false;
@@ -92,15 +82,6 @@ export function ContactSection() {
             { opacity: 1, x: 0, duration: 1.2, ease },
             '>+0.4');
 
-          // Hold
-          tl.to({}, { duration: 2 });
-
-          // ── Footer strip slides up ───────────────────────────────────────
-          tl.fromTo(footerStripRef.current,
-            { opacity: 0, y: 40 },
-            { opacity: 1, y: 0, duration: 1, ease },
-            '>');
-
           // Hold at end
           tl.to({}, { duration: 2.5 });
       }, sectionRef);
@@ -156,33 +137,6 @@ export function ContactSection() {
 
         </div>
 
-        {/* Footer strip */}
-        <div className="cs-footer-strip" ref={footerStripRef}>
-          <div className="cs-footer-meta">
-            <p className="cs-footer-tagline">
-              {isAr
-                ? 'الاستراتيجية والتصميم والنمو — منظومة واحدة متكاملة.'
-                : 'Strategy, design, and growth — built as one system.'}
-            </p>
-            <div className="cs-footer-socials">
-              {SOCIALS.map((s, i) => (
-                <span key={s.label} style={{ display: 'contents' }}>
-                  {i > 0 && <span className="cs-footer-sep">·</span>}
-                  <a href={s.href} className="cs-footer-social" target="_blank" rel="noopener noreferrer">
-                    {s.label}
-                  </a>
-                </span>
-              ))}
-            </div>
-          </div>
-          <div className="cs-footer-bottom">
-            <p className="cs-footer-copy">
-              &copy; {new Date().getFullYear()} The Archetypers.{' '}
-              {isAr ? 'جميع الحقوق محفوظة.' : 'All rights reserved.'}
-            </p>
-            <p className="cs-footer-location">Cairo, Egypt</p>
-          </div>
-        </div>
 
       </div>
     </div>
