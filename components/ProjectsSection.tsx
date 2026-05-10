@@ -30,8 +30,8 @@ const N = PROJECTS.length;
 
 export function ProjectsSection() {
   const sectionRef    = useRef<HTMLDivElement>(null);
+  const headerRef     = useRef<HTMLDivElement>(null);
   const sceneRef      = useRef<HTMLDivElement>(null);
-  const ctaRef        = useRef<HTMLDivElement>(null);
   const momentAreaRef = useRef<HTMLDivElement>(null);
   const momentRef     = useRef<HTMLDivElement>(null);
 
@@ -137,22 +137,22 @@ export function ProjectsSection() {
         // and cannot be touched by GSAP without breaking it.
         const cards = Array.from(sectionRef.current?.querySelectorAll('.ps-card') ?? []);
         gsap.set(cards, { opacity: 0 });
-        gsap.set(ctaRef.current, { opacity: 0, y: 16 });
+        gsap.set(headerRef.current, { opacity: 0, y: 16 });
 
         // Intro: cards materialise right-to-left (index N-1 → 0)
         ScrollTrigger.create({
-          trigger: sceneRef.current,
-          start: 'top 75%',
+          trigger: sectionRef.current,
+          start: 'top 80%',
           onEnter: () => {
-            gsap.to(cards, { opacity: 1, stagger: { amount: 1.6, from: 'end' }, duration: 0.75, ease: 'power2.out' });
-            gsap.to(ctaRef.current, { opacity: 1, y: 0, duration: 0.9, ease: 'power2.out', delay: 1 });
+            gsap.to(headerRef.current, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' });
+            gsap.to(cards, { opacity: 1, stagger: { amount: 1.6, from: 'end' }, duration: 0.75, ease: 'power2.out', delay: 0.2 });
             dispatchNoiseMode(1);
             sectionInView = true;
             if (!isHovered) rampGain(0.14);
           },
           onLeaveBack: () => {
+            gsap.to(headerRef.current, { opacity: 0, y: 16, duration: 0.35, ease: 'power2.in' });
             gsap.to(cards, { opacity: 0, stagger: { amount: 0.8, from: 'start' }, duration: 0.5, ease: 'power2.in' });
-            gsap.to(ctaRef.current, { opacity: 0, duration: 0.3 });
             dispatchNoiseMode(0);
             sectionInView = false;
             rampGain(0);
@@ -164,14 +164,14 @@ export function ProjectsSection() {
           trigger: sceneRef.current,
           start: 'bottom 35%',
           onLeave: () => {
+            gsap.to(headerRef.current, { opacity: 0, duration: 0.3 });
             gsap.to(cards, { opacity: 0, stagger: { amount: 0.9, from: 'start' }, duration: 0.55, ease: 'power2.in' });
-            gsap.to(ctaRef.current, { opacity: 0, duration: 0.3 });
             sectionInView = false;
             rampGain(0);
           },
           onEnterBack: () => {
+            gsap.to(headerRef.current, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' });
             gsap.to(cards, { opacity: 1, stagger: { amount: 1.2, from: 'end' }, duration: 0.75, ease: 'power2.out' });
-            gsap.to(ctaRef.current, { opacity: 1, duration: 0.6, ease: 'power2.out' });
             sectionInView = true;
             if (!isHovered) rampGain(0.14);
           },
@@ -219,32 +219,38 @@ export function ProjectsSection() {
   return (
     <div className="ps-section" ref={sectionRef}>
 
-      {/* 3D carousel */}
-      <div className="ps-scene" ref={sceneRef}>
-        <div
-          className="ps-a3d"
-          style={{ '--n': N } as React.CSSProperties}
-        >
-          {PROJECTS.map((p, i) => (
-            <div
-              key={i}
-              className="ps-card"
-              style={{ '--i': i } as React.CSSProperties}
-            >
-              <div className="ps-card-img" />
-              <div className="ps-card-overlay">
-                <span className="ps-overlay-num">#{p.number}</span>
-                <span className="ps-overlay-cat">{p.category}</span>
-              </div>
-            </div>
-          ))}
+      {/* Header + carousel — one screen */}
+      <div className="ps-main">
+        <div className="ps-header" ref={headerRef}>
+          <div className="ps-header-left">
+            <span className="ps-eyebrow">Selected Work</span>
+            <h2 className="ps-headline">The work.</h2>
+            <p className="ps-desc">12 projects. Brand identity, digital storefronts, and AI systems.</p>
+          </div>
+          <a href="/projects" className="hero-cta">See all projects</a>
         </div>
-      </div>
 
-      {/* CTA */}
-      <div className="ps-cta" ref={ctaRef}>
-        <span className="ps-cta-eyebrow">Brand Identity · Web & Store · AI Systems</span>
-        <a href="/projects" className="hero-cta">See all projects</a>
+        {/* 3D carousel */}
+        <div className="ps-scene" ref={sceneRef}>
+          <div
+            className="ps-a3d"
+            style={{ '--n': N } as React.CSSProperties}
+          >
+            {PROJECTS.map((p, i) => (
+              <div
+                key={i}
+                className="ps-card"
+                style={{ '--i': i } as React.CSSProperties}
+              >
+                <div className="ps-card-img" />
+                <div className="ps-card-overlay">
+                  <span className="ps-overlay-num">#{p.number}</span>
+                  <span className="ps-overlay-cat">{p.category}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Moment */}

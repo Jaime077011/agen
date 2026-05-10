@@ -852,16 +852,74 @@ body {
   position: relative;
   z-index: 10;
   isolation: isolate;
-  padding-top: 120px;
+}
+
+.ps-main {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.ps-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 110px 6vw 28px;
+  flex-shrink: 0;
+  gap: 24px;
+  opacity: 0;
+}
+
+.ps-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ps-eyebrow {
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.28);
+  font-family: var(--font-montserrat), sans-serif;
+  font-weight: 600;
+}
+
+.ps-headline {
+  font-family: var(--font-montserrat), sans-serif;
+  font-size: clamp(2rem, 3.8vw, 3.2rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--white);
+  line-height: 1.0;
+}
+
+.ps-desc {
+  font-size: 0.8rem;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.35);
+  max-width: 280px;
+}
+
+@media (max-width: 768px) {
+  .ps-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 88px 20px 20px;
+    gap: 20px;
+  }
+
+  .ps-headline { font-size: 2rem; }
 }
 
 /* 3D scene — ported from Ana Tudor's pure-css carousel */
 .ps-scene, .ps-a3d { display: grid; }
 
 .ps-scene {
+  flex: 1;
+  min-height: 0;
   overflow: hidden;
   perspective: 55em;
-  height: 78vh;
   mask-image:
     linear-gradient(to right,  transparent 0, black 8%,  black 92%,  transparent 100%),
     linear-gradient(to bottom, transparent 0, black 15%, black 85%, transparent 100%);
@@ -1021,30 +1079,6 @@ body {
   line-height: 1.1;
   text-transform: uppercase;
   margin: 0;
-}
-
-/* ── Carousel CTA (between scene and moment) ─────────────── */
-.ps-cta {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
-  padding: 40px 0 0;
-  text-align: center;
-  opacity: 0;
-}
-
-.ps-cta-eyebrow {
-  font-size: 0.58rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.28);
-  font-family: var(--font-montserrat), sans-serif;
-  font-weight: 600;
-}
-
-@media (max-width: 768px) {
-  .ps-cta { padding: 28px 24px 0; }
 }
 
 /* ── Testimonials ─────────────────────────────────────────── */
