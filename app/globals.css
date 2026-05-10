@@ -879,15 +879,6 @@ body {
   gap: 10px;
 }
 
-.ps-eyebrow {
-  font-size: 0.58rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.28);
-  font-family: var(--font-montserrat), sans-serif;
-  font-weight: 600;
-}
-
 .ps-headline {
   font-family: var(--font-montserrat), sans-serif;
   font-size: clamp(2rem, 3.8vw, 3.2rem);
