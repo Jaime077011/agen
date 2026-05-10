@@ -9,7 +9,6 @@ function chars(text: string) {
 
 export function Footer() {
   const sectionRef  = useRef<HTMLDivElement>(null);
-  const descRef     = useRef<HTMLDivElement>(null);
   const taglineRef  = useRef<HTMLDivElement>(null);
   const wordmarkRef = useRef<HTMLDivElement>(null);
   const brandRef    = useRef<HTMLParagraphElement>(null);
@@ -38,10 +37,6 @@ export function Footer() {
             scrub: 1,
           },
         });
-
-        tl.fromTo(descRef.current,
-          { opacity: 0, y: 28 },
-          { opacity: 1, y: 0, duration: 0.9, ease });
 
         tl.fromTo(taglineRef.current,
           { opacity: 0, y: 16 },
@@ -74,20 +69,6 @@ export function Footer() {
     <div className="footer-section" ref={sectionRef}>
       <div className="footer-sticky">
         <footer className="footer">
-
-          {/* Description + CTA */}
-          <div className="footer-top" ref={descRef}>
-            <p className="footer-desc">
-              The Archetypers is a branding and digital development studio in Egypt.
-              We partner with ambitious founders and creators to craft identities
-              that feel sharp, purposeful, and built for growth. With a philosophy
-              rooted in precision and business logic, we turn startups and scale-ups
-              into trusted, market-leading brands. Our work goes beyond visuals —
-              we deliver complete brand frameworks and high-performance websites
-              designed to last.
-            </p>
-            <a href="/contact" className="hero-cta">Upscale your business</a>
-          </div>
 
           {/* Tagline strip */}
           <div className="footer-tagline-strip" ref={taglineRef}>

@@ -2070,24 +2070,6 @@ body.ar .pain-link {
   justify-content: space-between;
 }
 
-/* Description + CTA */
-.footer-top {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 28px;
-  text-align: center;
-  opacity: 0;
-}
-
-.footer-desc {
-  font-size: 0.82rem;
-  line-height: 1.9;
-  color: rgba(255, 255, 255, 0.36);
-  max-width: 700px;
-  margin: 0 auto;
-}
-
 /* Tagline strip */
 .footer-tagline-strip {
   display: flex;
