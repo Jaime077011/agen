@@ -2124,7 +2124,7 @@ body.ar .pain-link {
 .footer-section {
   position: relative;
   z-index: 10;
-  height: 200vh;
+  height: 220vh;
 }
 
 .footer-sticky {
@@ -2138,116 +2138,122 @@ body.ar .pain-link {
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 48px 52px 44px;
+  padding: 56px 52px 40px;
   box-sizing: border-box;
+  justify-content: space-between;
 }
 
-/* Ghosted wordmark — fills vertical space */
-.footer-wordmark {
-  flex: 1;
+/* Description + CTA */
+.footer-top {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  font-family: var(--font-montserrat), sans-serif;
-  font-size: clamp(4rem, 11vw, 10.5rem);
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: -0.02em;
-  font-kerning: none;
-  font-feature-settings: "kern" 0;
-  line-height: 0.88;
-  color: rgba(255, 255, 255, 0.055);
-  user-select: none;
-  pointer-events: none;
+  gap: 28px;
+  text-align: center;
   opacity: 0;
 }
 
-.footer-meta {
+.footer-desc {
+  font-size: 0.82rem;
+  line-height: 1.9;
+  color: rgba(255, 255, 255, 0.36);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Tagline strip */
+.footer-tagline-strip {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 12px;
   opacity: 0;
 }
 
 .footer-tagline {
-  font-size: 0.68rem;
-  font-weight: 500;
-  letter-spacing: 0.14em;
+  font-family: var(--font-montserrat), sans-serif;
+  font-size: clamp(0.9rem, 1.8vw, 1.35rem);
+  font-weight: 800;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--white);
+  margin: 0;
 }
 
-.footer-socials {
+.footer-rule {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.12);
+  flex-shrink: 0;
+}
+
+/* Giant wordmark */
+.footer-wordmark {
   display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.footer-social {
-  font-size: 0.6rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.32);
-  text-decoration: none;
-  transition: color 0.2s;
-  padding: 4px 8px;
-}
-
-.footer-social:hover {
-  color: var(--accent);
-}
-
-.footer-social-sep {
-  color: rgba(255, 255, 255, 0.12);
-  font-size: 0.55rem;
-}
-
-.footer-bottom {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  padding-top: 24px;
-  margin-top: 24px;
-  gap: 16px;
-  flex-wrap: wrap;
+  flex-direction: column;
   opacity: 0;
 }
 
-.footer-copy,
-.footer-location {
-  font-size: 0.58rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.18);
+.footer-script {
+  font-family: 'AstonScript', cursive;
+  font-size: clamp(2.4rem, 4.2vw, 5.2rem);
+  color: var(--white);
+  line-height: 1;
+  margin-bottom: -0.1em;
+  padding-left: 0.06em;
+  display: block;
 }
 
-/* Mobile — restore sticky */
+.footer-brand {
+  font-family: var(--font-montserrat), sans-serif;
+  font-weight: 900;
+  font-size: 13.5vw;
+  text-transform: uppercase;
+  letter-spacing: -0.025em;
+  line-height: 0.85;
+  color: var(--white);
+  font-kerning: none;
+  font-feature-settings: "kern" 0;
+  margin: 0;
+}
+
+/* Copyright */
+.footer-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  opacity: 0;
+}
+
+.footer-copy {
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.28);
+  text-align: center;
+}
+
+.footer-copy strong {
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 700;
+}
+
+/* Mobile */
 @media (max-width: 768px) {
-  .footer-section { height: 150vh; }
-  .footer-sticky { height: 100dvh; }
+  .footer-section { height: 180vh; }
+  .footer-sticky  { height: 100dvh; }
 
-  .footer { padding: 48px 24px 44px; }
-
-  .footer-wordmark {
-    font-size: clamp(3rem, 14vw, 5rem);
-    line-height: 1;
-    color: rgba(255, 255, 255, 0.09);
+  .footer {
+    padding: 48px 24px 36px;
+    gap: 28px;
+    justify-content: space-between;
   }
 
-  .footer-meta {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-  }
+  .footer-desc { font-size: 0.75rem; }
 
-  .footer-bottom {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+  .footer-brand { font-size: 16vw; }
+
+  .footer-tagline { font-size: 0.7rem; }
+
+  .footer-script { font-size: clamp(2rem, 9vw, 3.5rem); }
 }
 
 /* Touch devices — hide custom cursor elements */

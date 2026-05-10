@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useRef } from 'react';
-import { useLang } from '@/lib/lang-context';
 
 function chars(text: string) {
   return text.split('').map((c, i) => (
@@ -8,19 +7,12 @@ function chars(text: string) {
   ));
 }
 
-const SOCIALS = [
-  { label: 'Instagram', href: '#' },
-  { label: 'LinkedIn', href: '#' },
-  { label: 'Behance', href: '#' },
-];
-
 export function Footer() {
-  const { lang } = useLang();
-  const isAr = lang === 'ar';
-
   const sectionRef  = useRef<HTMLDivElement>(null);
-  const wordmarkRef = useRef<HTMLParagraphElement>(null);
-  const metaRef     = useRef<HTMLDivElement>(null);
+  const descRef     = useRef<HTMLDivElement>(null);
+  const taglineRef  = useRef<HTMLDivElement>(null);
+  const wordmarkRef = useRef<HTMLDivElement>(null);
+  const brandRef    = useRef<HTMLParagraphElement>(null);
   const bottomRef   = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -36,40 +28,39 @@ export function Footer() {
       const ease = 'power2.out';
 
       ctx = gsap.context(() => {
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: 'top top',
-              end: 'bottom bottom',
-              scrub: 1,
-            },
-          });
+        const bChars = Array.from(brandRef.current?.querySelectorAll('.char') ?? []);
 
-          // Wordmark chars blur in
-          const wChars = Array.from(wordmarkRef.current?.querySelectorAll('.char') ?? []);
-          tl.fromTo(wordmarkRef.current, { opacity: 0 }, { opacity: 1, duration: 0.1 });
-          tl.fromTo(wChars,
-            { opacity: 0, filter: 'blur(12px)' },
-            { opacity: 1, filter: 'blur(0px)', stagger: 0.05, duration: 0.8, ease },
-            '<+0.05');
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: 1,
+          },
+        });
 
-          // Hold
-          tl.to({}, { duration: 1.5 });
+        tl.fromTo(descRef.current,
+          { opacity: 0, y: 28 },
+          { opacity: 1, y: 0, duration: 0.9, ease });
 
-          // Meta slides up
-          tl.fromTo(metaRef.current,
-            { opacity: 0, y: 36 },
-            { opacity: 1, y: 0, duration: 1, ease },
-            '>');
+        tl.fromTo(taglineRef.current,
+          { opacity: 0, y: 16 },
+          { opacity: 1, y: 0, duration: 0.7, ease },
+          '>+0.3');
 
-          // Bottom bar
-          tl.fromTo(bottomRef.current,
-            { opacity: 0, y: 20 },
-            { opacity: 1, y: 0, duration: 0.8, ease },
-            '>+0.4');
+        tl.set(wordmarkRef.current, { opacity: 1 });
+        tl.fromTo(bChars,
+          { opacity: 0, filter: 'blur(14px)' },
+          { opacity: 1, filter: 'blur(0px)', stagger: 0.04, duration: 0.9, ease },
+          '<+0.2');
 
-          // Hold at end
-          tl.to({}, { duration: 2 });
+        tl.fromTo(bottomRef.current,
+          { opacity: 0 },
+          { opacity: 1, duration: 0.6, ease },
+          '>+0.2');
+
+        tl.to({}, { duration: 2 });
+
       }, sectionRef);
     })();
 
@@ -84,34 +75,39 @@ export function Footer() {
       <div className="footer-sticky">
         <footer className="footer">
 
-          <p className="footer-wordmark" ref={wordmarkRef}>
-            {chars('The Archetypers')}
-          </p>
-
-          <div className="footer-meta" ref={metaRef}>
-            <p className="footer-tagline">
-              {isAr
-                ? 'الاستراتيجية والتصميم والنمو — منظومة واحدة متكاملة.'
-                : 'Strategy, design, and growth — built as one system.'}
+          {/* Description + CTA */}
+          <div className="footer-top" ref={descRef}>
+            <p className="footer-desc">
+              The Archetypers is a branding and digital development studio in Egypt.
+              We partner with ambitious founders and creators to craft identities
+              that feel sharp, purposeful, and built for growth. With a philosophy
+              rooted in precision and business logic, we turn startups and scale-ups
+              into trusted, market-leading brands. Our work goes beyond visuals —
+              we deliver complete brand frameworks and high-performance websites
+              designed to last.
             </p>
-            <div className="footer-socials">
-              {SOCIALS.map((s, i) => (
-                <span key={s.label} style={{ display: 'contents' }}>
-                  {i > 0 && <span className="footer-social-sep">·</span>}
-                  <a href={s.href} className="footer-social" target="_blank" rel="noopener noreferrer">
-                    {s.label}
-                  </a>
-                </span>
-              ))}
-            </div>
+            <a href="/contact" className="hero-cta">Upscale your business</a>
           </div>
 
+          {/* Tagline strip */}
+          <div className="footer-tagline-strip" ref={taglineRef}>
+            <div className="footer-rule" />
+            <p className="footer-tagline">Brand Strategy, Digital Growth, and Conversion</p>
+            <div className="footer-rule" />
+          </div>
+
+          {/* Giant wordmark */}
+          <div className="footer-wordmark" ref={wordmarkRef}>
+            <span className="footer-script">The</span>
+            <p className="footer-brand" ref={brandRef}>{chars('ARCHETYPERS')}</p>
+          </div>
+
+          {/* Copyright */}
           <div className="footer-bottom" ref={bottomRef}>
+            <div className="footer-rule" />
             <p className="footer-copy">
-              &copy; {new Date().getFullYear()} The Archetypers.{' '}
-              {isAr ? 'جميع الحقوق محفوظة.' : 'All rights reserved.'}
+              Copyright &copy; 2026 <strong>THE ARCHETYPERS</strong> , All rights reserved
             </p>
-            <p className="footer-location">Cairo, Egypt</p>
           </div>
 
         </footer>

@@ -7,6 +7,7 @@ import { SiteSection } from '@/components/SiteSection';
 import { ProjectsSection } from '@/components/ProjectsSection';
 import { TestimonialsSection } from '@/components/TestimonialsSection';
 import { ContactSection } from '@/components/ContactSection';
+import { Footer } from '@/components/Footer';
 import { ControlPanel } from '@/components/ControlPanel';
 
 export default function Home() {
@@ -21,6 +22,7 @@ export default function Home() {
       <ProjectsSection />
       <TestimonialsSection />
       <ContactSection />
+      <Footer />
       <ControlPanel />
     </>
   );
