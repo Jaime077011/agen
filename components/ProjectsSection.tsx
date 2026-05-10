@@ -38,47 +38,11 @@ export function ProjectsSection() {
     let isCancelled = false;
     let ctx: { revert: () => void } | null = null;
 
-    // ── Hover: pause spin + enable only front-facing cards ─────────────────
-    // backface-visibility:hidden hides rear cards visually but they still
-    // intercept pointer events. We calculate which cards are geometrically
-    // front-facing from the CSS animation's current time and block the rest.
-    const scene  = sceneRef.current;
-    const a3dEl  = scene?.querySelector('.ps-a3d') as HTMLElement | null;
-    const hCards = Array.from(scene?.querySelectorAll('.ps-card') ?? []) as HTMLElement[];
+    const scene = sceneRef.current;
+    const a3dEl = scene?.querySelector('.ps-a3d') as HTMLElement | null;
 
-    hCards.forEach(c => { c.style.pointerEvents = 'none'; });
-
-    const onSceneEnter = (e: Event) => {
-      if (!a3dEl) return;
-      a3dEl.style.animationPlayState = 'paused';
-
-      const anim = a3dEl.getAnimations()[0];
-      const elapsed = typeof anim?.currentTime === 'number' ? (anim.currentTime as number) : 0;
-      const animMs  = parseFloat(getComputedStyle(a3dEl).animationDuration) * 1000 || 28000;
-      const a3dDeg  = ((elapsed % animMs) / animMs) * 360;
-
-      hCards.forEach((card, i) => {
-        // Card i's effective Y-rotation in world space
-        const effectiveDeg = a3dDeg + i * (360 / N);
-        // cos > 0 means card's front normal points toward the viewer
-        const front = Math.cos((effectiveDeg * Math.PI) / 180) > 0;
-        card.style.pointerEvents = front ? 'auto' : 'none';
-      });
-
-      // Dispatch on the element actually under the cursor so :hover fires on the correct card,
-      // not just the scene boundary where mouseenter was triggered.
-      const me = e as MouseEvent;
-      const target = document.elementFromPoint(me.clientX, me.clientY) ?? scene;
-      (target as Element).dispatchEvent(new MouseEvent('mousemove', {
-        bubbles: true, cancelable: true, clientX: me.clientX, clientY: me.clientY,
-      }));
-    };
-
-    const onSceneLeave = () => {
-      if (!a3dEl) return;
-      a3dEl.style.animationPlayState = '';
-      hCards.forEach(c => { c.style.pointerEvents = 'none'; });
-    };
+    const onSceneEnter = () => { if (a3dEl) a3dEl.style.animationPlayState = 'paused'; };
+    const onSceneLeave = () => { if (a3dEl) a3dEl.style.animationPlayState = ''; };
 
     scene?.addEventListener('mouseenter', onSceneEnter);
     scene?.addEventListener('mouseleave', onSceneLeave);
@@ -189,9 +153,6 @@ export function ProjectsSection() {
                 <span className="ps-overlay-num">#{p.number}</span>
                 <span className="ps-overlay-cat">{p.category}</span>
               </div>
-              <a href="/projects" className="ps-card-cta">
-                View Project
-              </a>
             </div>
           ))}
         </div>
