@@ -1023,6 +1023,53 @@ body {
   margin: 0;
 }
 
+/* ── Projects CTA Row ────────────────────────────────────── */
+.pcta-section {
+  position: relative;
+  z-index: 10;
+  isolation: isolate;
+  padding: 100px 0 80px;
+  display: flex;
+  justify-content: center;
+}
+
+.pcta-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  text-align: center;
+  opacity: 0;
+}
+
+.pcta-label {
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-family: var(--font-montserrat), sans-serif;
+  font-weight: 600;
+}
+
+.pcta-headline {
+  font-family: var(--font-montserrat), sans-serif;
+  font-size: clamp(1.6rem, 3.2vw, 2.6rem);
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  color: var(--white);
+  line-height: 1.12;
+}
+
+@media (max-width: 768px) {
+  .pcta-section {
+    padding: 72px 24px 60px;
+  }
+
+  .pcta-headline {
+    font-size: 1.5rem;
+  }
+}
+
 /* ── Testimonials ─────────────────────────────────────────── */
 .ts-section {
   position: relative;
