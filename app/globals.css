@@ -333,24 +333,24 @@ body {
     filter 0.2s;
 }
 
-.arc-item:nth-child(1) { transition-delay: 0.08s; }
-.arc-item:nth-child(2) { transition-delay: 0.04s; }
-.arc-item:nth-child(3) { transition-delay: 0.00s; }
+.arc-item:nth-child(2) { transition-delay: 0.08s; }
+.arc-item:nth-child(3) { transition-delay: 0.04s; }
+.arc-item:nth-child(4) { transition-delay: 0.00s; }
 
 /* Open state — fan to the left */
-.control-panel.open .arc-item:nth-child(1) {
+.control-panel.open .arc-item:nth-child(2) {
   transform: translate(-64px, -60px) scale(1);
   opacity: 1;
   pointer-events: all;
 }
 
-.control-panel.open .arc-item:nth-child(2) {
+.control-panel.open .arc-item:nth-child(3) {
   transform: translate(-80px, 4px) scale(1);
   opacity: 1;
   pointer-events: all;
 }
 
-.control-panel.open .arc-item:nth-child(3) {
+.control-panel.open .arc-item:nth-child(4) {
   transform: translate(-64px, 68px) scale(1);
   opacity: 1;
   pointer-events: all;
@@ -1668,8 +1668,18 @@ body.ar .pain-link {
 
 .cs-wrapper .hero-headline {
   white-space: nowrap;
-  font-size: clamp(1rem, 5.5vw, 7.5rem);
 }
+
+@media (max-width: 768px) {
+  .cs-wrapper .hero-headline {
+    white-space: normal;
+    font-size: 14vw;
+  }
+  .cs-wrapper .hero-script-wrap {
+    margin-bottom: -8px;
+  }
+}
+
 
 @media (pointer: fine) {
   .cs-social-cursor {
@@ -4198,13 +4208,13 @@ body.ar .pain-link {
   }
 
   /* Fan arc upward so items don't fall off the bottom of the screen */
-  .control-panel.open .arc-item:nth-child(1) {
+  .control-panel.open .arc-item:nth-child(2) {
     transform: translate(-64px, -126px) scale(1);
   }
-  .control-panel.open .arc-item:nth-child(2) {
+  .control-panel.open .arc-item:nth-child(3) {
     transform: translate(-84px, -60px) scale(1);
   }
-  .control-panel.open .arc-item:nth-child(3) {
+  .control-panel.open .arc-item:nth-child(4) {
     transform: translate(-64px, 0px) scale(1);
   }
 }

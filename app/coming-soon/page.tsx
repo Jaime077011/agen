@@ -25,7 +25,7 @@ export default function ComingSoon() {
                 <span className="hero-script">Seriously.</span>
               </div>
               <div className="hero-headline-wrap anim-up" style={{ '--delay': '350ms' } as React.CSSProperties}>
-                <h1 className="hero-headline">You Deserve Better</h1>
+                <h1 className="hero-headline">You Deserve Better.</h1>
               </div>
               <div className="hero-tagline-wrap anim-up" style={{ '--delay': '480ms' } as React.CSSProperties}>
                 <p className="hero-tagline">Done settling? So are we. Let&apos;s build something that actually works.</p>
