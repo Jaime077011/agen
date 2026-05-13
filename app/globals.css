@@ -1593,6 +1593,109 @@ body.ar .pain-link {
   height: 1250vh;
 }
 
+/* coming-soon page wrapper — same stacking context as site-wrapper, no scroll height */
+.cs-wrapper {
+  position: relative;
+  z-index: 10;
+  height: 100vh;
+}
+
+/* logo centered at the top of the coming-soon page */
+.cs-top-logo {
+  position: absolute;
+  top: 28px;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  display: flex;
+  justify-content: center;
+}
+
+.cs-top-logo-clip {
+  width: 150px;
+  height: 49px;
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.cs-top-logo-clip img {
+  position: absolute;
+  width: 240px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.cs-social {
+  position: absolute;
+  bottom: 32px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  z-index: 10;
+}
+
+.cs-social-link {
+  color: rgba(255, 255, 255, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.cs-social-link svg {
+  width: 18px;
+  height: 18px;
+}
+
+.cs-social-link:hover {
+  color: var(--white);
+  transform: translateY(-2px);
+}
+
+.cs-wrapper .hero-script-wrap {
+  margin-bottom: -36px;
+}
+
+.cs-wrapper .hero-headline-wrap {
+  overflow: visible;
+}
+
+.cs-wrapper .hero-headline {
+  white-space: nowrap;
+  font-size: clamp(1rem, 5.5vw, 7.5rem);
+}
+
+@media (pointer: fine) {
+  .cs-social-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--white);
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 10002;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 2px 16px rgba(0,0,0,0.25);
+  }
+
+  .cs-social-cursor.active {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
 .site-sticky {
   position: sticky;
   top: 0;
