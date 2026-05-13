@@ -31,7 +31,7 @@ export default function ComingSoon() {
                 <p className="hero-tagline">Done settling? So are we. Let&apos;s build something that actually works.</p>
               </div>
               <div className="hero-cta-wrap anim-up" style={{ '--delay': '550ms' } as React.CSSProperties}>
-                <a href="/contact" className="hero-cta">See What&apos;s Possible</a>
+                <a href="/brief" className="hero-cta">See What&apos;s Possible</a>
               </div>
             </section>
           </div>

@@ -8,8 +8,8 @@ const COMING   = '/coming-soon';
 export function middleware(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
 
-  // Let the coming-soon page and all static/internal assets through
-  if (pathname === COMING) return NextResponse.next();
+  // Let the coming-soon page, brief form, and all static/internal assets through
+  if (pathname === COMING || pathname === '/brief') return NextResponse.next();
 
   // Owner visits /?preview=SECRET → set cookie and redirect to home
   if (SECRET && searchParams.get('preview') === SECRET) {
