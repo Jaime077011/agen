@@ -1,11 +1,13 @@
 import type { Metadata } from 'next';
 import { Montserrat, Tajawal, El_Messiri } from 'next/font/google';
+import { cookies } from 'next/headers';
 import './globals.css';
 import { LangProvider } from '@/lib/lang-context';
 import { ConsentBanner } from '@/components/ConsentBanner';
 import { ScrollGuard } from '@/components/ScrollGuard';
 import { SoundManager } from '@/components/SoundManager';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import type { Lang } from '@/lib/translations';
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -33,11 +35,23 @@ export const metadata: Metadata = {
   description: 'Strategy, design, and growth — built as one system.',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+const VALID_LANGS = new Set(['en', 'ar-eg', 'ar-sa']);
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const cookieStore = await cookies();
+  const raw = cookieStore.get('lang_pref')?.value ?? 'en';
+  const initialLang: Lang = VALID_LANGS.has(raw) ? (raw as Lang) : 'en';
+
+  const isAr = initialLang === 'ar-eg' || initialLang === 'ar-sa';
+  const htmlLang = initialLang === 'ar-eg' ? 'ar-EG' : initialLang === 'ar-sa' ? 'ar-SA' : 'en';
+
   return (
-    <html lang="en" dir="ltr">
-      <body className={`${montserrat.variable} ${tajawal.variable} ${elMessiri.variable}`} suppressHydrationWarning>
-        <LangProvider>
+    <html lang={htmlLang} dir={isAr ? 'rtl' : 'ltr'} suppressHydrationWarning>
+      <body
+        className={`${montserrat.variable} ${tajawal.variable} ${elMessiri.variable}${isAr ? ' ar' : ''}`}
+        suppressHydrationWarning
+      >
+        <LangProvider initialLang={initialLang}>
           {children}
         </LangProvider>
         <ConsentBanner />

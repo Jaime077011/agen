@@ -10,15 +10,7 @@ interface LangContextType {
 }
 
 const CYCLE: Lang[] = ['en', 'ar-eg', 'ar-sa'];
-const VALID_LANGS = new Set<Lang>(CYCLE);
 const LANG_COOKIE = 'lang_pref';
-
-function readLangCookie(): Lang | null {
-  if (typeof document === 'undefined') return null;
-  const match = document.cookie.split('; ').find(r => r.startsWith(`${LANG_COOKIE}=`));
-  const val = match?.split('=')[1] as Lang | undefined;
-  return val && VALID_LANGS.has(val) ? val : null;
-}
 
 function saveLangCookie(lang: Lang) {
   document.cookie = `${LANG_COOKIE}=${lang}; path=/; max-age=${60 * 60 * 24 * 30}; samesite=lax`;
@@ -26,16 +18,10 @@ function saveLangCookie(lang: Lang) {
 
 const LangContext = createContext<LangContextType | null>(null);
 
-export function LangProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLang] = useState<Lang>('en');
+export function LangProvider({ children, initialLang = 'en' }: { children: React.ReactNode; initialLang?: Lang }) {
+  const [lang, setLang] = useState<Lang>(initialLang);
   const [overlayOpacity, setOverlayOpacity] = useState(0);
   const [animating, setAnimating] = useState(false);
-
-  // Initialise from geo-detected or user-saved cookie
-  useEffect(() => {
-    const saved = readLangCookie();
-    if (saved) setLang(saved);
-  }, []);
 
   const toggleLang = useCallback(() => {
     if (animating) return;
@@ -52,6 +38,7 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
     }, 200);
   }, [animating]);
 
+  // Sync html/body attributes when lang changes (covers user toggles)
   useEffect(() => {
     const html = document.documentElement;
     if (lang === 'ar-eg' || lang === 'ar-sa') {
