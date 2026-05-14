@@ -263,9 +263,9 @@ body {
 /* FLOATING CONTROL PANEL */
 .control-panel {
   position: fixed;
-  top: 50%;
+  bottom: 32px;
   right: 32px;
-  transform: translateY(-50%);
+  transform: none;
   z-index: 100;
   width: 52px;
   height: 52px;
@@ -343,21 +343,21 @@ body {
 .arc-item:nth-child(3) { transition-delay: 0.04s; }
 .arc-item:nth-child(4) { transition-delay: 0.00s; }
 
-/* Open state — fan to the left */
+/* Open state — fan upward/left from bottom-right */
 .control-panel.open .arc-item:nth-child(2) {
-  transform: translate(-64px, -60px) scale(1);
+  transform: translate(-64px, -126px) scale(1);
   opacity: 1;
   pointer-events: all;
 }
 
 .control-panel.open .arc-item:nth-child(3) {
-  transform: translate(-80px, 4px) scale(1);
+  transform: translate(-84px, -60px) scale(1);
   opacity: 1;
   pointer-events: all;
 }
 
 .control-panel.open .arc-item:nth-child(4) {
-  transform: translate(-64px, 68px) scale(1);
+  transform: translate(-64px, 0px) scale(1);
   opacity: 1;
   pointer-events: all;
 }
@@ -1241,6 +1241,14 @@ body.ar .bottom-right p,
 body.ar .bottom-title {
   font-family: var(--font-tajawal), sans-serif;
   letter-spacing: 0;
+}
+
+body.ar .hero-tagline {
+  font-size: 1.15rem;
+}
+
+body.ar .hero-cta {
+  font-size: 1.15rem;
 }
 
 body.ar .bottom-right {
