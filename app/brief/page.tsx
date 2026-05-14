@@ -4,14 +4,18 @@ import { CursorTracker } from '@/components/CursorTracker';
 import { BodyLoader } from '@/components/BodyLoader';
 import { BriefForm } from '@/components/BriefForm';
 import { BriefCursorManager } from '@/components/BriefCursorManager';
+import { ControlPanel } from '@/components/ControlPanel';
+import { LangOverlay } from '@/components/LangOverlay';
 
 export default function Brief() {
   return (
     <>
       <Background />
       <NoiseBackground />
+      <LangOverlay />
       <CursorTracker />
       <BodyLoader />
+      <ControlPanel />
       <div className="brief-page">
         {/* Logo — top center */}
         <header className="brief-logo-bar anim-fade" style={{ '--delay': '80ms' } as React.CSSProperties}>

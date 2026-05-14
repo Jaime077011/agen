@@ -4,6 +4,12 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Khodijah';
+  src: url('/khodijah/Khodijah.otf') format('opentype');
+  font-display: swap;
+}
+
 *, *::before, *::after {
   margin: 0;
   padding: 0;
@@ -322,7 +328,7 @@ body {
   justify-content: center;
   cursor: pointer;
   text-decoration: none;
-  font-family: var(--font-cairo), var(--font-montserrat), sans-serif;
+  font-family: var(--font-tajawal), var(--font-montserrat), sans-serif;
   transform: translate(4px, 4px) scale(0);
   opacity: 0;
   pointer-events: none;
@@ -1209,18 +1215,18 @@ body {
 
 /* ARABIC / RTL */
 body.ar {
-  font-family: var(--font-cairo), sans-serif;
+  font-family: var(--font-tajawal), sans-serif;
 }
 
 body.ar .hero-script {
-  font-family: var(--font-cairo), sans-serif;
+  font-family: var(--font-el-messiri), sans-serif;
   font-weight: 700;
   font-style: normal;
   letter-spacing: 0;
 }
 
 body.ar .hero-headline {
-  font-family: var(--font-cairo), sans-serif;
+  font-family: var(--font-tajawal), sans-serif;
   font-weight: 900;
   letter-spacing: 0;
 }
@@ -1233,7 +1239,7 @@ body.ar .mobile-menu ul a,
 body.ar .bottom-left p,
 body.ar .bottom-right p,
 body.ar .bottom-title {
-  font-family: var(--font-cairo), sans-serif;
+  font-family: var(--font-tajawal), sans-serif;
   letter-spacing: 0;
 }
 
@@ -1546,13 +1552,13 @@ body.loaded .anim-fade {
 
 /* Arabic overrides — pain section */
 body.ar .pain-hook {
-  font-family: var(--font-cairo), sans-serif;
+  font-family: var(--font-tajawal), sans-serif;
   letter-spacing: 0;
   transform: translateX(calc(50px * (1 - var(--hook-p, 0))));
 }
 
 body.ar .pain-truth {
-  font-family: var(--font-cairo), sans-serif;
+  font-family: var(--font-tajawal), sans-serif;
   letter-spacing: 0;
   padding-left: 0;
   padding-right: 18px;
@@ -1570,7 +1576,7 @@ body.ar .pain-section.phase-truth-3 .pain-truth:nth-child(3) { transform: transl
 
 body.ar .pain-pivot,
 body.ar .pain-link {
-  font-family: var(--font-cairo), sans-serif;
+  font-family: var(--font-tajawal), sans-serif;
   letter-spacing: 0;
 }
 
@@ -4776,3 +4782,80 @@ body.ar .pain-link {
   .ctf2-budget-btn { width: 46px; height: 46px; }
   .ctf2-budget-currency { font-size: clamp(2.4rem, 12vw, 4rem); }
 }
+
+/* ─── BRIEF FORM — STEP TRANSITIONS ─────────────────────────────────────── */
+.ctf2-step-anim {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  animation-duration: 0.32s;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  animation-fill-mode: both;
+}
+
+.ctf2-step-next { animation-name: ctf2-slide-from-right; }
+.ctf2-step-back { animation-name: ctf2-slide-from-left; }
+
+@keyframes ctf2-slide-from-right {
+  from { opacity: 0; transform: translateX(40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes ctf2-slide-from-left {
+  from { opacity: 0; transform: translateX(-40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ─── BRIEF / FORM — ARABIC OVERRIDES ───────────────────────────────────── */
+body.ar .ctf2-label,
+body.ar .ctf2-title,
+body.ar .ctf2-subtitle,
+body.ar .ctf2-service-name,
+body.ar .ctf2-service-desc,
+body.ar .ctf2-budget-period,
+body.ar .ctf2-budget-note,
+body.ar .ctf2-field-label,
+body.ar .ctf2-field-optional,
+body.ar .ctf2-input,
+body.ar .ctf2-textarea,
+body.ar .ctf2-billing-btn,
+body.ar .ctf2-back,
+body.ar .ctf2-next,
+body.ar .ctf2-success-title,
+body.ar .ctf2-success-sub {
+  font-family: var(--font-tajawal), sans-serif;
+  letter-spacing: 0;
+}
+
+body.ar .ctf2-header { text-align: center; }
+body.ar .ctf2-steps  { justify-content: center; }
+
+body.ar .ctf2-service-card,
+body.ar .brief-main .ctf2-service-card {
+  text-align: right;
+  align-items: flex-start;
+}
+
+body.ar .ctf2-service-name {
+  text-transform: none;
+}
+
+body.ar .ctf2-service-check {
+  right: auto;
+  left: 10px;
+}
+
+body.ar .ctf2-field-label { text-align: right; }
+body.ar .ctf2-input,
+body.ar .ctf2-textarea    { text-align: right; direction: rtl; }
+
+body.ar .ctf2-budget-amount { text-align: right; }
+body.ar .ctf2-budget-note   { text-align: right; }
+
+body.ar .ctf2-nav { flex-direction: row-reverse; }
+
+body.ar .ctf2-success { text-align: right; }
+body.ar .ctf2-success-title,
+body.ar .ctf2-success-sub { text-align: right; }
+body.ar .ctf2-check { margin-right: 0; }

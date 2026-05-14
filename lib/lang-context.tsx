@@ -16,12 +16,14 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
   const [overlayOpacity, setOverlayOpacity] = useState(0);
   const [animating, setAnimating] = useState(false);
 
+  const CYCLE: Lang[] = ['en', 'ar-eg', 'ar-sa'];
+
   const toggleLang = useCallback(() => {
     if (animating) return;
     setAnimating(true);
     setOverlayOpacity(1);
     setTimeout(() => {
-      setLang(l => (l === 'en' ? 'ar' : 'en'));
+      setLang(l => CYCLE[(CYCLE.indexOf(l) + 1) % CYCLE.length]);
       setOverlayOpacity(0);
       setTimeout(() => setAnimating(false), 220);
     }, 200);
@@ -29,8 +31,8 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const html = document.documentElement;
-    if (lang === 'ar') {
-      html.setAttribute('lang', 'ar');
+    if (lang === 'ar-eg' || lang === 'ar-sa') {
+      html.setAttribute('lang', lang === 'ar-eg' ? 'ar-EG' : 'ar-SA');
       html.setAttribute('dir', 'rtl');
       document.body.classList.add('ar');
     } else {

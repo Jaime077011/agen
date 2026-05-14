@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
+import { useLang } from '@/lib/lang-context';
 
 type CursorType = 'service' | 'next' | 'back' | 'plus' | 'minus' | 'input' | 'drag' | null;
 
@@ -44,6 +45,8 @@ const ICONS: Record<Exclude<CursorType, null>, React.ReactNode> = {
 };
 
 export function BriefCursorManager() {
+  const { lang } = useLang();
+  const isAr = lang === 'ar-eg' || lang === 'ar-sa';
   const [hovered, setHovered] = useState<CursorType>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
   const rafRef    = useRef<number>(0);
@@ -139,7 +142,11 @@ export function BriefCursorManager() {
       className={`brief-cursor${hovered ? ' active' : ''}${hovered === 'service' ? ' large' : ''}`}
       aria-hidden="true"
     >
-      {hovered && ICONS[hovered]}
+      {hovered && ICONS[
+        isAr && hovered === 'next' ? 'back' :
+        isAr && hovered === 'back' ? 'next' :
+        hovered
+      ]}
     </div>
   );
 }

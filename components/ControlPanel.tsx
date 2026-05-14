@@ -154,7 +154,7 @@ export function ControlPanel() {
 
       {/* Arc item 1 — language toggle */}
       <button className="arc-item" onClick={toggleLang} aria-label="Switch language">
-        {lang === 'en' ? 'AR' : 'EN'}
+        {lang === 'en' ? 'EG' : lang === 'ar-eg' ? 'SA' : 'EN'}
       </button>
 
       {/* Arc item 2 — colour picker */}

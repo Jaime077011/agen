@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Montserrat, Cairo } from 'next/font/google';
+import { Montserrat, Tajawal, El_Messiri } from 'next/font/google';
 import './globals.css';
 import { LangProvider } from '@/lib/lang-context';
 import { ConsentBanner } from '@/components/ConsentBanner';
@@ -13,10 +13,17 @@ const montserrat = Montserrat({
   display: 'swap',
 });
 
-const cairo = Cairo({
+const tajawal = Tajawal({
   subsets: ['arabic', 'latin'],
-  weight: ['400', '500', '600', '700', '900'],
-  variable: '--font-cairo',
+  weight: ['400', '500', '700', '800', '900'],
+  variable: '--font-tajawal',
+  display: 'swap',
+});
+
+const elMessiri = El_Messiri({
+  subsets: ['arabic', 'latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-el-messiri',
   display: 'swap',
 });
 
@@ -28,7 +35,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" dir="ltr">
-      <body className={`${montserrat.variable} ${cairo.variable}`} suppressHydrationWarning>
+      <body className={`${montserrat.variable} ${tajawal.variable} ${elMessiri.variable}`} suppressHydrationWarning>
         <LangProvider>
           {children}
         </LangProvider>
